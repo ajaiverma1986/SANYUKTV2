@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog.Config" Version="4.5.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SANYUKT.Configuration\SANYUKT.Configuration.csproj" />
+    <ProjectReference Include="..\SANYUKT.Datamodel\SANYUKT.Datamodel.csproj" />
+  </ItemGroup>
+
+</Project>
