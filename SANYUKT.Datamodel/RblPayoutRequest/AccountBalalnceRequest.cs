@@ -105,7 +105,51 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
         public GetSinglePaymentStatusCorpReq get_Single_Payment_Status_Corp_Req { get; set; }
     }
 
-   
+    //Account statement request
+
+    public class AccStmtDtRngReq
+    {
+        public HeaderStatement Header { get; set; }
+        public BodyStatement Body { get; set; }
+        public Signature1 Signature { get; set; }
+    }
+
+    public class BodyStatement
+    {
+        public string Acc_No { get; set; }
+        public string Tran_Type { get; set; }
+        public string From_Dt { get; set; }
+        public PaginationDetails Pagination_Details { get; set; }
+        public string To_Dt { get; set; }
+    }
+
+    public class HeaderStatement
+    {
+        public string TranID { get; set; }
+        public string Corp_ID { get; set; }
+        public string Approver_ID { get; set; }
+    }
+
+    public class LastBalance
+    {
+        public string Amount_Value { get; set; }
+        public string Currency_Code { get; set; }
+    }
+
+    public class PaginationDetails
+    {
+        public LastBalance Last_Balance { get; set; }
+        public string Last_Pstd_Date { get; set; }
+        public string Last_Txn_Date { get; set; }
+        public string Last_Txn_Id { get; set; }
+        public string Last_Txn_SrlNo { get; set; }
+    }
+
+    public class AccountstatementRequest
+    {
+        public AccStmtDtRngReq Acc_Stmt_DtRng_Req { get; set; }
+    }
+
 
 
 }
