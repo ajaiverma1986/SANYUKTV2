@@ -106,6 +106,14 @@ namespace SANYUKT.Configuration
                 return configuration["RblBankPayout:client_secret"];
             }
         }
+        public string RblPayoutCORPID
+        {
+            get
+            {
+                return configuration["RblBankPayout:CORPID"];
+            }
+        }
+       
         public string certisslpass
         {
             get

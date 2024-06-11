@@ -35,7 +35,7 @@ namespace SANYUKT.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [AuditApi(EventTypeName = "POST RblPayoutController/GetAccountBalalance", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
-        public async Task<IActionResult> GetAccountBalalance([FromBody] AccountBalalnceRequest request)
+        public async Task<IActionResult> GetAccountBalalance([FromBody]RblPayoutRequest objp)
         {
         //    UserLoginResponse response = new UserLoginResponse();
 
@@ -47,7 +47,7 @@ namespace SANYUKT.API.Controllers
         //    }
         SimpleResponse response1 =new SimpleResponse();
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString ()+ "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString ()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString ());
-            response1 = await _Provider.GetBalalce(request, certificate2, this.CallerUser);
+            response1 = await _Provider.GetBalalce(objp, certificate2, this.CallerUser);
 
             return Ok(response1);
 
@@ -58,8 +58,8 @@ namespace SANYUKT.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [AuditApi(EventTypeName = "POST RblPayoutController/PayoutTransaction", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
-        public async Task<IActionResult> Transaction([FromBody] PaymentRequest request)
+        [AuditApi(EventTypeName = "POST RblPayoutController/Transaction", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
+        public async Task<IActionResult> Transaction([FromBody] SinglePaymentRequest request)
         {
             //    UserLoginResponse response = new UserLoginResponse();
 
@@ -82,8 +82,8 @@ namespace SANYUKT.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [AuditApi(EventTypeName = "POST RblPayoutController/PayoutTransaction", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
-        public async Task<IActionResult> TransactionStatus([FromBody] PaymentStatusRequest request)
+        [AuditApi(EventTypeName = "POST RblPayoutController/TransactionStatus", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
+        public async Task<IActionResult> TransactionStatus([FromBody] SinglePaymentStatus request)
         {
             //    UserLoginResponse response = new UserLoginResponse();
 
@@ -106,8 +106,8 @@ namespace SANYUKT.API.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        [AuditApi(EventTypeName = "POST RblPayoutController/PayoutTransaction", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
-        public async Task<IActionResult> GetAccountStatement([FromBody] AccountstatementRequest request)
+        [AuditApi(EventTypeName = "POST RblPayoutController/GetAccountStatement", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
+        public async Task<IActionResult> GetAccountStatement([FromBody] RblPayoutStatementRequest request)
         {
             //    UserLoginResponse response = new UserLoginResponse();
 
