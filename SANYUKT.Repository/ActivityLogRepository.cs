@@ -22,12 +22,12 @@ namespace SANYUKT.Repository
             _database = new SANYUKTDatabase();
         }
 
-        public async Task<ListResponse> ActivityLog_Search(ActivityLogRequest request, ISANYUKTServiceUser FIAAPIUser)
+        public async Task<ListResponse> ActivityLog_Search(ActivityLogRequest request, ISANYUKTServiceUser SANYUKTAPIUser)
         {
             ListResponse response = new ListResponse();
             List<ActivityLogResponse> lst = new List<ActivityLogResponse>();
             var dbCommand = _database.GetStoredProcCommand("[AAC].[ActivityLog_Search]");
-            _database.AutoGenerateInputParams(dbCommand, request, FIAAPIUser, true);
+            _database.AutoGenerateInputParams(dbCommand, request, SANYUKTAPIUser, true);
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {

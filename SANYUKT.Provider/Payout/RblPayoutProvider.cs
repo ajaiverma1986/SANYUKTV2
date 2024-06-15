@@ -85,6 +85,7 @@ namespace SANYUKT.Provider.Payout
             bp.Ben_Address = req.Ben_Address;
             bp.Issue_BranchCd = req.Issue_BranchCd;
             bp.Ben_Acct_No = req.Ben_Acct_No;
+            bp.Ben_TrnParticulars = req.Ben_TrnParticulars;
             bp.Ben_PartTrnRmks = req.Ben_PartTrnRmks;
             bp.Debit_PartTrnRmks = req.Debit_PartTrnRmks;
             bp.Ben_BankName = req.Ben_BankName;
