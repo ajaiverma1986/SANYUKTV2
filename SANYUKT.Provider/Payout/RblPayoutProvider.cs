@@ -4,10 +4,12 @@ using SANYUKT.Commonlib.Cache;
 using SANYUKT.Configuration;
 using SANYUKT.Datamodel.Common;
 using SANYUKT.Datamodel.Entities.Authorization;
+using SANYUKT.Datamodel.Entities.RblPayout;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.RblPayoutRequest;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
+using SANYUKT.Repository;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -20,14 +22,29 @@ namespace SANYUKT.Provider.Payout
 {
     public class RblPayoutProvider : BaseProvider
     {
+        public readonly RblPayoutRepository _repository = null;
+        public RblPayoutProvider() {
+            _repository=new RblPayoutRepository ();
+        }
         public async Task<SimpleResponse> GetBalalce(RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             AccountBalalnceRequest requestreq = new AccountBalalnceRequest();
+
+            NonFinancialTxnRequest request1 =new NonFinancialTxnRequest();
+            request1.agencyid = 1;
+            request1.serviceid = 1;
+            request1.TxnPlateForm = "API";
+            request1.partnerid = 1;
+            request1.partnerreferenceno = "ABC000001";
+            request1.partnerretailorid = "C10000001";
+            
+
+
             GetAccountBalanceReq aa = new GetAccountBalanceReq();
             HeaderAcc ha = new HeaderAcc();
             ha.Approver_ID = objp.ApproverId;
             ha.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID.ToString();
-            ha.TranID = objp.SessionTransactionID;
+            ha.TranID = await _repository.NewNonFinacialTransaction(request1, serviceUser);
             aa.Header = ha;
             BodyAcc ba = new BodyAcc();
             ba.AcctId = objp.AccountNo;
