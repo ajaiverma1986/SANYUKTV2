@@ -127,4 +127,5 @@ namespace SANYUKT.Datamodel.Common
         Terminated = 12
 
     }
+   
 }

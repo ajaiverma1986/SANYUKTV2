@@ -7,7 +7,9 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
     public class RblPayoutBasic
     {
         public string ApproverId { get; set; }
-        public string SessionTransactionID { get; set; }
+        public string PartnerRefNo { get; set; }
+        public string PartnerRetailorId {  get; set; }
+        public string TxnPlateForm {  get; set; }
     }
     public class RblPayoutBasicchild : RblPayoutBasic
     {
@@ -33,22 +35,14 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
 
     public class SinglePaymentRequest : RblPayoutBasicchild
     {
-
         public string Amount { get; set; }
-        public string Debit_Acct_No { get; set; }
-        public string Debit_Acct_Name { get; set; }
-        public string Debit_IFSC { get; set; }
-        public string Debit_Mobile { get; set; }
         public string Debit_TrnParticulars { get; set; }
-        public string Debit_PartTrnRmks { get; set; }
         public string Ben_IFSC { get; set; }
         public string Ben_Acct_No { get; set; }
         public string Ben_Name { get; set; }
-        public string Ben_Address { get; set; }
         public string Ben_BankName { get; set; }
         public string Ben_BankCd { get; set; }
         public string Ben_BranchCd { get; set; }
-        public string Ben_Email { get; set; }
         public string Ben_Mobile { get; set; }
         public string Ben_TrnParticulars { get; set; }
         public string Ben_PartTrnRmks { get; set; }

@@ -1,6 +1,4 @@
 ﻿using SANYUKT.Database;
-using SANYUKT.Datamodel.Common;
-using SANYUKT.Datamodel.Entities.Activity;
 using SANYUKT.Datamodel.Entities.RblPayout;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
@@ -12,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace SANYUKT.Repository
 {
-    public class RblPayoutRepository:BaseRepository
+    public class TransactionRepository:BaseRepository
     {
         private readonly ISANYUKTDatabase _database = null;
-        public RblPayoutRepository()
-        {
+        public TransactionRepository() {
             _database = new SANYUKTDatabase();
         }
         public async Task<string> NewNonFinacialTransaction(BaseTransactionRequest request, ISANYUKTServiceUser serviceUser)
@@ -38,7 +35,7 @@ namespace SANYUKT.Repository
             await _database.ExecuteNonQueryAsync(dbCommand);
 
             outputstr = GetIDOutputString(dbCommand);
-           
+
             return outputstr;
 
         }

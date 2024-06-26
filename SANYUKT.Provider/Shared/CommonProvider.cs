@@ -16,7 +16,7 @@ namespace SANYUKT.Provider.Shared
             repository = new CommonRepository();
         }
 
-        public async Task<SimpleResponse> TransactionHook(string apiname, string encryptedrequest, string encryptedresponse, string plainrequest, string plainresponse)
+        public async Task<SimpleResponse> ApilogResponse(string apiname, string encryptedrequest, string encryptedresponse, string plainrequest, string plainresponse)
         {
             ApiRequestLog requestLog = new ApiRequestLog();
             requestLog.apiname = apiname;

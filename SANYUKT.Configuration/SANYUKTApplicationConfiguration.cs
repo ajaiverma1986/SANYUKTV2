@@ -135,6 +135,34 @@ namespace SANYUKT.Configuration
                 return configuration["FIADB"];
             }
         }
+        public string RblAccountNo
+        {
+            get
+            {
+                return configuration["RblBankPayout:AccountNo"];
+            }
+        }
+        public string RblAccountName
+        {
+            get
+            {
+                return configuration["RblBankPayout:AccountName"];
+            }
+        }
+        public string RblPayoutIfsccode
+        {
+            get
+            {
+                return configuration["RblBankPayout:DebitIfsc"];
+            }
+        }
+        public string RblPayoutMobile
+        {
+            get
+            {
+                return configuration["RblBankPayout:DebitMobile"];
+            }
+        }
 
         private string GetParameterValue(string ParamName)
         {

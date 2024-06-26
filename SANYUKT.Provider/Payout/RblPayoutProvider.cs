@@ -1,19 +1,26 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto.Agreement.Srp;
 using SANYUKT.Commonlib.Cache;
 using SANYUKT.Configuration;
 using SANYUKT.Datamodel.Common;
+using SANYUKT.Datamodel.Entities;
 using SANYUKT.Datamodel.Entities.Authorization;
 using SANYUKT.Datamodel.Entities.RblPayout;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.RblPayoutRequest;
+using SANYUKT.Datamodel.RblPayoutResponse;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
 using SANYUKT.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Policy;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -22,15 +29,15 @@ namespace SANYUKT.Provider.Payout
 {
     public class RblPayoutProvider : BaseProvider
     {
-        public readonly RblPayoutRepository _repository = null;
+        public readonly TransactionProvider _provider = null;
         public RblPayoutProvider() {
-            _repository=new RblPayoutRepository ();
+            _provider = new TransactionProvider();
         }
         public async Task<SimpleResponse> GetBalalce(RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             AccountBalalnceRequest requestreq = new AccountBalalnceRequest();
 
-            NonFinancialTxnRequest request1 =new NonFinancialTxnRequest();
+            BaseTransactionRequest request1 =new BaseTransactionRequest();
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = "API";
@@ -44,7 +51,7 @@ namespace SANYUKT.Provider.Payout
             HeaderAcc ha = new HeaderAcc();
             ha.Approver_ID = objp.ApproverId;
             ha.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID.ToString();
-            ha.TranID = await _repository.NewNonFinacialTransaction(request1, serviceUser);
+            ha.TranID = await _provider.NewNonFinacialTransaction(request1, serviceUser);
             aa.Header = ha;
             BodyAcc ba = new BodyAcc();
             ba.AcctId = objp.AccountNo;
@@ -82,6 +89,37 @@ namespace SANYUKT.Provider.Payout
         public async Task<SimpleResponse> PayoutTransaction(SinglePaymentRequest req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             PaymentRequest requestreq = new PaymentRequest();
+            SimpleResponse response = new SimpleResponse();
+            NewTransactionRequest request1= new NewTransactionRequest();
+            request1.description = "Payout Transaction";
+            request1.amount =Convert.ToDecimal ( req.Amount);
+            request1.partnerretailorid = req.PartnerRetailorId;
+            request1.TxnPlateForm= req.TxnPlateForm;
+            request1.agencyid = 1;
+            request1.serviceid = 1;
+            request1.partnerid = serviceUser.UserMasterID;
+            request1.partnerreferenceno = req.PartnerRefNo;
+            request1.TxnType = "D";
+            TransactionResponse transactionResponse=new TransactionResponse ();
+
+             transactionResponse = await _provider.NewTransaction(request1, serviceUser);
+            if (transactionResponse == null)
+            {
+                response.SetError(ErrorCodes.AUTHORIZATION_FAILED);
+                return response;
+            }
+            if (transactionResponse.Transactioncode == null)
+            {
+                response.SetError(ErrorCodes.AUTHORIZATION_FAILED);
+                return response;
+            }
+            if (transactionResponse.Transactioncode == "")
+            {
+                response.SetError(ErrorCodes.AUTHORIZATION_FAILED);
+                return response;
+            }
+
+
             SinglePaymentCorpReq spr = new SinglePaymentCorpReq();
             Signature1 si = new Signature1();
             si.Signature = "";
@@ -90,31 +128,30 @@ namespace SANYUKT.Provider.Payout
             hp.Approver_ID = req.ApproverId;
             hp.Checker_ID = req.CheckedrId;
             hp.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID.ToString();
-            hp.TranID = req.SessionTransactionID.ToString();
+            hp.TranID = transactionResponse.Transactioncode;
             hp.Maker_ID = req.MakerId.ToString();
             spr.Header = hp;
 
             BodyPayment bp = new BodyPayment();
             bp.Amount = req.Amount;
-            bp.Remarks = req.Remarks;
             bp.Ben_BranchCd = req.Ben_BranchCd;
             bp.Ben_BankCd = req.Ben_BankCd;
-            bp.Ben_Address = req.Ben_Address;
+            bp.Ben_Address = "";
             bp.Issue_BranchCd = req.Issue_BranchCd;
             bp.Ben_Acct_No = req.Ben_Acct_No;
             bp.Ben_TrnParticulars = req.Ben_TrnParticulars;
             bp.Ben_PartTrnRmks = req.Ben_PartTrnRmks;
-            bp.Debit_PartTrnRmks = req.Debit_PartTrnRmks;
+            bp.Debit_PartTrnRmks = "";
             bp.Ben_BankName = req.Ben_BankName;
             bp.Remarks = req.Remarks;
-            bp.Ben_Email = req.Ben_Email;
+            bp.Ben_Email = "";
             bp.Ben_IFSC = req.Ben_IFSC;
             bp.Ben_Mobile = req.Ben_Mobile;
             bp.Ben_Name = req.Ben_Name;
-            bp.Debit_Acct_Name = req.Debit_Acct_Name;
-            bp.Debit_Acct_No = req.Debit_Acct_No;
-            bp.Debit_IFSC = req.Debit_IFSC;
-            bp.Debit_Mobile = req.Debit_Mobile;
+            bp.Debit_Acct_Name = SANYUKTApplicationConfiguration.Instance.RblAccountName ;
+            bp.Debit_Acct_No = SANYUKTApplicationConfiguration.Instance.RblAccountNo;
+            bp.Debit_IFSC =  SANYUKTApplicationConfiguration.Instance.RblPayoutIfsccode;
+            bp.Debit_Mobile = SANYUKTApplicationConfiguration.Instance.RblPayoutIfsccode;
             bp.Debit_TrnParticulars = req.Debit_TrnParticulars;
             bp.Mode_of_Pay = req.Mode_of_Pay;
             spr.Body = bp;
@@ -122,7 +159,7 @@ namespace SANYUKT.Provider.Payout
 
 
 
-            SimpleResponse response = new SimpleResponse();
+           
             var _clientHandler = new HttpClientHandler();
             _clientHandler.ClientCertificates.Add(Certificatetext);
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
@@ -147,10 +184,20 @@ namespace SANYUKT.Provider.Payout
             return response;
         }
 
-        public async Task<SimpleResponse> PayoutTransactionStatus(SinglePaymentStatus obbb, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
+        public async Task<RblResponse> PayoutTransactionStatus(SinglePaymentStatus obbb, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
 
+            BaseTransactionRequest request1 = new BaseTransactionRequest();
+            request1.agencyid = 1;
+            request1.serviceid = 1;
+            request1.TxnPlateForm = obbb.TxnPlateForm;
+            request1.partnerid = serviceUser.UserMasterID;
+            request1.partnerreferenceno =obbb.PartnerRefNo;
+            request1.partnerretailorid = obbb.PartnerRetailorId;
+            request1.TxnType = "Transaction Status";
+
+            RblResponse resp =new RblResponse();
             PaymentStatusRequest requestreq = new PaymentStatusRequest();
             GetSinglePaymentStatusCorpReq gsps = new GetSinglePaymentStatusCorpReq();
             Signature1 si = new Signature1();
@@ -159,7 +206,7 @@ namespace SANYUKT.Provider.Payout
             gsps.Signature = si;
             Headerstaus hd = new Headerstaus();
             hd.Approver_ID = obbb.ApproverId;
-            hd.TranID = obbb.SessionTransactionID;
+            hd.TranID = await _provider.NewNonFinacialTransaction(request1, serviceUser);
             hd.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID;
             hd.Maker_ID = obbb.MakerId;
             hd.Checker_ID = obbb.CheckedrId;
@@ -188,8 +235,45 @@ namespace SANYUKT.Provider.Payout
             request.Content = content;
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
+            GetsinglePaymentReponse nnn=new GetsinglePaymentReponse ();
+            UpdateNonfinacialRequest request2 =new UpdateNonfinacialRequest ();
+            if (response1.StatusCode == HttpStatusCode.OK)
+            {
+                string jsonData = JsonConvert.SerializeObject(response.Result);
+                dynamic jsonn = JsonConvert.DeserializeObject(jsonData);
+             
+                string strRemSlash = jsonn.Replace("\"", "\'");
+                string strRemNline = strRemSlash.Replace("\n", " ");
+                // Time to desrialize it to convert it into an object class.
+                 nnn = JsonConvert.DeserializeObject<GetsinglePaymentReponse>(@strRemNline);
+                resp.Status = nnn.get_Single_Payment_Status_Corp_Res.Header.Status;
+                resp.ChanelPartnerRefNo = obbb.PartnerRefNo;
+                resp.ErorrDescription = nnn.get_Single_Payment_Status_Corp_Res.Header.Error_Desc;
+                resp.ErrorCode = nnn.get_Single_Payment_Status_Corp_Res.Header.Error_Cde;
+                resp.TransactionId = nnn.get_Single_Payment_Status_Corp_Res.Header.TranID;
 
-            return response;
+                request2.errorcode = resp.ErrorCode;
+                request2.errorDescrtiopn = resp.ErorrDescription;
+                request2.Txncode = resp.TransactionId;
+              await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+            }
+            else if (response1.StatusCode==HttpStatusCode.Unauthorized)
+            {
+               
+                resp.Status = "Unauthorized";
+                resp.ChanelPartnerRefNo = obbb.PartnerRefNo;
+                resp.ErorrDescription = "";
+                resp.ErrorCode = response1.ReasonPhrase;
+                resp.TransactionId = requestreq.get_Single_Payment_Status_Corp_Req.Header.TranID;
+
+                request2.errorcode = response1.ReasonPhrase;
+                request2.errorDescrtiopn = response1.ReasonPhrase;
+                request2.Txncode = requestreq.get_Single_Payment_Status_Corp_Req.Header.TranID;
+                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+
+            }
+
+            return resp;
         }
 
         public async Task<SimpleResponse> AccountStatement(RblPayoutStatementRequest obbb, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
@@ -203,7 +287,7 @@ namespace SANYUKT.Provider.Payout
             HeaderStatement hs = new HeaderStatement();
             hs.Approver_ID = obbb.ApproverId;
             hs.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID;
-            hs.TranID = obbb.SessionTransactionID;
+            hs.TranID = obbb.PartnerRefNo;
             asdt.Header = hs;
             BodyStatement bs = new BodyStatement();
             bs.From_Dt = obbb.From_Dt;

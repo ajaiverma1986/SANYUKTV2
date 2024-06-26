@@ -7,6 +7,7 @@ using SANYUKT.Configuration;
 using SANYUKT.Datamodel.DTO.Request;
 using SANYUKT.Datamodel.DTO.Response;
 using SANYUKT.Datamodel.RblPayoutRequest;
+using SANYUKT.Datamodel.RblPayoutResponse;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider;
 using SANYUKT.Provider.Payout;
@@ -93,7 +94,7 @@ namespace SANYUKT.API.Controllers
             //        response.SetError(error);
             //        return Ok(response);
             //    }
-            SimpleResponse response1 = new SimpleResponse();
+            RblResponse response1 = new RblResponse();
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response1 = await _Provider.PayoutTransactionStatus(request, certificate2, this.CallerUser);
 

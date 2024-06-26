@@ -86,6 +86,7 @@ namespace SANYUKT.Datamodel.Shared
         }
 
 
+
         public void FromModelState(ModelStateDictionary ModelState)
         {
             if (ModelState.IsValid)
@@ -109,5 +110,6 @@ namespace SANYUKT.Datamodel.Shared
                 ModelState.AddModelError(index.ToString(), Errors[index].ErrorMessage);
             }
         }
+        
     }
 }
