@@ -49,7 +49,7 @@ namespace SANYUKT.Datamodel.Shared
             this.ErrorCode = ErrorCode;
             string messageKey = RESOURCE_MESSAGE_KEY_PREFIX + ErrorCode.ToString("D");
             ErrorMessage = ErrorMessages.ResourceManager.GetString(messageKey);
-            ErrorMessage = "Please try again";
+           
         }
 
         public void SetError(ErrorResponse err)

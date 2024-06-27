@@ -117,7 +117,67 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Code_01" xml:space="preserve">
-    <value>Data Not available</value>
+  <data name="CODE_0" xml:space="preserve">
+    <value>NO_ERROR</value>
+  </data>
+  <data name="CODE_100" xml:space="preserve">
+    <value>SERVER_ERROR</value>
+  </data>
+  <data name="CODE_101" xml:space="preserve">
+    <value>Incorrect Password</value>
+  </data>
+  <data name="CODE_102" xml:space="preserve">
+    <value>Validation Error</value>
+  </data>
+  <data name="CODE_103" xml:space="preserve">
+    <value>Authentication Failure</value>
+  </data>
+  <data name="CODE_104" xml:space="preserve">
+    <value>User not allowed to access this Application</value>
+  </data>
+  <data name="CODE_105" xml:space="preserve">
+    <value>Authrization Failure</value>
+  </data>
+  <data name="CODE_106" xml:space="preserve">
+    <value>Invalid API Token</value>
+  </data>
+  <data name="CODE_107" xml:space="preserve">
+    <value>Invalid Username</value>
+  </data>
+  <data name="CODE_108" xml:space="preserve">
+    <value>INVALID_PARAMETERS</value>
+  </data>
+  <data name="CODE_109" xml:space="preserve">
+    <value>INSUFFICIENT_LIMIT</value>
+  </data>
+  <data name="CODE_110" xml:space="preserve">
+    <value>INVALID_TRANSACTION_AMOUNT</value>
+  </data>
+  <data name="CODE_111" xml:space="preserve">
+    <value>INVALID_SERVICE_MAPPING</value>
+  </data>
+  <data name="CODE_112" xml:space="preserve">
+    <value>NO_RECORD_FOUND</value>
+  </data>
+  <data name="CODE_113" xml:space="preserve">
+    <value>UNEXPECTED_ERROR_FOUND</value>
+  </data>
+  <data name="CODE_114" xml:space="preserve">
+    <value>BAD_REQUEST</value>
+  </data>
+  <data name="CODE_115" xml:space="preserve">
+    <value>APPLICATION_ERROR</value>
+  </data>
+  <data name="CODE_116" xml:space="preserve">
+    <value>BADREQUEST_METHOD_ERROR</value>
+  </data>
+  <data name="CODE_117" xml:space="preserve">
+    <value>METHOD_NOT_FOUND</value>
+  </data>
+  <data name="CODE_118" xml:space="preserve">
+    <value>SIMPLE_PASSWORD</value>
+  </data>
+  <data name="CODE_119" xml:space="preserve">
+    <value>Transaction Not Done Please try again</value>
   </data>
 </root>

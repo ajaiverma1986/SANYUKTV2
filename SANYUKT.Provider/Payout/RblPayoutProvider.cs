@@ -30,8 +30,10 @@ namespace SANYUKT.Provider.Payout
     public class RblPayoutProvider : BaseProvider
     {
         public readonly TransactionProvider _provider = null;
+        public readonly UserDetailsProvider _userprovider= null;
         public RblPayoutProvider() {
             _provider = new TransactionProvider();
+            _userprovider= new UserDetailsProvider();
         }
         public async Task<SimpleResponse> GetBalalce(RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
@@ -90,6 +92,18 @@ namespace SANYUKT.Provider.Payout
         {
             PaymentRequest requestreq = new PaymentRequest();
             SimpleResponse response = new SimpleResponse();
+
+
+            bool isavaillimit = false;
+            isavaillimit =await _userprovider.CheckAvailableBalance(Convert.ToDecimal( req.Amount), 0, serviceUser);
+            if (isavaillimit)
+            {
+                response.SetError(ErrorCodes.INSUFFICIENT_LIMIT);
+                return response;
+
+            }
+
+
             NewTransactionRequest request1= new NewTransactionRequest();
             request1.description = "Payout Transaction";
             request1.amount =Convert.ToDecimal ( req.Amount);
@@ -105,17 +119,17 @@ namespace SANYUKT.Provider.Payout
              transactionResponse = await _provider.NewTransaction(request1, serviceUser);
             if (transactionResponse == null)
             {
-                response.SetError(ErrorCodes.AUTHORIZATION_FAILED);
+                response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
             if (transactionResponse.Transactioncode == null)
             {
-                response.SetError(ErrorCodes.AUTHORIZATION_FAILED);
+                response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
             if (transactionResponse.Transactioncode == "")
             {
-                response.SetError(ErrorCodes.AUTHORIZATION_FAILED);
+                response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
 

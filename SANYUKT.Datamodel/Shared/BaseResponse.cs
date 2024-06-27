@@ -45,7 +45,7 @@ namespace SANYUKT.Datamodel.Shared
             if (Errors == null)
                 Errors = new List<ErrorResponse>();
             ErrorResponse error = new ErrorResponse();
-            //error.SetError(errorCode);
+            error.SetError(errorCode);
             Errors.Add(error);
         }
 
