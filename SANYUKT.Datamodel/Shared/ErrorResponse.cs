@@ -1,5 +1,5 @@
 ﻿
-
+using SANYUKT.Resource;
 namespace SANYUKT.Datamodel.Shared
 {
     public class ErrorResponse
@@ -14,12 +14,12 @@ namespace SANYUKT.Datamodel.Shared
             NoError();
         }
 
-        //public ErrorResponse(ErrorCodes errorCode)
-        //{
-        //    ErrorCode = errorCode;
-        //    string messageKey = RESOURCE_MESSAGE_KEY_PREFIX + errorCode.ToString("D");
-        //    ErrorMessage = ErrorMessages.ResourceManager.GetString(messageKey);
-        //}
+        public ErrorResponse(ErrorCodes errorCode)
+        {
+            ErrorCode = errorCode;
+            string messageKey = RESOURCE_MESSAGE_KEY_PREFIX + errorCode.ToString("D");
+            ErrorMessage = ErrorMessages.ResourceManager.GetString(messageKey);
+        }
 
         public ErrorResponse(ErrorCodes errorCode, string errorMessage)
         {
@@ -48,7 +48,7 @@ namespace SANYUKT.Datamodel.Shared
         {
             this.ErrorCode = ErrorCode;
             string messageKey = RESOURCE_MESSAGE_KEY_PREFIX + ErrorCode.ToString("D");
-            //ErrorMessage = ErrorMessages.ResourceManager.GetString(messageKey);
+            ErrorMessage = ErrorMessages.ResourceManager.GetString(messageKey);
             ErrorMessage = "Please try again";
         }
 
@@ -56,7 +56,7 @@ namespace SANYUKT.Datamodel.Shared
         {
             this.ErrorCode = err.ErrorCode;
             this.ErrorMessage = err.ErrorMessage;
-            //this.ErrorMessage = "Please Try again";
+           
         }
 
         public void SetError(string ErrorMessage)
@@ -65,10 +65,10 @@ namespace SANYUKT.Datamodel.Shared
             this.ErrorMessage = ErrorMessage;
         }
 
-        //public static ErrorResponse ForError(ErrorCodes ErrorCode)
-        //{
-        //    return new ErrorResponse(ErrorCode);
-        //}
+        public static ErrorResponse ForError(ErrorCodes ErrorCode)
+        {
+            return new ErrorResponse(ErrorCode);
+        }
 
         public bool HasError
         {
