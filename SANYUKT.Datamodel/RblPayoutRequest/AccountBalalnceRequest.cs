@@ -81,7 +81,7 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
 
     public class BodyStatus
     {
-        public string UTRNo { get; set; }
+        public string RRN { get; set; }
     }
 
     public class GetSinglePaymentStatusCorpReq

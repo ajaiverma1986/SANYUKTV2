@@ -186,4 +186,28 @@
   <data name="CODE_121" xml:space="preserve">
     <value>Benficiary Details Missing</value>
   </data>
+  <data name="CODE_122" xml:space="preserve">
+    <value>Technical Error</value>
+  </data>
+  <data name="CODE_123" xml:space="preserve">
+    <value>Service not found</value>
+  </data>
+  <data name="CODE_124" xml:space="preserve">
+    <value>Service Account No not found</value>
+  </data>
+  <data name="CODE_125" xml:space="preserve">
+    <value>Service IFSC code not found</value>
+  </data>
+  <data name="CODE_126" xml:space="preserve">
+    <value>Service Account Name not Found</value>
+  </data>
+  <data name="CODE_127" xml:space="preserve">
+    <value>Servcie account Mobile no not found</value>
+  </data>
+  <data name="CODE_128" xml:space="preserve">
+    <value>Benficiary cant't be Added</value>
+  </data>
+  <data name="CODE_129" xml:space="preserve">
+    <value>Invalid Benficiary</value>
+  </data>
 </root>

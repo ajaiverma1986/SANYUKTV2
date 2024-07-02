@@ -59,6 +59,10 @@ namespace SANYUKT.Provider
         {
             return await _repository.GetAllBenficiary(request, serviceUser);
         }
+        public async Task<BenficiaryResponse> GetBenficiaryDetailsByID(long BenFiciaryId)
+        {
+            return await _repository.GetBenficiaryDetailsByID(BenFiciaryId);
+        }
         public async Task<long> ChangeBenficairyStatus(BenficaryChangeStatusRequest request, ISANYUKTServiceUser serviceUser)
         {
             long outputresponse = 0;

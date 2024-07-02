@@ -266,5 +266,77 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_121", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technical Error.
+        /// </summary>
+        public static string CODE_122 {
+            get {
+                return ResourceManager.GetString("CODE_122", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service not found.
+        /// </summary>
+        public static string CODE_123 {
+            get {
+                return ResourceManager.GetString("CODE_123", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Account No not found.
+        /// </summary>
+        public static string CODE_124 {
+            get {
+                return ResourceManager.GetString("CODE_124", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service IFSC code not found.
+        /// </summary>
+        public static string CODE_125 {
+            get {
+                return ResourceManager.GetString("CODE_125", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Account Name not Found.
+        /// </summary>
+        public static string CODE_126 {
+            get {
+                return ResourceManager.GetString("CODE_126", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Servcie account Mobile no not found.
+        /// </summary>
+        public static string CODE_127 {
+            get {
+                return ResourceManager.GetString("CODE_127", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary cant&apos;t be Added.
+        /// </summary>
+        public static string CODE_128 {
+            get {
+                return ResourceManager.GetString("CODE_128", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Benficiary.
+        /// </summary>
+        public static string CODE_129 {
+            get {
+                return ResourceManager.GetString("CODE_129", resourceCulture);
+            }
+        }
     }
 }

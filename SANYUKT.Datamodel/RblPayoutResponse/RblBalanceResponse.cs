@@ -44,6 +44,11 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
         public string ChanelPartnerRefNo { get; set; }
        
     }
+    public class RblAccountBalalnceResponse :RblResponse
+    {
+        public string BalalnceAmount { get; set; }
+      
+    }
     public class RblTransactionResponse: RblResponse
     {
         public string BankRefNo { get; set; }
@@ -82,7 +87,22 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
     public class GetAccountBalanceRes
     {
         public Header Header { get; set; }
+        public BodyBla Body { get; set; }
         public Signature Signature { get; set; }
+    }
+    public class BalAmt
+    {
+        public string amountValue { get; set; }
+        public CurrencyCode currencyCode { get; set; }
+    }
+
+    public class BodyBla
+    {
+        public BalAmt BalAmt { get; set; }
+    }
+
+    public class CurrencyCode
+    {
     }
 
 }

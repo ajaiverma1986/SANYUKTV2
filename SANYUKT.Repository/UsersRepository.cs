@@ -97,6 +97,35 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<BenficiaryResponse> GetBenficiaryDetailsByID(long BenFiciaryId)
+        {
+            BenficiaryResponse response = new BenficiaryResponse();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetBenficiaryById");
+           
+            _database.AddInParameter(dbCommand, "@BenFiciaryId", BenFiciaryId);
+            
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+
+                    response.PartnerId = GetInt64Value(dataReader, "PartnerId").Value;
+                    response.BenBranchCode = GetStringValue(dataReader, "BenBranchCode");
+                    response.BenAddress = GetStringValue(dataReader, "BenAddress");
+                    response.BenBankcode = GetStringValue(dataReader, "BenBankcode");
+                    response.BenAccountNo = GetStringValue(dataReader, "BenAccountNo");
+                    response.BenbankName = GetStringValue(dataReader, "BenbankName");
+                    response.BenBankcode = GetStringValue(dataReader, "BenBankcode");
+                    response.BenIfsccode = GetStringValue(dataReader, "BenIfsccode");
+                    response.BenMobile = GetStringValue(dataReader, "BenMobile");
+                    response.EmailId = GetStringValue(dataReader, "EmailId");
+                    response.BenficiaryName = GetStringValue(dataReader, "BenficiaryName");
+                   
+                }
+            }
+            return response;
+        }
         public async Task<long> ChangeBenficairyStatus(BenficaryChangeStatusRequest request, ISANYUKTServiceUser serviceUser)
         {
 

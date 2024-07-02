@@ -30,7 +30,16 @@ namespace SANYUKT.Datamodel.Shared
         SIMPLE_PASSWORD=118,
         TRANSACTION_NOT_DONE=119,
         SERVICE_CHARGE_NOT_DEFINE = 120,
-        BEN_DETAILS_MISS = 121
+        BEN_DETAILS_MISS = 121,
+        ACC_BAL_INSUFCIANT = 122,
+        SP_123 = 123,
+        SP_124 = 124,
+        SP_125 = 125,
+        SP_126 = 126,
+        SP_127 = 127,
+        SP_128 = 128,
+        SP_129 = 129
+
 
     }
 }
