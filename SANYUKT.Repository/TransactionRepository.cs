@@ -1,5 +1,9 @@
 ﻿using SANYUKT.Database;
+using SANYUKT.Datamodel.Common;
+using SANYUKT.Datamodel.DTO.Request;
+using SANYUKT.Datamodel.Entities.Authorization;
 using SANYUKT.Datamodel.Entities.RblPayout;
+using SANYUKT.Datamodel.Entities.Transactions;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Repository.Shared;
@@ -73,6 +77,8 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@txnplateform", request.TxnPlateForm);
             _database.AddInParameter(dbCommand, "@txntype", request.TxnType);
             _database.AddInParameter(dbCommand, "@Amount", request.amount);
+            _database.AddInParameter(dbCommand, "@Txnfee", request.txnFee);
+            _database.AddInParameter(dbCommand, "@Margin", request.margincom);
             _database.AddOutParameter(dbCommand, "@Out_ID", 100);
 
             await _database.ExecuteNonQueryAsync(dbCommand);
@@ -82,5 +88,61 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<SevicechargeResponse> GetServiceChargeDetail(SevicechargeRequest request)
+        {
+            SevicechargeResponse response = null;
+            var dbCommand = _database.GetStoredProcCommand("[CONFG].usp_getServiceChargediscount");
+            _database.AddInParameter(dbCommand, "@AgencyID", request.AgencyId);
+            _database.AddInParameter(dbCommand, "@ServiceID", request.ServiceId);
+            _database.AddInParameter(dbCommand, "@amount", request.Amount);
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                dataReader.Read();
+                if (dataReader.HasRows)
+                {
+                    response = new SevicechargeResponse();
+                    response.CalculationType = GetInt32Value(dataReader, "CalculationType").Value;
+                    response.SlabType = GetInt32Value(dataReader, "SlabType").Value;
+                    response.CalculationValue = GetDecimalValue(dataReader, "CalculationValue").Value;
+                    response.CalculationTypeName = GetStringValue(dataReader, "CalculationTypeName");
+                   
+                }
+            }
+
+            return response;
+        }
+        public async Task<string> NewTransactionUpdateStatus(UpdateTransactionStatusRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            string outputstr = "";
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].usp_updatetransactionstatus");
+            _database.AddInParameter(dbCommand, "@Transactioncode", request.Transactioncode);
+            _database.AddInParameter(dbCommand, "@RefNo", request.RefNo);
+            _database.AddInParameter(dbCommand, "@RelatedReference", request.RelatedReference);
+            _database.AddInParameter(dbCommand, "@BankTxnDatetime", request.BankTxnDatetime);
+            _database.AddInParameter(dbCommand, "@RefNo1", request.RefNo1);
+            _database.AddInParameter(dbCommand, "@RefNo2", request.RefNo2);
+            _database.AddInParameter(dbCommand, "@RefNo3", request.RefNo3);
+            _database.AddInParameter(dbCommand, "@RefNo4", request.RefNo4);
+            _database.AddInParameter(dbCommand, "@RefNo5", request.RefNo5);
+            _database.AddInParameter(dbCommand, "@RefNo6", request.RefNo6);
+            _database.AddInParameter(dbCommand, "@RefNo7", request.RefNo7);
+            _database.AddInParameter(dbCommand, "@RefNo8", request.RefNo8);
+            _database.AddInParameter(dbCommand, "@RefNo9", request.RefNo9);
+            _database.AddInParameter(dbCommand, "@RefNo10", request.RefNo10);
+            _database.AddInParameter(dbCommand, "@FailureReason", request.FailureReason);
+            _database.AddInParameter(dbCommand, "@status", request.status);
+            _database.AddInParameter(dbCommand, "@UpdatedBy", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", 100);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputString(dbCommand);
+
+            return outputstr;
+
+        }
+
     }
 }

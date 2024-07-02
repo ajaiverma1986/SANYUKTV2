@@ -47,5 +47,25 @@ namespace SANYUKT.Provider
             }
             return avail;
         }
+        public async Task<long> AddNewBenficiary(AddBenficiaryRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+          
+            outputresponse = await _repository.AddNewBenficiary(request,serviceUser);
+            
+            return outputresponse;
+        }
+        public async Task<List<BenficiaryResponse>> GetAllBenficiary(ListBenficaryRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            return await _repository.GetAllBenficiary(request, serviceUser);
+        }
+        public async Task<long> ChangeBenficairyStatus(BenficaryChangeStatusRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+
+            outputresponse = await _repository.ChangeBenficairyStatus(request, serviceUser);
+
+            return outputresponse;
+        }
     }
 }

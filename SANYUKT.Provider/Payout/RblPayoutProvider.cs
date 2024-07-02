@@ -1,12 +1,16 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto.Agreement.Srp;
+using Org.BouncyCastle.Ocsp;
 using SANYUKT.Commonlib.Cache;
 using SANYUKT.Configuration;
 using SANYUKT.Datamodel.Common;
 using SANYUKT.Datamodel.Entities;
 using SANYUKT.Datamodel.Entities.Authorization;
 using SANYUKT.Datamodel.Entities.RblPayout;
+using SANYUKT.Datamodel.Entities.Transactions;
+using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.RblPayoutRequest;
 using SANYUKT.Datamodel.RblPayoutResponse;
@@ -31,21 +35,23 @@ namespace SANYUKT.Provider.Payout
     {
         public readonly TransactionProvider _provider = null;
         public readonly UserDetailsProvider _userprovider= null;
+        public readonly CommonProvider _commonProvider = null;
         public RblPayoutProvider() {
             _provider = new TransactionProvider();
             _userprovider= new UserDetailsProvider();
+            _commonProvider= new CommonProvider();
         }
         public async Task<SimpleResponse> GetBalalce(RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             AccountBalalnceRequest requestreq = new AccountBalalnceRequest();
-
+            RblResponse  resp=new RblResponse ();
             BaseTransactionRequest request1 =new BaseTransactionRequest();
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = "API";
-            request1.partnerid = 1;
-            request1.partnerreferenceno = "ABC000001";
-            request1.partnerretailorid = "C10000001";
+            request1.partnerid = serviceUser.UserMasterID;
+            request1.partnerreferenceno = objp.PartnerRefNo;
+            request1.partnerretailorid = objp.PartnerRetailorId;
             
 
 
@@ -84,6 +90,60 @@ namespace SANYUKT.Provider.Payout
             request.Content = content;
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
+            await _commonProvider.ApilogResponse("RBL Payout Balalnce Enq", fullurl, "", jsonstr, response.Result.ToString());
+            GetAccbalResponse nnn = new GetAccbalResponse();
+            UpdateNonfinacialRequest request2 = new UpdateNonfinacialRequest();
+            if (response1.StatusCode == HttpStatusCode.OK)
+            {
+                string jsonData = JsonConvert.SerializeObject(response.Result);
+                dynamic jsonn = JsonConvert.DeserializeObject(jsonData);
+
+                string strRemSlash = jsonn.Replace("\"", "\'");
+                string strRemNline = strRemSlash.Replace("\n", " ");
+                // Time to desrialize it to convert it into an object class.
+                nnn = JsonConvert.DeserializeObject<GetAccbalResponse>(@strRemNline);
+                resp.Status = nnn.getAccountBalanceRes.Header.Status;
+                resp.ChanelPartnerRefNo = objp.PartnerRefNo;
+                resp.ErorrDescription = nnn.getAccountBalanceRes.Header.Error_Desc;
+                resp.ErrorCode = nnn.getAccountBalanceRes.Header.Error_Cde;
+                resp.TransactionId = nnn.getAccountBalanceRes.Header.TranID;
+
+                request2.errorcode = resp.ErrorCode;
+                request2.errorDescrtiopn = resp.ErorrDescription;
+                request2.Txncode = resp.TransactionId;
+                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+            }
+            else if (response1.StatusCode == HttpStatusCode.Unauthorized)
+            {
+
+                resp.Status = "Unauthorized";
+                resp.ChanelPartnerRefNo = objp.PartnerRefNo;
+                resp.ErorrDescription = "";
+                resp.ErrorCode = response1.ReasonPhrase;
+               resp.TransactionId = ha.TranID;
+
+                request2.errorcode = response1.ReasonPhrase;
+                request2.errorDescrtiopn = response1.ReasonPhrase;
+                request2.Txncode = ha.TranID;
+                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+
+            }
+            else if (response1.StatusCode == HttpStatusCode.InternalServerError)
+            {
+
+                resp.Status = "InternalServerError";
+                resp.ChanelPartnerRefNo = objp.PartnerRefNo;
+                resp.ErorrDescription = "";
+                resp.ErrorCode = response1.ReasonPhrase;
+                resp.TransactionId = ha.TranID;
+
+                request2.errorcode = response1.ReasonPhrase;
+                request2.errorDescrtiopn = response1.ReasonPhrase;
+                request2.Txncode = ha.TranID;
+                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+
+            }
+            response .Result = resp;
 
             return response;
         }
@@ -92,10 +152,50 @@ namespace SANYUKT.Provider.Payout
         {
             PaymentRequest requestreq = new PaymentRequest();
             SimpleResponse response = new SimpleResponse();
+            RblTransactionResponse resp = new RblTransactionResponse();
+            decimal txnFee = 0;
+            decimal Margin=0;
+            SevicechargeRequest sevicechargeRequest = new SevicechargeRequest();
+            sevicechargeRequest.ServiceId = 1;
+            sevicechargeRequest.AgencyId=1;
+            sevicechargeRequest.Amount= Convert.ToDecimal(req.Amount);
 
+            SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
+            sevicechargeResponse = await _provider.GetServiceChargeDetail(sevicechargeRequest);
+            if(sevicechargeResponse == null)
+            {
+                response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                return response;
+            }
+            if(sevicechargeResponse.SlabType == 1)
+            {
+                if (sevicechargeResponse.CalculationType == 1)
+                {
+                    txnFee = sevicechargeResponse.CalculationValue;
+                    Margin = 0;
+                }
+                else
+                {
+                    txnFee = sevicechargeResponse.CalculationValue*Convert.ToDecimal(req.Amount);
+                    Margin = 0;
+                }
+            }
+           else
+            {
+                if (sevicechargeResponse.CalculationType == 1)
+                {
+                    txnFee = 0;
+                    Margin = sevicechargeResponse.CalculationValue;
+                }
+                else
+                {
+                    txnFee = 0;
+                    Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                }
+            }
 
             bool isavaillimit = false;
-            isavaillimit =await _userprovider.CheckAvailableBalance(Convert.ToDecimal( req.Amount), 0, serviceUser);
+            isavaillimit =await _userprovider.CheckAvailableBalance(Convert.ToDecimal( req.Amount), txnFee, serviceUser);
             if (isavaillimit)
             {
                 response.SetError(ErrorCodes.INSUFFICIENT_LIMIT);
@@ -114,6 +214,8 @@ namespace SANYUKT.Provider.Payout
             request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = req.PartnerRefNo;
             request1.TxnType = "D";
+            request1.txnFee = txnFee;
+            request1.margincom = Margin;
             TransactionResponse transactionResponse=new TransactionResponse ();
 
              transactionResponse = await _provider.NewTransaction(request1, serviceUser);
@@ -131,6 +233,33 @@ namespace SANYUKT.Provider.Payout
             {
                 response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
+            }
+            long benid = 0;
+            if (req.BenficiaryId == null && req.BenficiaryId=="0")
+            {
+                if(req.Ben_Acct_No=="")
+                {
+                    response.SetError(ErrorCodes.BEN_DETAILS_MISS);
+                    return response;
+                }
+            }
+            else
+            {
+                AddBenficiaryRequest objb= new AddBenficiaryRequest ();
+                objb.BenBankcode = req.Ben_BankCd;
+                objb.BenBranchCode = req.Ben_BranchCd;
+                objb.BenAddress = "";
+                objb.BenAccountNo = req.Ben_Acct_No;
+                objb.BenbankName = req.Ben_BankName;
+                objb.BenficiaryName = req.Ben_Name;
+                objb.BenIfsccode = req.Ben_IFSC;
+                objb.BenMobile=req.Ben_Mobile;
+                benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
+                if(benid == 0)
+                {
+                    response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
+                    return response;
+                }
             }
 
 
@@ -151,10 +280,10 @@ namespace SANYUKT.Provider.Payout
             bp.Ben_BranchCd = req.Ben_BranchCd;
             bp.Ben_BankCd = req.Ben_BankCd;
             bp.Ben_Address = "";
-            bp.Issue_BranchCd = req.Issue_BranchCd;
+            bp.Issue_BranchCd ="";
             bp.Ben_Acct_No = req.Ben_Acct_No;
             bp.Ben_TrnParticulars = req.Ben_TrnParticulars;
-            bp.Ben_PartTrnRmks = req.Ben_PartTrnRmks;
+            bp.Ben_PartTrnRmks = "SINGLE PAYMENT";
             bp.Debit_PartTrnRmks = "";
             bp.Ben_BankName = req.Ben_BankName;
             bp.Remarks = req.Remarks;
@@ -165,7 +294,7 @@ namespace SANYUKT.Provider.Payout
             bp.Debit_Acct_Name = SANYUKTApplicationConfiguration.Instance.RblAccountName ;
             bp.Debit_Acct_No = SANYUKTApplicationConfiguration.Instance.RblAccountNo;
             bp.Debit_IFSC =  SANYUKTApplicationConfiguration.Instance.RblPayoutIfsccode;
-            bp.Debit_Mobile = SANYUKTApplicationConfiguration.Instance.RblPayoutIfsccode;
+            bp.Debit_Mobile = SANYUKTApplicationConfiguration.Instance.RblPayoutMobile;
             bp.Debit_TrnParticulars = req.Debit_TrnParticulars;
             bp.Mode_of_Pay = req.Mode_of_Pay;
             spr.Body = bp;
@@ -187,13 +316,134 @@ namespace SANYUKT.Provider.Payout
             var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(authenticationString));
             request.Headers.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
 
-
-            //make the request
             string jsonstr = JsonConvert.SerializeObject(requestreq, Formatting.Indented);
             var content = new StringContent(jsonstr);
             request.Content = content;
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
+            await _commonProvider.ApilogResponse("RBL Payout Transaction", fullurl, "", jsonstr, response.Result.ToString());
+            SingleRblPaymentResponse nnn = new SingleRblPaymentResponse();
+            UpdateTransactionStatusRequest request3 = new UpdateTransactionStatusRequest();
+            if (response1.StatusCode == HttpStatusCode.OK)
+            {
+                string jsonData = JsonConvert.SerializeObject(response.Result);
+                dynamic jsonn = JsonConvert.DeserializeObject(jsonData);
+
+
+
+                string strRemSlash = jsonn.Replace("\"", "\'");
+                string strRemNline = strRemSlash.Replace("\n", " ");
+                // Time to desrialize it to convert it into an object class.
+                nnn = JsonConvert.DeserializeObject<SingleRblPaymentResponse>(@strRemNline);
+                resp.Status = nnn.Single_Payment_Corp_Resp.Header.Status;
+                resp.ChanelPartnerRefNo = req.PartnerRefNo;
+                resp.ErorrDescription = nnn.Single_Payment_Corp_Resp.Header.Error_Desc;
+                resp.ErrorCode = nnn.Single_Payment_Corp_Resp.Header.Error_Cde;
+                resp.TransactionId = nnn.Single_Payment_Corp_Resp.Header.TranID;
+                resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.channelpartnerrefno;
+                resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
+                resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
+                resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
+                resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
+                resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
+                resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+
+                request3.RefNo = resp.BankRefNo;
+                request3.RelatedReference = resp.RefNo;
+                request3.RefNo1 = resp.RRN;
+                request3.RefNo2 = resp.Ben_Acct_No;
+                request3.RefNo3 = resp.BenIFSC;
+                request3.BankTxnDatetime = resp.Txn_Time;
+                request3.RefNo4 = resp.Status;
+                request3.RefNo5 = resp.Amount;
+                request3.RefNo6= resp.ErrorCode;
+                request3.RefNo7 = req.Mode_of_Pay;
+                request3.RefNo10 = resp.ErrorCode;
+                request3.FailureReason = resp.ErorrDescription;
+                request3.Transactioncode = resp.TransactionId;
+                if(resp.Status== "Failure")
+                {
+                    request3.status = 4;
+                }
+                else if(resp.Status == "In process")
+                {
+                    request3.status = 3;
+                }
+                else if (resp.Status == "Success")
+                {
+                    request3.status = 2;
+                }
+                await _provider.NewTransactionUpdateStatus(request3, serviceUser);
+            }
+            else if (response1.StatusCode == HttpStatusCode.Unauthorized)
+            {
+
+                
+                resp.Status = "Unauthorized";
+                resp.ChanelPartnerRefNo = req.PartnerRefNo;
+                resp.ErorrDescription = "";
+                resp.ErrorCode = response1.ReasonPhrase;
+                resp.TransactionId = hp.TranID;
+                resp.RefNo = "";
+                resp.RRN ="";
+                resp.BenIFSC = "";
+                resp.Ben_Acct_No = "";
+                resp.Amount = "";
+                resp.Txn_Time = "";
+                resp.BankRefNo = "";
+
+                request3.RefNo = "";
+                request3.RelatedReference ="";
+                request3.RefNo1 = "";
+                request3.RefNo2 ="";
+                request3.RefNo3 = "";
+                request3.BankTxnDatetime = "";
+                request3.RefNo4 = "Unauthorized";
+                request3.RefNo5 = req.Amount;
+                request3.RefNo6 = "Unauthorized";
+                request3.RefNo7 = req.Mode_of_Pay;
+                request3.RefNo10 = "Unauthorized";
+                request3.FailureReason = "";
+                request3.Transactioncode = resp.TransactionId;
+                request3.status = 4;
+                await _provider.NewTransactionUpdateStatus(request3, serviceUser);
+
+            }
+            else if (response1.StatusCode == HttpStatusCode.InternalServerError)
+            {
+
+
+                resp.Status = "InternalServerError";
+                resp.ChanelPartnerRefNo = req.PartnerRefNo;
+                resp.ErorrDescription = "";
+                resp.ErrorCode = response1.ReasonPhrase;
+                resp.TransactionId = hp.TranID;
+                resp.RefNo = "";
+                resp.RRN = "";
+                resp.BenIFSC = "";
+                resp.Ben_Acct_No = "";
+                resp.Amount = "";
+                resp.Txn_Time = "";
+                resp.BankRefNo = "";
+
+                request3.RefNo = "";
+                request3.RelatedReference = "";
+                request3.RefNo1 = "";
+                request3.RefNo2 = "";
+                request3.RefNo3 = "";
+                request3.BankTxnDatetime = "";
+                request3.RefNo4 = "InternalServerError";
+                request3.RefNo5 = req.Amount;
+                request3.RefNo6 = "InternalServerError";
+                request3.RefNo7 = req.Mode_of_Pay;
+                request3.RefNo10 = "InternalServerError";
+                request3.FailureReason = "";
+                request3.Transactioncode = resp.TransactionId;
+                request3.status = 4;
+                await _provider.NewTransactionUpdateStatus(request3, serviceUser);
+
+            }
+            response.Result = resp;
 
             return response;
         }
@@ -249,6 +499,7 @@ namespace SANYUKT.Provider.Payout
             request.Content = content;
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
+            await _commonProvider.ApilogResponse("RBL Payout Transaction Status", fullurl, "", jsonstr, response.Result.ToString());
             GetsinglePaymentReponse nnn=new GetsinglePaymentReponse ();
             UpdateNonfinacialRequest request2 =new UpdateNonfinacialRequest ();
             if (response1.StatusCode == HttpStatusCode.OK)
@@ -275,6 +526,21 @@ namespace SANYUKT.Provider.Payout
             {
                
                 resp.Status = "Unauthorized";
+                resp.ChanelPartnerRefNo = obbb.PartnerRefNo;
+                resp.ErorrDescription = "";
+                resp.ErrorCode = response1.ReasonPhrase;
+                resp.TransactionId = requestreq.get_Single_Payment_Status_Corp_Req.Header.TranID;
+
+                request2.errorcode = response1.ReasonPhrase;
+                request2.errorDescrtiopn = response1.ReasonPhrase;
+                request2.Txncode = requestreq.get_Single_Payment_Status_Corp_Req.Header.TranID;
+                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+
+            }
+            else if (response1.StatusCode == HttpStatusCode.InternalServerError)
+            {
+
+                resp.Status = "InternalServerError";
                 resp.ChanelPartnerRefNo = obbb.PartnerRefNo;
                 resp.ErorrDescription = "";
                 resp.ErrorCode = response1.ReasonPhrase;

@@ -1,4 +1,5 @@
 ﻿using SANYUKT.Datamodel.RblPayoutRequest;
+using SANYUKT.Datamodel.Shared;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -41,7 +42,47 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
         public string ErrorCode { get; set; }
         public string ErorrDescription { get; set; }
         public string ChanelPartnerRefNo { get; set; }
+       
+    }
+    public class RblTransactionResponse: RblResponse
+    {
+        public string BankRefNo { get; set; }
+        public string RRN { get; set; }
+        public string Ben_Acct_No { get; set; }
+        public string Amount { get; set; }
+        public string BenIFSC { get; set; }
+        public string Txn_Time { get; set; }
+        public string RefNo { get; set; }
 
+    }
+    public class SingleRblPaymentResponse
+    {
+        public SinglePaymentCorpResp Single_Payment_Corp_Resp { get; set; }
+    }
+    public class SinglePaymentCorpResp
+    {
+        public Header Header { get; set; }
+        public BodySingle Body { get; set; }
+        public Signature Signature { get; set; }
+    }
+    public class BodySingle
+    {
+        public string channelpartnerrefno { get; set; }
+        public string RRN { get; set; }
+        public string Ben_Acct_No { get; set; }
+        public string Amount { get; set; }
+        public string BenIFSC { get; set; }
+        public string Txn_Time { get; set; }
+        public string RefNo { get; set; }
+    }
+    public class GetAccbalResponse
+    {
+        public GetAccountBalanceRes getAccountBalanceRes { get; set; }
+    }
+    public class GetAccountBalanceRes
+    {
+        public Header Header { get; set; }
+        public Signature Signature { get; set; }
     }
 
 }

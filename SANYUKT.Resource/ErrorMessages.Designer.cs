@@ -248,5 +248,23 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_119", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Charge Structure not Define.
+        /// </summary>
+        public static string CODE_120 {
+            get {
+                return ResourceManager.GetString("CODE_120", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary Details Missing.
+        /// </summary>
+        public static string CODE_121 {
+            get {
+                return ResourceManager.GetString("CODE_121", resourceCulture);
+            }
+        }
     }
 }

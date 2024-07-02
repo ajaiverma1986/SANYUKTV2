@@ -180,4 +180,10 @@
   <data name="CODE_119" xml:space="preserve">
     <value>Transaction Not Done Please try again</value>
   </data>
+  <data name="CODE_120" xml:space="preserve">
+    <value>Service Charge Structure not Define</value>
+  </data>
+  <data name="CODE_121" xml:space="preserve">
+    <value>Benficiary Details Missing</value>
+  </data>
 </root>

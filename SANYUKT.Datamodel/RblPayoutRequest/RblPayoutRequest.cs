@@ -36,6 +36,7 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
     public class SinglePaymentRequest : RblPayoutBasicchild
     {
         public string Amount { get; set; }
+        public string BenficiaryId { get; set; }
         public string Debit_TrnParticulars { get; set; }
         public string Ben_IFSC { get; set; }
         public string Ben_Acct_No { get; set; }
@@ -45,8 +46,6 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
         public string Ben_BranchCd { get; set; }
         public string Ben_Mobile { get; set; }
         public string Ben_TrnParticulars { get; set; }
-        public string Ben_PartTrnRmks { get; set; }
-        public string Issue_BranchCd { get; set; }
         public string Mode_of_Pay { get; set; }
         public string Remarks { get; set; }
 
