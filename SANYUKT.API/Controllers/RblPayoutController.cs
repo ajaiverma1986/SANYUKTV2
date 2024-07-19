@@ -68,7 +68,7 @@ namespace SANYUKT.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [AuditApi(EventTypeName = "POST RblPayoutController/PayoutTransactionwithoutBen", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
-        public async Task<IActionResult> DirectPay([FromBody] SinglePaymentRequest request)
+        public async Task<IActionResult> DirectPay([FromBody] SinglePaymentRequestFT request)
         {
             UserLoginResponse response = new UserLoginResponse();
 

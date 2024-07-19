@@ -210,4 +210,13 @@
   <data name="CODE_129" xml:space="preserve">
     <value>Invalid Benficiary</value>
   </data>
+  <data name="CODE_130" xml:space="preserve">
+    <value>Invalid Payment Mode</value>
+  </data>
+  <data name="CODE_131" xml:space="preserve">
+    <value>Invalid Amount</value>
+  </data>
+  <data name="CODE_132" xml:space="preserve">
+    <value>RTGS Transaction Amount must be more than 200000</value>
+  </data>
 </root>

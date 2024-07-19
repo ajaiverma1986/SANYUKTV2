@@ -338,5 +338,32 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_129", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Payment Mode.
+        /// </summary>
+        public static string CODE_130 {
+            get {
+                return ResourceManager.GetString("CODE_130", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Amount.
+        /// </summary>
+        public static string CODE_131 {
+            get {
+                return ResourceManager.GetString("CODE_131", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RTGS Transaction Amount must be more than 200000.
+        /// </summary>
+        public static string CODE_132 {
+            get {
+                return ResourceManager.GetString("CODE_132", resourceCulture);
+            }
+        }
     }
 }
