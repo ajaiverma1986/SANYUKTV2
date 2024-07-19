@@ -46,10 +46,7 @@ namespace SANYUKT.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddMvc().AddJsonOptions(options =>
-            //{
-            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            //});
+            
             services.AddControllers().AddJsonOptions(options =>
               {
                   options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -60,7 +57,7 @@ namespace SANYUKT.API
             {
                 options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
-
+            
             
             services.AddSingleton<SANYUKTExceptionFilterService>();
             services.AddSingleton<ILoggingService, LoggingService>();
@@ -109,11 +106,7 @@ namespace SANYUKT.API
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c => 
-            //{
-            //    c.SwaggerEndpoint("../swagger/v1/swagger.json", "FIA Neo Bank API");
-            //});
+            
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -222,7 +215,7 @@ namespace SANYUKT.API
                 }
                 await next();
             });
-
+           
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

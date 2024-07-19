@@ -19,7 +19,7 @@ namespace SANYUKT.Configuration
         static SANYUKTApplicationConfiguration()
         {
             IConfigurationBuilder builder = new ConfigurationBuilder();
-
+            
             if (File.Exists(Directory.GetCurrentDirectory() + "\\" + "appsettings.development.json"))
                 builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.development.json", optional: true, reloadOnChange: true);
             else
@@ -43,6 +43,13 @@ namespace SANYUKT.Configuration
             get
             {
                 return configuration.GetConnectionString("FIADB");
+            }
+        }
+        public string FIAAPIUrl
+        {
+            get
+            {
+                return configuration.GetConnectionString("FIAAPIUrl");
             }
         }
 
