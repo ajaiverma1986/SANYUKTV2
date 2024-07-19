@@ -544,7 +544,7 @@ namespace SANYUKT.Provider.Payout
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
             await _commonProvider.ApilogResponse("RBL Payout Transaction", fullurl, "", jsonstr, response.Result.ToString());
-            SingleRblPaymentResponse nnn = new SingleRblPaymentResponse();
+            SinglePaymentResponseFT nnn = new SinglePaymentResponseFT();
             UpdateTransactionStatusRequest request3 = new UpdateTransactionStatusRequest();
             if (response1.StatusCode == HttpStatusCode.OK)
             {
@@ -556,7 +556,7 @@ namespace SANYUKT.Provider.Payout
                 string strRemSlash = jsonn.Replace("\"", "\'");
                 string strRemNline = strRemSlash.Replace("\n", " ");
                 // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<SingleRblPaymentResponse>(@strRemNline);
+                nnn = JsonConvert.DeserializeObject<SinglePaymentResponseFT>(@strRemNline);
                 resp.Status = nnn.Single_Payment_Corp_Resp.Header.Status;
                 resp.ChanelPartnerRefNo = req.PartnerRefNo;
                 resp.ErorrDescription = nnn.Single_Payment_Corp_Resp.Header.Error_Desc;
@@ -564,19 +564,20 @@ namespace SANYUKT.Provider.Payout
                 resp.TransactionId = nnn.Single_Payment_Corp_Resp.Header.TranID;
                 if (resp.Status == "Success")
                 {
-                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.channelpartnerrefno;
+                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+                    resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
+                    resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
+                    resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
+                    resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
+                    resp.BankRefNo = "";
                 }
                 else
                 {
                     resp.RefNo = "";
                 }
 
-                resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
-                resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
-                resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
-                resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
-                resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
-                resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+                resp.RRN = "";
+                
 
                 request3.RefNo = resp.BankRefNo;
                 request3.RelatedReference = resp.RefNo;
@@ -946,7 +947,7 @@ namespace SANYUKT.Provider.Payout
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
             await _commonProvider.ApilogResponse("RBL Payout Transaction", fullurl, "", jsonstr, response.Result.ToString());
-            SingleRblPaymentResponse nnn = new SingleRblPaymentResponse();
+            SinglePaymentResponseNEFT nnn = new SinglePaymentResponseNEFT();
             UpdateTransactionStatusRequest request3 = new UpdateTransactionStatusRequest();
             if (response1.StatusCode == HttpStatusCode.OK)
             {
@@ -958,7 +959,7 @@ namespace SANYUKT.Provider.Payout
                 string strRemSlash = jsonn.Replace("\"", "\'");
                 string strRemNline = strRemSlash.Replace("\n", " ");
                 // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<SingleRblPaymentResponse>(@strRemNline);
+                nnn = JsonConvert.DeserializeObject<SinglePaymentResponseNEFT>(@strRemNline);
                 resp.Status = nnn.Single_Payment_Corp_Resp.Header.Status;
                 resp.ChanelPartnerRefNo = req.PartnerRefNo;
                 resp.ErorrDescription = nnn.Single_Payment_Corp_Resp.Header.Error_Desc;
@@ -966,19 +967,21 @@ namespace SANYUKT.Provider.Payout
                 resp.TransactionId = nnn.Single_Payment_Corp_Resp.Header.TranID;
                 if (resp.Status == "Success")
                 {
-                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.channelpartnerrefno;
+                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+                    resp.RRN = "";
+                    resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
+                    resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
+                    resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
+                    resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
+                    resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.UTRNo;
+                    resp.PoNum = nnn.Single_Payment_Corp_Resp.Body.PONum;
                 }
                 else
                 {
                     resp.RefNo = "";
                 }
 
-                resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
-                resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
-                resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
-                resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
-                resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
-                resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+               
 
                 request3.RefNo = resp.BankRefNo;
                 request3.RelatedReference = resp.RefNo;
@@ -990,6 +993,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo5 = resp.Amount;
                 request3.RefNo6 = resp.ErrorCode;
                 request3.RefNo7 = req.Mode_of_Pay;
+                request3.RefNo8 = resp.PoNum;
                 request3.RefNo10 = resp.ErrorCode;
                 request3.FailureReason = resp.ErorrDescription;
                 request3.Transactioncode = resp.TransactionId;
@@ -1023,6 +1027,7 @@ namespace SANYUKT.Provider.Payout
                 resp.Amount = "";
                 resp.Txn_Time = "";
                 resp.BankRefNo = "";
+                resp.PoNum = "";
 
                 request3.RefNo = "";
                 request3.RelatedReference = "";
@@ -1057,6 +1062,7 @@ namespace SANYUKT.Provider.Payout
                 resp.Amount = "";
                 resp.Txn_Time = "";
                 resp.BankRefNo = "";
+                resp.PoNum = "";
 
                 request3.RefNo = "";
                 request3.RelatedReference = "";
@@ -1352,7 +1358,7 @@ namespace SANYUKT.Provider.Payout
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
             await _commonProvider.ApilogResponse("RBL Payout Transaction", fullurl, "", jsonstr, response.Result.ToString());
-            SingleRblPaymentResponse nnn = new SingleRblPaymentResponse();
+            SinglePaymentResponseNEFT nnn = new SinglePaymentResponseNEFT();
             UpdateTransactionStatusRequest request3 = new UpdateTransactionStatusRequest();
             if (response1.StatusCode == HttpStatusCode.OK)
             {
@@ -1364,7 +1370,7 @@ namespace SANYUKT.Provider.Payout
                 string strRemSlash = jsonn.Replace("\"", "\'");
                 string strRemNline = strRemSlash.Replace("\n", " ");
                 // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<SingleRblPaymentResponse>(@strRemNline);
+                nnn = JsonConvert.DeserializeObject<SinglePaymentResponseNEFT>(@strRemNline);
                 resp.Status = nnn.Single_Payment_Corp_Resp.Header.Status;
                 resp.ChanelPartnerRefNo = req.PartnerRefNo;
                 resp.ErorrDescription = nnn.Single_Payment_Corp_Resp.Header.Error_Desc;
@@ -1372,19 +1378,21 @@ namespace SANYUKT.Provider.Payout
                 resp.TransactionId = nnn.Single_Payment_Corp_Resp.Header.TranID;
                 if (resp.Status == "Success")
                 {
-                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.channelpartnerrefno;
+                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+                    resp.RRN = "";
+                    resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
+                    resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
+                    resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
+                    resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
+                    resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+                    resp.PoNum = nnn.Single_Payment_Corp_Resp.Body.PONum;
                 }
                 else
                 {
                     resp.RefNo = "";
                 }
 
-                resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
-                resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
-                resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
-                resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
-                resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
-                resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+               
 
                 request3.RefNo = resp.BankRefNo;
                 request3.RelatedReference = resp.RefNo;
@@ -1396,6 +1404,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo5 = resp.Amount;
                 request3.RefNo6 = resp.ErrorCode;
                 request3.RefNo7 = req.Mode_of_Pay;
+                request3.RefNo8 = resp.PoNum;
                 request3.RefNo10 = resp.ErrorCode;
                 request3.FailureReason = resp.ErorrDescription;
                 request3.Transactioncode = resp.TransactionId;
@@ -1415,8 +1424,6 @@ namespace SANYUKT.Provider.Payout
             }
             else if (response1.StatusCode == HttpStatusCode.Unauthorized)
             {
-
-
                 resp.Status = "Unauthorized";
                 resp.ChanelPartnerRefNo = req.PartnerRefNo;
                 resp.ErorrDescription = "";
@@ -1429,6 +1436,7 @@ namespace SANYUKT.Provider.Payout
                 resp.Amount = "";
                 resp.Txn_Time = "";
                 resp.BankRefNo = "";
+
 
                 request3.RefNo = "";
                 request3.RelatedReference = "";
@@ -1752,7 +1760,7 @@ namespace SANYUKT.Provider.Payout
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
             await _commonProvider.ApilogResponse("RBL Payout Transaction", fullurl, "", jsonstr, response.Result.ToString());
-            SingleRblPaymentResponse nnn = new SingleRblPaymentResponse();
+            SinglePaymentResponseIMPS nnn = new SinglePaymentResponseIMPS();
             UpdateTransactionStatusRequest request3 = new UpdateTransactionStatusRequest();
             if (response1.StatusCode == HttpStatusCode.OK)
             {
@@ -1764,7 +1772,7 @@ namespace SANYUKT.Provider.Payout
                 string strRemSlash = jsonn.Replace("\"", "\'");
                 string strRemNline = strRemSlash.Replace("\n", " ");
                 // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<SingleRblPaymentResponse>(@strRemNline);
+                nnn = JsonConvert.DeserializeObject<SinglePaymentResponseIMPS>(@strRemNline);
                 resp.Status = nnn.Single_Payment_Corp_Resp.Header.Status;
                 resp.ChanelPartnerRefNo = req.PartnerRefNo;
                 resp.ErorrDescription = nnn.Single_Payment_Corp_Resp.Header.Error_Desc;
@@ -1773,18 +1781,25 @@ namespace SANYUKT.Provider.Payout
                 if (resp.Status == "Success")
                 {
                     resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.channelpartnerrefno;
+                    resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
+                    resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
+                    resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
+                    resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
+                    resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
+                    resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
                 }
                 else
                 {
-                    resp.RefNo = "";
+                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.channelpartnerrefno;
+                    resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
+                    resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
+                    resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
+                    resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
+                    resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
+                    resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
                 }
 
-                resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
-                resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
-                resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
-                resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
-                resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
-                resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+              
 
                 request3.RefNo = resp.BankRefNo;
                 request3.RelatedReference = resp.RefNo;

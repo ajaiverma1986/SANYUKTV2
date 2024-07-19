@@ -24,7 +24,73 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
         public string Error_Cde { get; set; }
         public string Error_Desc { get; set; }
     }
+    public class SinglePaymentBodyResponseFT
+    {
+        public string RefNo { get; set; }
+        public string Ben_Acct_No { get; set; }
+        public string Amount { get; set; }
+        public string BenIFSC { get; set; }
+        public string Txn_Time { get; set; }
 
+    }
+    public class SinglePaymentResponseFT
+    {
+        public Single_Payment_Corp_RespFT Single_Payment_Corp_Resp { get; set; }
+
+    }
+    public class Single_Payment_Corp_RespFT
+    {
+        public Header Header { get; set; }
+        public SinglePaymentBodyResponseFT Body { get; set; }
+        public Signature Signature { get; set; }
+
+    }
+    public class SinlePaymentBodyResponseNEFT
+    {
+        public string RefNo { get; set; }
+        public string UTRNo { get; set; }
+        public string PONum { get; set; }
+        public string Ben_Acct_No { get; set; }
+        public string Amount { get; set; }
+        public string BenIFSC { get; set; }
+        public string Txn_Time { get; set; }
+
+    }
+    public class Single_Payment_Corp_RespNEFT
+    {
+        public Header Header { get; set; }
+        public SinlePaymentBodyResponseNEFT Body { get; set; }
+        public Signature Signature { get; set; }
+
+    }
+    public class SinglePaymentResponseNEFT
+    {
+        public Single_Payment_Corp_RespNEFT Single_Payment_Corp_Resp { get; set; }
+
+    }
+    public class SinlePaymentBodyResponseIMPS
+    {
+        public string RefNo { get; set; }
+        public string channelpartnerrefno { get; set; }
+        public string RRN { get; set; }
+        public string Ben_Acct_No { get; set; }
+        public string Amount { get; set; }
+        public string BenIFSC { get; set; }
+        public string Txn_Time { get; set; }
+
+    }
+    public class Single_Payment_Corp_RespIMPS
+    {
+        public Header Header { get; set; }
+        public SinlePaymentBodyResponseIMPS Body { get; set; }
+        public Signature Signature { get; set; }
+
+    }
+    public class SinglePaymentResponseIMPS
+    {
+        public Single_Payment_Corp_RespIMPS Single_Payment_Corp_Resp { get; set; }
+
+    }
     public class GetsinglePaymentReponse
     {
         public GetSinglePaymentStatusCorpRes get_Single_Payment_Status_Corp_Res { get; set; }
@@ -58,6 +124,7 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
         public string BenIFSC { get; set; }
         public string Txn_Time { get; set; }
         public string RefNo { get; set; }
+        public string PoNum { get; set; }
 
     }
     public class SingleRblPaymentResponse
