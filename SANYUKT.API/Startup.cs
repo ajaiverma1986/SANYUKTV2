@@ -116,7 +116,7 @@ namespace SANYUKT.API
             });
             
             app.UseRouting();
-            
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.Use(async (context, next) =>
             {
                 ISANYUKTServiceUser serviceUser = context.RequestServices.GetRequiredService<ISANYUKTServiceUser>();
