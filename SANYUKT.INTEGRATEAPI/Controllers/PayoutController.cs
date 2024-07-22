@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using Audit.WebApi;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SANYUKT.Commonlib.Utility;
 using SANYUKT.Connector;
 using SANYUKT.Datamodel.Common;
 using SANYUKT.Datamodel.DTO.Request;
 using SANYUKT.Datamodel.DTO.Response;
+using SANYUKT.Datamodel.Entities.Users;
+using SANYUKT.Datamodel.Shared;
 using SANYUKT.INTEGRATEAPI.Shared;
 using System.Linq;
 using System.Security.Claims;
@@ -31,7 +35,7 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
         /// </summary>
         /// <param name="userLoginRequest"></param>
         /// <returns></returns>
-        [Route("Payout/Login")]
+        [Route("Payout/GenerateToken")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest userLoginRequest)
         {
@@ -56,6 +60,46 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
                 this.CurrentLoggedInUser.UserToken = userLoginResponse.UserToken;
             }
             return userLoginResponse;
+        }
+        /// <summary>
+        /// Add Benficiary Request
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        [Route("Payout/AddBenficiary")]
+        [HttpPost]
+        public async Task<IActionResult> AddBenficiary([FromBody] AddBenficiaryRequest request)
+        {
+            SimpleResponse response = (await _Service.AddBenficiary(request, this.CurrentLoggedInUser));
+
+            if (response == null)
+            {
+                response = new SimpleResponse();
+                response.SetError(ErrorCodes.SERVER_ERROR);
+                return Json(response);
+            }
+
+            return Json(response);
+        }
+        /// <summary>
+        /// Add Benficiary Request
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        [Route("Payout/AddBenficiary")]
+        [HttpPost]
+        public async Task<IActionResult> ListBenficiary([FromBody] ListBenficaryRequest request)
+        {
+            SimpleResponse response = (await _Service.ListBenficiary(request, this.CurrentLoggedInUser));
+
+            if (response == null)
+            {
+                response = new SimpleResponse();
+                response.SetError(ErrorCodes.SERVER_ERROR);
+                return Json(response);
+            }
+
+            return Json(response);
         }
     }
 }

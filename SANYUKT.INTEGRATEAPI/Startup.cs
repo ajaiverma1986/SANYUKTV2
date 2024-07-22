@@ -1,45 +1,39 @@
 using Audit.SqlServer.Providers;
+using SANYUKT.Configuration;
+using SANYUKT.Datamodel.Common;
+using SANYUKT.Datamodel.Interfaces;
+using SANYUKT.Logging;
+using SANYUKT.INTEGRATEAPI.Shared;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
-using SANYUKT.Configuration;
-using SANYUKT.Datamodel.Common;
-using SANYUKT.Datamodel.Interfaces;
-using SANYUKT.INTEGRATEAPI.Shared;
-using SANYUKT.Logging;
+using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace SANYUKT.INTEGRATEAPI
 {
+
     public class Startup
     {
-      
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             System.Net.ServicePointManager.DefaultConnectionLimit = 10000;
         }
+
         public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            //services.AddMvc().AddJsonOptions(options =>
-            //{
-            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            //});
+
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -52,12 +46,11 @@ namespace SANYUKT.INTEGRATEAPI
                 options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
 
+            services.AddMvcCore().AddApiExplorer();
 
-
-            //services.AddSession(options => {
-            //    options.IdleTimeout = TimeSpan.FromMinutes(10);
-            //});
-            services.AddMemoryCache();
+             services.AddSession();
+            //services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
             services.AddScoped<ISANUKTLoggedInUser, SANYUKTLoggedInUser>();
             services.AddSingleton<SANYUKTExceptionFilterService>();
             services.AddSingleton<ILoggingService, LoggingService>();
@@ -75,9 +68,10 @@ namespace SANYUKT.INTEGRATEAPI
 
            
 
+
             Audit.Core.Configuration.DataProvider = new SqlDataProvider()
             {
-                ConnectionString = SANYUKTApplicationConfiguration.Instance.FIADB,
+                ConnectionString = SANYUKTApplicationConfiguration.Instance.AuditingDB,
                 Schema = "dbo",
                 TableName = "Event",
                 IdColumnName = "EventId",
@@ -89,7 +83,7 @@ namespace SANYUKT.INTEGRATEAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -105,7 +99,6 @@ namespace SANYUKT.INTEGRATEAPI
                 RequestPath = "/Images"
             });
             app.UseRouting();
-
             app.Use(async (context, next) =>
             {
                 ISANUKTLoggedInUser user = context.RequestServices.GetRequiredService<ISANUKTLoggedInUser>();
@@ -117,10 +110,24 @@ namespace SANYUKT.INTEGRATEAPI
                 {
                     user.UserToken = context.Request.Query["usertoken"];
                 }
-               
+
                 if (context.User.Identity.IsAuthenticated)
                 {
-                    
+                    /* Claim userTokenClaim = context.User.Claims.FirstOrDefault(c => (c.Type.Equals(FIAClaimTypes.UserToken, StringComparison.InvariantCultureIgnoreCase)));
+                     if (userTokenClaim != default(Claim))
+                         user.UserToken = userTokenClaim.Value;
+
+                     Claim UserMasterIDClaim = context.User.Claims.FirstOrDefault(c => (c.Type.Equals(FIAClaimTypes.UserMasterID, StringComparison.InvariantCultureIgnoreCase)));
+                     if (UserMasterIDClaim != default(Claim))
+                         user.UserMasterID = Convert.ToInt64(UserMasterIDClaim.Value);
+
+                     //Claim UserTypeClaim = context.User.Claims.FirstOrDefault(c => (c.Type.Equals(FIAClaimTypes.UserType, StringComparison.InvariantCultureIgnoreCase)));
+                     //if(UserTypeClaim != default(Claim))
+                     //    user.UserTypeID = Convert.ToInt32(UserTypeClaim.Value);
+
+                     user.DisplayName = context.User.Claims.FirstOrDefault(c => (c.Type.Equals(ClaimTypes.Name, StringComparison.InvariantCultureIgnoreCase))).Value;
+
+                     user.RolePermissions = context.User.Claims.Where(c => c.Type.Equals(ClaimTypes.Role, StringComparison.InvariantCultureIgnoreCase)).Select(c => c.Value).ToList();*/
                 }
 
                 //Get client ip address
@@ -141,18 +148,20 @@ namespace SANYUKT.INTEGRATEAPI
                 await next();
             });
 
-            //app.UseSession();
+            app.UseSession();
             app.UseCors(cors => { cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin(); });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
-
             });
+
 
         }
     }
+
+
+
+    
 }

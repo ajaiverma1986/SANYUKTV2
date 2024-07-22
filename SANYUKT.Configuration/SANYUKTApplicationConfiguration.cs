@@ -45,11 +45,25 @@ namespace SANYUKT.Configuration
                 return configuration.GetConnectionString("FIADB");
             }
         }
+        public string AuditingDB
+        {
+            get
+            {
+                return configuration.GetConnectionString("AuditingDB");
+            }
+        }
+        public string LoggingDB
+        {
+            get
+            {
+                return configuration.GetConnectionString("LoggingDB");
+            }
+        }
         public string FIAAPIUrl
         {
             get
             {
-                return configuration.GetConnectionString("FIAAPIUrl");
+                return configuration["FIAAPIUrl"];
             }
         }
 
@@ -135,13 +149,7 @@ namespace SANYUKT.Configuration
                 return configuration["CertSslName"];
             }
         }
-        public string LoggingDB
-        {
-            get
-            {
-                return configuration["FIADB"];
-            }
-        }
+       
         public string RblAccountNo
         {
             get
