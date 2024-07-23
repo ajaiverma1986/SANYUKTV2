@@ -2,6 +2,7 @@
 using SANYUKT.Datamodel.DTO.Request;
 using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
+using SANYUKT.Datamodel.RblPayoutRequest;
 using SANYUKT.Datamodel.Shared;
 using System;
 using System.Threading.Tasks;
@@ -37,6 +38,26 @@ namespace SANYUKT.Connector
         public async Task<SimpleResponse> ListBenficiary(ListBenficaryRequest request, ISANUKTLoggedInUser SanyuktLoggedInUser)
         {
             return (await apiHelper.PostAsync<SimpleResponse>("RblPayout/GetAllBenficiary", request, SanyuktLoggedInUser));
+        }
+        /// <summary>
+        /// Direct Payout Transaction 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="SanyuktLoggedInUser"></param>
+        /// <returns>SimpleResponse</returns>
+        public async Task<SimpleResponse> DirectPay(SinglePaymentRequestFT request, ISANUKTLoggedInUser SanyuktLoggedInUser)
+        {
+            return (await apiHelper.PostAsync<SimpleResponse>("RblPayout/DirectPay", request, SanyuktLoggedInUser));
+        }
+        /// <summary>
+        ///  Payout Transaction Status
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="SanyuktLoggedInUser"></param>
+        /// <returns>SimpleResponse</returns>
+        public async Task<SimpleResponse> TransactionStatus(SinglePaymentStatus request, ISANUKTLoggedInUser SanyuktLoggedInUser)
+        {
+            return (await apiHelper.PostAsync<SimpleResponse>("RblPayout/TransactionStatus", request, SanyuktLoggedInUser));
         }
     }
 }

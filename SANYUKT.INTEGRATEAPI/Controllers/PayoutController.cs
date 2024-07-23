@@ -8,6 +8,7 @@ using SANYUKT.Datamodel.Common;
 using SANYUKT.Datamodel.DTO.Request;
 using SANYUKT.Datamodel.DTO.Response;
 using SANYUKT.Datamodel.Entities.Users;
+using SANYUKT.Datamodel.RblPayoutRequest;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.INTEGRATEAPI.Shared;
 using System.Linq;
@@ -91,6 +92,46 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
         public async Task<IActionResult> ListBenficiary([FromBody] ListBenficaryRequest request)
         {
             SimpleResponse response = (await _Service.ListBenficiary(request, this.CurrentLoggedInUser));
+
+            if (response == null)
+            {
+                response = new SimpleResponse();
+                response.SetError(ErrorCodes.SERVER_ERROR);
+                return Json(response);
+            }
+
+            return Json(response);
+        }
+        /// <summary>
+        /// Direct Payout Transaction
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        [Route("Payout/Transaction")]
+        [HttpPost]
+        public async Task<IActionResult> DirectPay([FromBody] SinglePaymentRequestFT request)
+        {
+            SimpleResponse response = (await _Service.DirectPay(request, this.CurrentLoggedInUser));
+
+            if (response == null)
+            {
+                response = new SimpleResponse();
+                response.SetError(ErrorCodes.SERVER_ERROR);
+                return Json(response);
+            }
+
+            return Json(response);
+        }
+        /// <summary>
+        /// Direct Payout Transaction Status
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        [Route("Payout/TransactionStatus")]
+        [HttpPost]
+        public async Task<IActionResult> TransactionStatus([FromBody] SinglePaymentStatus request)
+        {
+            SimpleResponse response = (await _Service.TransactionStatus(request, this.CurrentLoggedInUser));
 
             if (response == null)
             {
