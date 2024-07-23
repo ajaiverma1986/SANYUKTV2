@@ -10,11 +10,53 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public int ServiceId { get; set;}
         public decimal Amount { get; set;}
     }
+    public class TransactionDetailsRequest
+    {
+        public int AgencyId { get; set; }
+        public int ServiceId { get; set; }
+        public long PartnerId { get; set; }
+        public string TransactionCode { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+        public string TxnType { get; set; }
+        public string PartnerTransactionId { get; set; }
+       
+    }
     public class SevicechargeResponse
     {
         public int CalculationType { get; set; }
         public int SlabType { get; set; }
         public string CalculationTypeName { get; set; }
         public decimal CalculationValue { get; set; }
+    }
+    public class TransactionDetailListResponse
+    {
+        public long TransactionId { get; set; }
+        public string Transactioncode { get; set; }
+        public long PartnerId { get; set; }
+        public string PartnerTxnId { get; set; }
+        public int ServiceId { get; set; }
+        public int AgencyId { get; set; }
+        public string PartnerRetailorId { get; set; }
+        public string RefNo { get; set; }
+        public string RelatedReference { get; set; }
+        public string BankTxnDatetime { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? TxnFee { get; set; }
+        public string RefNo1 { get; set; }
+        public string RefNo2 { get; set; }
+        public string RefNo3 { get; set; }
+        public string RefNo4 { get; set; }
+        public string RefNo5 { get; set; }
+        public string RefNo6 { get; set; }
+        public string RefNo7 { get; set; }
+        public string RefNo8 { get; set; }
+        public string RefNo9 { get; set; }
+        public string RefNo10 { get; set; }
+        public string FailureReason { get; set; }
+        public int Status { get; set; }
+        public string PartnerName { get; set; }
+
+
     }
 }

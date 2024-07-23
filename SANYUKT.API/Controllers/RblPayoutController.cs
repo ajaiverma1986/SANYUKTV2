@@ -34,33 +34,6 @@ namespace SANYUKT.API.Controllers
             _userProvider=new UserDetailsProvider();
         }
 
-        ///// <summary>
-        ///// Get Balalnce API
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //[AuditApi(EventTypeName = "POST RblPayoutController/GetAccountBalalance", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
-        //public async Task<IActionResult> GetAccountBalalance([FromBody]RblPayoutRequest objp)
-        //{
-        //    UserLoginResponse response = new UserLoginResponse();
-
-        //    ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
-        //    if (error.HasError)
-        //    {
-        //        response.SetError(error);
-        //        return Ok(response);
-        //    }
-        //    SimpleResponse response1 =new SimpleResponse();
-        //    X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString ()+ "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString ()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString ());
-        //    response1 = await _Provider.GetBalalce(objp, certificate2, this.CallerUser);
-
-        //    return Ok(response1);
-
-        //}
-
-
-
         /// <summary>
         /// Payout transaction API
         /// </summary>
@@ -116,7 +89,7 @@ namespace SANYUKT.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [AuditApi(EventTypeName = "POST RblPayoutController/TransactionStatus", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
-        public async Task<IActionResult> TransactionStatus([FromBody] SinglePaymentStatus request)
+        public async Task<IActionResult> TransactionStatus([FromBody] SinglePaymentStatusNew request)
         {
             UserLoginResponse response = new UserLoginResponse();
 

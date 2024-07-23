@@ -67,5 +67,22 @@ namespace SANYUKT.Provider
             }
             return response;
         }
+        public async Task<List<TransactionDetailListResponse>> GetAllListTransactionDetail(TransactionDetailsRequest request)
+        {
+            List<TransactionDetailListResponse> response = new List<TransactionDetailListResponse>();
+            response = await _repository.GetAllListTransactionDetail(request);
+            return response;
+        }
+        public async Task<TransactionDetailListResponse> GetTransactionDetail(TransactionDetailsRequest request)
+        {
+            TransactionDetailListResponse resp = new TransactionDetailListResponse();
+            List<TransactionDetailListResponse> response = new List<TransactionDetailListResponse>();
+            response = await _repository.GetAllListTransactionDetail(request);
+            if(response.Count > 0)
+            {
+                resp = response[0];
+            }
+            return resp;
+        }
     }
 }

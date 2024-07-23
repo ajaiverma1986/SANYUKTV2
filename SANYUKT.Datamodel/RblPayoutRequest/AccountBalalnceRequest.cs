@@ -79,15 +79,35 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
 
     //statuys
 
-    public class BodyStatus
+    public class BodyStatusNEFT
+    {
+        public string UTRNo { get; set; }
+    }
+    public class BodyStatusIMPS
     {
         public string RRN { get; set; }
     }
+    public class BodyStatusFT
+    {
+        public string RefNo { get; set; }
+    }
 
-    public class GetSinglePaymentStatusCorpReq
+    public class GetSinglePaymentStatusCorpReqNEFT
     {
         public Headerstaus Header { get; set; }
-        public BodyStatus Body { get; set; }
+        public BodyStatusNEFT Body { get; set; }
+        public Signature1 Signature { get; set; }
+    }
+    public class GetSinglePaymentStatusCorpReqIMPS
+    {
+        public Headerstaus Header { get; set; }
+        public BodyStatusIMPS Body { get; set; }
+        public Signature1 Signature { get; set; }
+    }
+    public class GetSinglePaymentStatusCorpReqFT
+    {
+        public Headerstaus Header { get; set; }
+        public BodyStatusFT Body { get; set; }
         public Signature1 Signature { get; set; }
     }
 
@@ -100,9 +120,17 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
         public string Approver_ID { get; set; }
     }
 
-    public class PaymentStatusRequest
+    public class PaymentStatusRequestNEFT
     {
-        public GetSinglePaymentStatusCorpReq get_Single_Payment_Status_Corp_Req { get; set; }
+        public GetSinglePaymentStatusCorpReqNEFT get_Single_Payment_Status_Corp_Req { get; set; }
+    }
+    public class PaymentStatusRequestFT
+    {
+        public GetSinglePaymentStatusCorpReqFT get_Single_Payment_Status_Corp_Req { get; set; }
+    }
+    public class PaymentStatusRequestIMPS
+    {
+        public GetSinglePaymentStatusCorpReqIMPS get_Single_Payment_Status_Corp_Req { get; set; }
     }
 
     //Account statement request

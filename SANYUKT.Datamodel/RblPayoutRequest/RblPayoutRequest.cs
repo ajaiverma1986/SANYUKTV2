@@ -20,9 +20,14 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
     {
         public string AccountNo { get; set; }
     }
-    public class SinglePaymentStatus : RblPayoutBasicchild
+    public class SinglePaymentStatus: RblPayoutBasicchild
     {
-        public string UTRNo { get; set; }
+        public string RefNo { get; set; }
+    }
+    public class SinglePaymentStatusNew
+    {
+        public string TransactionID { get; set; }
+        public string PartnerTxnId { get; set; }
     }
     public class RblPayoutStatementRequest : RblPayoutBasic
     {

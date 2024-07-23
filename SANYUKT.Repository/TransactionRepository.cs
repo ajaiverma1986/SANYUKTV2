@@ -143,6 +143,57 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<List<TransactionDetailListResponse>> GetAllListTransactionDetail(TransactionDetailsRequest request)
+        {
+            List<TransactionDetailListResponse> response = new List<TransactionDetailListResponse> ();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].uspGetTransactionDetails");
+            _database.AddInParameter(dbCommand, "@AgencyId", request.AgencyId);
+            _database.AddInParameter(dbCommand, "@ServiceId", request.ServiceId);
+            _database.AddInParameter(dbCommand, "@PartnerId", request.PartnerId);
+            _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
+            _database.AddInParameter(dbCommand, "@ToDate", request.ToDate );
+            _database.AddInParameter(dbCommand, "@TxnType", request.TxnType);
+            _database.AddInParameter(dbCommand, "@PartnerTransactionId", request.PartnerTransactionId);
+            _database.AddInParameter(dbCommand, "@TransactionCode", request.TransactionCode);
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                dataReader.Read();
+                if (dataReader.HasRows)
+                {
+                    TransactionDetailListResponse response2 = new TransactionDetailListResponse();
+                    response2.TransactionId = GetInt64Value(dataReader, "TransactionId").Value;
+                    response2.Transactioncode = GetStringValue(dataReader, "Transactioncode");
+                    response2.PartnerId = GetInt64Value(dataReader, "PartnerId").Value;
+                    response2.PartnerTxnId = GetStringValue(dataReader, "PartnerTxnId");
+                    response2.ServiceId = GetInt32Value(dataReader, "ServiceId").Value;
+                    response2.AgencyId = GetInt32Value(dataReader, "AgencyId").Value;
+                    response2.PartnerRetailorId = GetStringValue(dataReader, "PartnerRetailorId");
+                    response2.RefNo = GetStringValue(dataReader, "RefNo");
+                    response2.RelatedReference = GetStringValue(dataReader, "RelatedReference");
+                    response2.BankTxnDatetime = GetStringValue(dataReader, "BankTxnDatetime");
+                    response2.Amount = GetDecimalValue(dataReader, "Amount") ?? 0;
+                    response2.TxnFee = GetDecimalValue(dataReader, "TxnFee") ?? 0;
+                    response2.RefNo1 = GetStringValue(dataReader, "RefNo1");
+                    response2.RefNo2 = GetStringValue(dataReader, "RefNo2");
+                    response2.RefNo3 = GetStringValue(dataReader, "RefNo3");
+                    response2.RefNo4 = GetStringValue(dataReader, "RefNo4");
+                    response2.RefNo5 = GetStringValue(dataReader, "RefNo5");
+                    response2.RefNo6 = GetStringValue(dataReader, "RefNo6");
+                    response2.RefNo7 = GetStringValue(dataReader, "RefNo7");
+                    response2.RefNo8 = GetStringValue(dataReader, "RefNo8");
+                    response2.RefNo9 = GetStringValue(dataReader, "RefNo9");
+                    response2.RefNo10 = GetStringValue(dataReader, "RefNo10");
+                    response2.FailureReason = GetStringValue(dataReader, "FailureReason");
+                    response2.Status = GetInt32Value(dataReader, "Status").Value;
+                    response2.PartnerName = GetStringValue(dataReader, "PartnerName");
+
+                    response.Add(response2);
+                }
+               
+            }
+
+            return response;
+        }
 
     }
 }
