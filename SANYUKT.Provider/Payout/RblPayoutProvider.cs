@@ -1801,9 +1801,9 @@ namespace SANYUKT.Provider.Payout
 
               
 
-                request3.RefNo = resp.BankRefNo;
+                request3.RefNo = resp.RRN;
                 request3.RelatedReference = resp.RefNo;
-                request3.RefNo1 = resp.RRN;
+                request3.RefNo1 = resp.BankRefNo;
                 request3.RefNo2 = resp.Ben_Acct_No;
                 request3.RefNo3 = resp.BenIFSC;
                 request3.BankTxnDatetime = resp.Txn_Time;
