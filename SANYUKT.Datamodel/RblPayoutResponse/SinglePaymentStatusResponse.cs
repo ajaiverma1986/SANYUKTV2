@@ -13,7 +13,7 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
         public string ErrorCode { get; set; }=string.Empty;
         public string ErorrDescription { get; set; } = string.Empty;
         public string ChanelPartnerRefNo { get; set; } = string.Empty;
-        public string Amount { get; set; }
+        public string Amount { get; set; } =string.Empty;
         public string REFNO { get; set; }=string.Empty;
         public string RRN { get; set; }=string.Empty;
         public string Txntime { get; set; }=string.Empty ;
