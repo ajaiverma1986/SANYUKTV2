@@ -99,7 +99,7 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
-            RblResponse response1 = new RblResponse();
+            RblStatusResponse response1 = new RblStatusResponse();
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response1 = await _Provider.PayoutTransactionStatus(request, certificate2, this.CallerUser);
 
