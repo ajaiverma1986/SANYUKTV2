@@ -119,6 +119,7 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
     {
         public string BankRefNo { get; set; }
         public string RRN { get; set; }
+        public string UTRNo { get; set; }
         public string Ben_Acct_No { get; set; }
         public string Amount { get; set; }
         public string BenIFSC { get; set; }
