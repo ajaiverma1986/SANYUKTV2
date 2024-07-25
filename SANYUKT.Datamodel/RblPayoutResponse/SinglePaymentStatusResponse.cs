@@ -8,17 +8,23 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
 
     public class RblStatusResponse
     {
-        public string TransactionId { get; set; }
-        public string Status { get; set; }
-        public string ErrorCode { get; set; }
-        public string ErorrDescription { get; set; }
-        public string ChanelPartnerRefNo { get; set; }
+        public string TransactionId { get; set; }=string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string ErrorCode { get; set; }=string.Empty;
+        public string ErorrDescription { get; set; } = string.Empty;
+        public string ChanelPartnerRefNo { get; set; } = string.Empty;
         public string Amount { get; set; }
-        public string REFNO { get; set; }
-        public string Txntime { get; set; }
-        public string BenaccountNo { get; set; }
-        public string BenIfsccode { get; set; }
-        public string TXNType { get; set; }
+        public string REFNO { get; set; }=string.Empty;
+        public string RRN { get; set; }=string.Empty;
+        public string Txntime { get; set; }=string.Empty ;
+        public string BenaccountNo { get; set; } = string.Empty;
+        public string BenIfsccode { get; set; }=string.Empty;
+        public string PONUM { get; set; } = string.Empty;
+        public string UTRNO { get; set; } = string.Empty;
+        //public string REMITTERNAME { get; set; } = string.Empty;
+        //public string REMITTERMBLNO { get; set; } = string.Empty;
+        //public string BANK { get; set; } = string.Empty;
+        public string TXNType { get; set; } = string.Empty;
 
     }
     public class HeaderSatusResponse
@@ -81,5 +87,31 @@ namespace SANYUKT.Datamodel.RblPayoutResponse
     {
         public GetSinglePaymentStatusCorpResNEFT get_Single_Payment_Status_Corp_Res { get; set; }
     }
+    public class BodyStatusResponseIMPS
+    {
+        public string ORGTRANSACTIONID { get; set; }
+        public string REFNO { get; set; }
+        public string RRN { get; set; }
+        public string AMOUNT { get; set; }
+        public string PAYMENTSTATUS { get; set; }
+        public string REMITTERNAME { get; set; }
+        public string REMITTERMBLNO { get; set; }
+        public string BENEFICIARYNAME { get; set; }
+        public string BANK { get; set; }
+        public string IFSCCODE { get; set; }
+        public string BEN_ACCT_NO { get; set; }
+        public string TXNTIME { get; set; }
+    }
+    public class GetSinglePaymentStatusCorpResIMPS
+    {
+        public HeaderSatusResponse Header { get; set; }
+        public BodyStatusResponseIMPS Body { get; set; }
+        public SignatureStatusResponse Signature { get; set; }
+    }
+    public class SinglePaymentStatusResponseIMPS
+    {
+        public GetSinglePaymentStatusCorpResIMPS get_Single_Payment_Status_Corp_Res { get; set; }
+    }
+
 
 }

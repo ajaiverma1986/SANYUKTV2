@@ -2366,6 +2366,8 @@ namespace SANYUKT.Provider.Payout
                     resp.Txntime = "";
                     resp.BenaccountNo = "";
                     resp.BenIfsccode ="";
+                    resp.PONUM = "";
+                    resp.RRN = "";
                 }
             }
         
@@ -2446,6 +2448,8 @@ namespace SANYUKT.Provider.Payout
                 resp.Txntime = nnn.get_Single_Payment_Status_Corp_Res.Body.TXNTIME;
                 resp.BenaccountNo = nnn.get_Single_Payment_Status_Corp_Res.Body.BEN_ACCT_NO;
                 resp.BenIfsccode = nnn.get_Single_Payment_Status_Corp_Res.Body.BENIFSC;
+                resp.PONUM = nnn.get_Single_Payment_Status_Corp_Res.Body.PONUM;
+                resp.UTRNO = nnn.get_Single_Payment_Status_Corp_Res.Body.UTRNO;
                 resp.TXNType = "NEFT";
 
                 request2.errorcode = resp.ErrorCode;
@@ -2561,6 +2565,9 @@ namespace SANYUKT.Provider.Payout
                 resp.Txntime = nnn.get_Single_Payment_Status_Corp_Res.Body.TXNTIME;
                 resp.BenaccountNo = nnn.get_Single_Payment_Status_Corp_Res.Body.BEN_ACCT_NO;
                 resp.BenIfsccode = nnn.get_Single_Payment_Status_Corp_Res.Body.BENIFSC;
+                resp.PONUM = nnn.get_Single_Payment_Status_Corp_Res.Body.PONUM;
+                resp.UTRNO = nnn.get_Single_Payment_Status_Corp_Res.Body.UTRNO;
+
                 resp.TXNType = "RTGS";
 
                 request2.errorcode = resp.ErrorCode;
@@ -2676,6 +2683,7 @@ namespace SANYUKT.Provider.Payout
                 resp.Txntime = nnn.get_Single_Payment_Status_Corp_Res.Body.TXNTIME;
                 resp.BenaccountNo = nnn.get_Single_Payment_Status_Corp_Res.Body.BEN_ACCT_NO;
                 resp.BenIfsccode = nnn.get_Single_Payment_Status_Corp_Res.Body.BENIFSC;
+                resp.TXNType = "FT";
 
                 request2.errorcode = resp.ErrorCode;
                 request2.errorDescrtiopn = resp.ErorrDescription;
@@ -2769,7 +2777,7 @@ namespace SANYUKT.Provider.Payout
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
             await _commonProvider.ApilogResponse("RBL Payout Transaction Status", fullurl, "", jsonstr, response.Result.ToString());
-            GetsinglePaymentReponse nnn = new GetsinglePaymentReponse();
+            SinglePaymentStatusResponseIMPS nnn = new SinglePaymentStatusResponseIMPS();
             UpdateNonfinacialRequest request2 = new UpdateNonfinacialRequest();
             if (response1.StatusCode == HttpStatusCode.OK)
             {
@@ -2779,16 +2787,38 @@ namespace SANYUKT.Provider.Payout
                 string strRemSlash = jsonn.Replace("\"", "\'");
                 string strRemNline = strRemSlash.Replace("\n", " ");
                 // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<GetsinglePaymentReponse>(@strRemNline);
-                resp.Status = nnn.get_Single_Payment_Status_Corp_Res.Header.Status;
+                nnn = JsonConvert.DeserializeObject<SinglePaymentStatusResponseIMPS>(@strRemNline);
+                if(nnn.get_Single_Payment_Status_Corp_Res.Body.PAYMENTSTATUS=="7")
+                {
+                    resp.Status = "Success";
+                }
+                else if(nnn.get_Single_Payment_Status_Corp_Res.Body.PAYMENTSTATUS == "8")
+                {
+                    resp.Status = "Failure";
+                }
+                else if (nnn.get_Single_Payment_Status_Corp_Res.Body.PAYMENTSTATUS == "9")
+                {
+                    resp.Status = "In Progress";
+                }
+
                 resp.ChanelPartnerRefNo = obbb.PartnerRefNo;
                 resp.ErorrDescription = nnn.get_Single_Payment_Status_Corp_Res.Header.Error_Desc;
                 resp.ErrorCode = nnn.get_Single_Payment_Status_Corp_Res.Header.Error_Cde;
-                resp.TransactionId = nnn.get_Single_Payment_Status_Corp_Res.Header.TranID;
+                resp.TransactionId = nnn.get_Single_Payment_Status_Corp_Res.Body.ORGTRANSACTIONID;
+                resp.Amount = nnn.get_Single_Payment_Status_Corp_Res.Body.AMOUNT;
+                resp.REFNO = nnn.get_Single_Payment_Status_Corp_Res.Body.REFNO;
+                resp.Txntime = nnn.get_Single_Payment_Status_Corp_Res.Body.TXNTIME;
+                resp.BenaccountNo = nnn.get_Single_Payment_Status_Corp_Res.Body.BEN_ACCT_NO;
+                resp.BenIfsccode = nnn.get_Single_Payment_Status_Corp_Res.Body.IFSCCODE;
+                resp.RRN = nnn.get_Single_Payment_Status_Corp_Res.Body.RRN;
+                //resp.REMITTERNAME = nnn.get_Single_Payment_Status_Corp_Res.Body.REMITTERNAME;
+                //resp.REMITTERMBLNO = nnn.get_Single_Payment_Status_Corp_Res.Body.REMITTERMBLNO;
+                //resp.BANK = nnn.get_Single_Payment_Status_Corp_Res.Body.BANK;
+                resp.TXNType = "IMPS";
 
                 request2.errorcode = resp.ErrorCode;
                 request2.errorDescrtiopn = resp.ErorrDescription;
-                request2.Txncode = resp.TransactionId;
+                request2.Txncode = nnn.get_Single_Payment_Status_Corp_Res.Header.TranID;
                 await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
             }
             else if (response1.StatusCode == HttpStatusCode.Unauthorized)
@@ -2802,7 +2832,7 @@ namespace SANYUKT.Provider.Payout
 
                 request2.errorcode = response1.ReasonPhrase;
                 request2.errorDescrtiopn = response1.ReasonPhrase;
-                request2.Txncode = requestreq.get_Single_Payment_Status_Corp_Req.Header.TranID;
+                request2.Txncode = nnn.get_Single_Payment_Status_Corp_Res.Header.TranID;
                 await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
 
             }
