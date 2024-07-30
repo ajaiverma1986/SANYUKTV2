@@ -416,5 +416,57 @@ namespace SANYUKT.Repository
             }
 
         }
+
+        public async Task<SimpleResponse> GetAllPaymentChanel()
+        {
+            SimpleResponse response = new SimpleResponse();
+            List<ListPaymentChanelResponse> objMaster = new List<ListPaymentChanelResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[MDM].usp_GetDistrict");
+            
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    ListPaymentChanelResponse obj = new ListPaymentChanelResponse();
+                    obj.Status = GetInt32Value(dataReader, "Status").Value;
+                    obj.PaymentChanelID = GetInt32Value(dataReader, "PaymentChanelID").Value;
+                    obj.PaymentChanelName = GetStringValue(dataReader, "PaymentChanelName");
+                  
+                    objMaster.Add(obj);
+                }
+                response.Result = objMaster;
+                return response;
+            }
+
+        }
+
+        public async Task<SimpleResponse> GetAllPaymentModes(int? PaymentChanelId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            List<ListPaymentModeResponse> objMaster = new List<ListPaymentModeResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[MDM].ListPaymentModeMaster");
+            _database.AddInParameter(dbCommand, "@PaymentChanelId", PaymentChanelId);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    ListPaymentModeResponse obj = new ListPaymentModeResponse();
+                    obj.Status = GetInt32Value(dataReader, "Status").Value;
+                    obj.PaymentChanelID = GetInt32Value(dataReader, "PaymentChanelID").Value;
+                    obj.PaymentModeID = GetInt32Value(dataReader, "PaymentModeID").Value;
+                    obj.PaymentChanelName = GetStringValue(dataReader, "PaymentChanelName");
+                    obj.PaymentModeName = GetStringValue(dataReader, "PaymentModeName");
+                    obj.StatusName = GetStringValue(dataReader, "StatusName");
+
+                    objMaster.Add(obj);
+                }
+                response.Result = objMaster;
+                return response;
+            }
+
+        }
     }
 }

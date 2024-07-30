@@ -101,5 +101,17 @@ namespace SANYUKT.Provider
             response = await _repository.GetAllServiceType(AgencyId);
             return response;
         }
+        public async Task<SimpleResponse> GetAllPaymentChanel()
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = await _repository.GetAllPaymentChanel();
+            return response;
+        }
+        public async Task<SimpleResponse> GetAllPaymentModes(int? PaymentChanelId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = await _repository.GetAllPaymentModes(PaymentChanelId);
+            return response;
+        }
     }
 }

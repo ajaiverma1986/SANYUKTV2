@@ -235,5 +235,44 @@ namespace SANYUKT.Repository
             }
 
         }
+
+        public async Task<SimpleResponse> GetAllPaymentAccounts(int? Bankid)
+        {
+            SimpleResponse response = new SimpleResponse();
+            List<PaymentAccountsListResponse> objMaster = new List<PaymentAccountsListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[CONFG].ListPaymentAccountMaster");
+            _database.AddInParameter(dbCommand, "@BankID", Bankid);
+          
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    PaymentAccountsListResponse obj = new PaymentAccountsListResponse();
+                    obj.PaymentAccountID = GetInt32Value(dataReader, "PaymentAccountID").Value;
+                    obj.AccountName = GetStringValue(dataReader, "AccountName");
+                    obj.Status = GetInt32Value(dataReader, "Status").Value;
+                    obj.BankID = GetInt32Value(dataReader, "BankID").Value;
+                    obj.StatusName = GetStringValue(dataReader, "StatusName");
+                    obj.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    obj.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    obj.AccountNo = GetStringValue(dataReader, "AccountNo");
+                    obj.BankName = GetStringValue(dataReader, "BankName");
+                    obj.BranchName = GetStringValue(dataReader, "BranchName");
+                    obj.Branchcode = GetStringValue(dataReader, "Branchcode");
+                    obj.Ifsccode = GetStringValue(dataReader, "Ifsccode");
+                    obj.BranchAddress = GetStringValue(dataReader, "BranchAddress");
+                    obj.Micrcode = GetStringValue(dataReader, "Micrcode");
+                    obj.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
+                    obj.UpdatedOn = GetDateValue(dataReader, "UpdatedOn").Value;
+
+
+                    objMaster.Add(obj);
+                }
+                response.Result = objMaster;
+                return response;
+            }
+
+        }
     }
 }

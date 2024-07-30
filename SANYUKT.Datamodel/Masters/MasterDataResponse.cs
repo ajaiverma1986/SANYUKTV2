@@ -123,4 +123,20 @@ namespace SANYUKT.Datamodel.Masters
         public string AgencyName { get; set; }
         public string StatusName { get; set; }
     }
+    public class ListPaymentChanelResponse
+    {
+        public int PaymentChanelID { get; set; }
+        public int Status { get; set; }
+        public string PaymentChanelName { get; set; }
+        public string StatusName { get; set; }
+    }
+    public class ListPaymentModeResponse
+    {
+        public int PaymentModeID { get; set; }
+        public int PaymentChanelID { get; set; }
+        public int Status { get; set; }
+        public string PaymentModeName { get; set; }
+        public string PaymentChanelName { get; set; }
+        public string StatusName { get; set; }
+    }
 }

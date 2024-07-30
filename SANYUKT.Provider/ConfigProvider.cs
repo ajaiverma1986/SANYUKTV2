@@ -58,5 +58,11 @@ namespace SANYUKT.Provider
             response = await _repository.GetallTransactionSlab(request);
             return response;
         }
+        public async Task<SimpleResponse> GetAllPaymentAccounts(int? Bankid)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = await _repository.GetAllPaymentAccounts(Bankid);
+            return response;
+        }
     }
 }

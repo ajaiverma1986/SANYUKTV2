@@ -84,4 +84,25 @@ namespace SANYUKT.Datamodel.Masters
         public string ServiceName { get; set; }
     }
 
+    public class PaymentAccountsListResponse
+    {
+        public int PaymentAccountID { get; set; }
+        public int BankID { get; set; }
+        public int Status { get; set; }
+        public string StatusName { get; set; }
+        public string AccountName { get; set; }
+        public string AccountNo { get; set; }
+        public string Ifsccode { get; set; }
+        public string BranchName { get; set; }
+        public string Branchcode { get; set; }
+        public string Micrcode { get; set; }
+        public string BranchAddress { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public string BankName { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+
+    }
+
 }
