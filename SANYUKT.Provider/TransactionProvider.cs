@@ -84,5 +84,23 @@ namespace SANYUKT.Provider
             }
             return resp;
         }
+        public async Task<SimpleResponse> AddNewPayinRequest(AddPaymentRequestRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse resp = new SimpleResponse();
+            resp = await _repository.AddNewPayinRequest(request, serviceUser);
+            return resp;
+        }
+        public async Task<SimpleResponse> ApproveRejectPayinRequest(ApproveRejectPayinRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse resp = new SimpleResponse();
+            resp = await _repository.ApproveRejectPayinRequest(request, serviceUser);
+            return resp;
+        }
+        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request)
+        {
+          SimpleResponse response = new SimpleResponse();
+            response = await _repository.GetallPayinRequest(request);
+            return response;
+        }
     }
 }

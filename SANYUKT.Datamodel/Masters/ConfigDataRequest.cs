@@ -28,4 +28,17 @@ namespace SANYUKT.Datamodel.Masters
         public int? ServiceID { get; set; }
         public double? Amount { get; set; }
     }
+    public class AddPaymentAccountMasterRequest
+    {
+        public int? BankID { get; set; }
+        public string AccountName { get; set; }
+        public string AccountNo { get; set; }
+        public string Ifsccode { get; set; }
+        public string BranchName { get; set; }
+        public string Branchcode { get; set; }
+        public string Micrcode { get; set; }
+        public string BranchAddress { get; set; }
+        public long CreatedBy { get; set; }
+
+    }
 }

@@ -59,4 +59,38 @@ namespace SANYUKT.Datamodel.Entities.Transactions
 
 
     }
+
+    public class AddPaymentRequestRequest
+    {
+        public long UserId { get; set; }
+        public int PaymentChanelID { get; set; }
+        public int PaymentModeId { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? Charge { get; set; }
+        public long OriginatorAccountId { get; set; }
+        public int BenficiaryAccountId { get; set; }
+        public DateTime? DepositDate { get; set; }
+        public string RefNo1 { get; set; }
+        public string RefNo2 { get; set; }
+        public string Remarks { get; set; }
+        public long CreatedBy { get; set; }
+        
+    }
+    public class ApproveRejectPayinRequest
+    {
+        public long RequestID { get; set; }
+        public string RejectedReason { get; set; }
+        public int Status { get; set; }
+        public long UpdatedBy { get; set; }
+
+    }
+    public class ListPayinRequestRequest
+    {
+        public int  PaymentChanelID { get; set; }
+        public int PaymentModeId { get; set; }
+        public int Status { get; set; }
+        public long UserId { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+    }
 }

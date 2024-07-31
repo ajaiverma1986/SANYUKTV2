@@ -195,5 +195,104 @@ namespace SANYUKT.Repository
             return response;
         }
 
+        public async Task<SimpleResponse> AddNewPayinRequest(AddPaymentRequestRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].AddNewPaymentRequest");
+            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@PaymentChanelID", request.PaymentChanelID);
+            _database.AddInParameter(dbCommand, "@PaymentModeId", request.PaymentModeId);
+            _database.AddInParameter(dbCommand, "@Amount", request.Amount);
+            _database.AddInParameter(dbCommand, "@Charge", request.Charge);
+            _database.AddInParameter(dbCommand, "@DepositDate", request.DepositDate);
+            _database.AddInParameter(dbCommand, "@RefNo1", request.RefNo1);
+            _database.AddInParameter(dbCommand, "@RefNo2", request.RefNo2);
+            _database.AddInParameter(dbCommand, "@Remarks", request.Remarks);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@OriginatorAccountId", request.OriginatorAccountId);
+            _database.AddInParameter(dbCommand, "@BenficiaryAccountId", request.BenficiaryAccountId);
+            _database.AddOutParameter(dbCommand, "@Out_ID", 100);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            response.Result = GetIDOutputLong(dbCommand);
+           
+            return response;
+
+        }
+        public async Task<SimpleResponse> ApproveRejectPayinRequest(ApproveRejectPayinRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].ApproveRejectPayinRequest");
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@RequestID", request.RequestID);
+            _database.AddInParameter(dbCommand, "@RejectedReason", request.RejectedReason);
+            _database.AddInParameter(dbCommand, "@UpdatedBy", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", 100);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            response.Result = GetIDOutputLong(dbCommand);
+
+            return response;
+
+        }
+        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request)
+        {
+            SimpleResponse response1 =new SimpleResponse();
+            List< PayinRequestListResponse> response =new List<PayinRequestListResponse> ();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].usp_ListPayinRequest");
+            _database.AddInParameter(dbCommand, "@PaymentChanelID", request.PaymentChanelID);
+            _database.AddInParameter(dbCommand, "@PaymentModeId", request.PaymentModeId);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
+            _database.AddInParameter(dbCommand, "@ToDate", request.ToDate);
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                dataReader.Read();
+                if (dataReader.HasRows)
+                {
+                    PayinRequestListResponse obj = new PayinRequestListResponse();
+                    obj.RequestID = GetInt32Value(dataReader, "RequestID").Value;
+                    obj.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    obj.PaymentChanelID = GetInt32Value(dataReader, "PaymentChanelID").Value;
+                    obj.PaymentModeId = GetInt32Value(dataReader, "PaymentModeId").Value;
+                    obj.OriginatorAccountId = GetInt32Value(dataReader, "OriginatorAccountId").Value;
+                    obj.BenficiaryAccountId = GetInt32Value(dataReader, "BenficiaryAccountId").Value;
+                    obj.Status = GetInt32Value(dataReader, "Status").Value;
+                    obj.Amount = GetDecimalValue(dataReader, "Amount").Value;
+                    obj.Charge = GetDecimalValue(dataReader, "Charge").Value;
+                    obj.DepositDate = GetDateValue(dataReader, "DepositDate").Value;
+                    obj.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
+                    obj.UpdatedOn = GetDateValue(dataReader, "UpdatedOn").Value;
+                    obj.StatusName = GetStringValue(dataReader, "StatusName");
+                    obj.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    obj.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    obj.RefNo1 = GetStringValue(dataReader, "RefNo1");
+                    obj.RefNo2 = GetStringValue(dataReader, "RefNo2");
+                    obj.Remarks = GetStringValue(dataReader, "Remarks");
+                    obj.RejectedReason = GetStringValue(dataReader, "RejectedReason");
+                    obj.OriginatorBank = GetStringValue(dataReader, "OriginatorBank");
+                    obj.OrgAccountName = GetStringValue(dataReader, "OrgAccountName");
+                    obj.OrgAccountNo = GetStringValue(dataReader, "OrgAccountNo");
+                    obj.OrgIfsccode = GetStringValue(dataReader, "OrgIfsccode");
+                    obj.OrgBranchAddress = GetStringValue(dataReader, "OrgBranchAddress");
+                    obj.BankName = GetStringValue(dataReader, "BankName");
+                    obj.AccountName = GetStringValue(dataReader, "AccountName");
+                    obj.AccountNo = GetStringValue(dataReader, "AccountNo");
+                    obj.BranchName = GetStringValue(dataReader, "BranchName");
+                    obj.Ifsccode = GetStringValue(dataReader, "Ifsccode");
+                    obj.Branchcode = GetStringValue(dataReader, "Branchcode");
+                    obj.BranchAddress = GetStringValue(dataReader, "BranchAddress");
+                    obj.PaymentChanelName = GetStringValue(dataReader, "PaymentChanelName");
+                    obj.PaymentModeName = GetStringValue(dataReader, "PaymentModeName");
+                    
+                    response.Add(obj);
+                }
+            }
+            response1.Result= response;
+            return response1;
+        }
     }
 }

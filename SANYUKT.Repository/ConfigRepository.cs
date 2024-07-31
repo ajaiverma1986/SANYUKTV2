@@ -1,4 +1,6 @@
 ﻿using SANYUKT.Database;
+using SANYUKT.Datamodel.Entities.RblPayout;
+using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Masters;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Repository.Shared;
@@ -272,6 +274,31 @@ namespace SANYUKT.Repository
                 response.Result = objMaster;
                 return response;
             }
+
+        }
+
+        public async Task<long> AddPaymentAccounts(AddPaymentAccountMasterRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[CONFG].AddPaymentAccountMaster");
+            _database.AddInParameter(dbCommand, "@BankID", request.BankID);
+            _database.AddInParameter(dbCommand, "@AccountName", request.AccountName);
+            _database.AddInParameter(dbCommand, "@AccountNo", request.AccountNo);
+            _database.AddInParameter(dbCommand, "@Ifsccode", request.Ifsccode);
+            _database.AddInParameter(dbCommand, "@BranchName", request.BranchName);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@Branchcode", request.Branchcode);
+            _database.AddInParameter(dbCommand, "@Micrcode", request.Micrcode);
+            _database.AddInParameter(dbCommand, "@BranchAddress", request.BranchAddress);
+            _database.AddOutParameter(dbCommand, "@Out_ID", 100);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
 
         }
     }

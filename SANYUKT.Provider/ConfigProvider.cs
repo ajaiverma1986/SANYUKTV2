@@ -1,4 +1,5 @@
-﻿using SANYUKT.Datamodel.Masters;
+﻿using SANYUKT.Datamodel.Interfaces;
+using SANYUKT.Datamodel.Masters;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
 using SANYUKT.Repository;
@@ -62,6 +63,12 @@ namespace SANYUKT.Provider
         {
             SimpleResponse response = new SimpleResponse();
             response = await _repository.GetAllPaymentAccounts(Bankid);
+            return response;
+        }
+        public async Task<SimpleResponse> AddPaymentAccounts(AddPaymentAccountMasterRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response.Result = await _repository.AddPaymentAccounts(request, serviceUser);
             return response;
         }
     }
