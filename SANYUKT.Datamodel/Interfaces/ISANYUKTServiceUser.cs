@@ -10,6 +10,7 @@ namespace SANYUKT.Datamodel.Interfaces
         string ApiToken { get; set; }
         Int64? UserMasterID { get; set; }
         Int32? OrganizationID { get; set; }
+        Int32? UserID { get; set; }
         Int32? WorkOrganizationID { get; set; }
         string ApplicationName { get; set; }
         int ApplicationID { get; set; }
