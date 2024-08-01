@@ -45,6 +45,13 @@ namespace SANYUKT.Configuration
                 return configuration.GetConnectionString("FIADB");
             }
         }
+        public string FileDownloadPath
+        {
+            get
+            {
+                return configuration["FileDownloadPath"];
+            }
+        }
         public string AuditingDB
         {
             get

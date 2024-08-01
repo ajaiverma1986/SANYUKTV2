@@ -46,7 +46,7 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].AddBenficiary");
-            _database.AddInParameter(dbCommand, "@partnerid", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@partnerid", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@benficiaryname", request.BenbankName);
             _database.AddInParameter(dbCommand, "@benmobile", request.BenMobile);
             _database.AddInParameter(dbCommand, "@emailid", request.EmailId);
@@ -71,7 +71,7 @@ namespace SANYUKT.Repository
             List<BenficiaryResponse> response=new List<BenficiaryResponse> ();
           
             var dbCommand = _database.GetStoredProcCommand("[USR].GetAllBenficiary");
-            _database.AddInParameter(dbCommand, "@PartnerId", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@PartnerId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
             _database.AddInParameter(dbCommand, "@BenFiciaryId", request.BenFiciaryId);
             _database.AddInParameter(dbCommand, "@AccountNo", request.AccountNo);
@@ -132,8 +132,52 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].ChangeBenficiaryStatus");
-            _database.AddInParameter(dbCommand, "@PartnerId",serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@PartnerId",serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@BenficiaryId", request.BenFiciaryId);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<long> CreateNewUserRequest(CreateUserRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].usp_UserOnboarding");
+            _database.AddInParameter(dbCommand, "@UserTypeId", request.UserTypeId);
+            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
+            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
+            _database.AddInParameter(dbCommand, "@FirstName", request.FirstName);
+            _database.AddInParameter(dbCommand, "@MiddleName", request.MiddleName);
+            _database.AddInParameter(dbCommand, "@LastName", request.LastName);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<long> AddOriginatorAccounts(CreateOriginatorAccountRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].CreateOriginatorAccountMaster");
+            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@BankId", request.BankId);
+            _database.AddInParameter(dbCommand, "@AccountName", request.AccountName);
+            _database.AddInParameter(dbCommand, "@AccountNo", request.AccountNo);
+            _database.AddInParameter(dbCommand, "@Ifsccode", request.Ifsccode);
+            _database.AddInParameter(dbCommand, "@BranchAddress", request.BranchAddress);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
 
             await _database.ExecuteNonQueryAsync(dbCommand);

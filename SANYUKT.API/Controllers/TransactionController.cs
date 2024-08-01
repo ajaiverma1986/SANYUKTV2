@@ -59,7 +59,7 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Json(response);
             }
-            response = await _Provider.GetallPayinRequest(request);
+            response = await _Provider.GetallPayinRequest(request, CallerUser);
             return Json(response);
         }
     }

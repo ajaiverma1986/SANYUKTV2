@@ -53,7 +53,6 @@ namespace SANYUKT.Provider.Payout
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = "API";
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = "";
             request1.partnerretailorid ="";
 
@@ -169,7 +168,6 @@ namespace SANYUKT.Provider.Payout
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = "API";
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = objp.PartnerRefNo;
             request1.partnerretailorid = objp.PartnerRetailorId;
             
@@ -441,7 +439,6 @@ namespace SANYUKT.Provider.Payout
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = req.PartnerRefNo;
             request1.TxnType = "D";
             request1.txnFee = txnFee;
@@ -844,7 +841,6 @@ namespace SANYUKT.Provider.Payout
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = req.PartnerRefNo;
             request1.TxnType = "D";
             request1.txnFee = txnFee;
@@ -1255,7 +1251,6 @@ namespace SANYUKT.Provider.Payout
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = req.PartnerRefNo;
             request1.TxnType = "D";
             request1.txnFee = txnFee;
@@ -1657,7 +1652,6 @@ namespace SANYUKT.Provider.Payout
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = req.PartnerRefNo;
             request1.TxnType = "D";
             request1.txnFee = txnFee;
@@ -2088,7 +2082,6 @@ namespace SANYUKT.Provider.Payout
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = req.PartnerRefNo;
             request1.TxnType = "D";
             request1.txnFee = txnFee;
@@ -2331,7 +2324,7 @@ namespace SANYUKT.Provider.Payout
             mm.MakerId = "";
 
 
-            resptxn = await _provider.GetTransactionDetail(txndrequest);
+            resptxn = await _provider.GetTransactionDetail(txndrequest, serviceUser);
             if (resptxn != null)
             {
                 if (resptxn.RefNo7  == "FT")
@@ -2382,7 +2375,6 @@ namespace SANYUKT.Provider.Payout
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = obbb.TxnPlateForm;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = obbb.PartnerRefNo;
             request1.partnerretailorid = obbb.PartnerRetailorId;
             request1.TxnType = "Transaction Status";
@@ -2499,7 +2491,6 @@ namespace SANYUKT.Provider.Payout
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = obbb.TxnPlateForm;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = obbb.PartnerRefNo;
             request1.partnerretailorid = obbb.PartnerRetailorId;
             request1.TxnType = "Transaction Status";
@@ -2617,7 +2608,6 @@ namespace SANYUKT.Provider.Payout
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = obbb.TxnPlateForm;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = obbb.PartnerRefNo;
             request1.partnerretailorid = obbb.PartnerRetailorId;
             request1.TxnType = "Transaction Status";
@@ -2732,7 +2722,6 @@ namespace SANYUKT.Provider.Payout
             request1.agencyid = 1;
             request1.serviceid = 1;
             request1.TxnPlateForm = obbb.TxnPlateForm;
-            request1.partnerid = serviceUser.UserMasterID;
             request1.partnerreferenceno = obbb.PartnerRefNo;
             request1.partnerretailorid = obbb.PartnerRetailorId;
             request1.TxnType = "Transaction Status";

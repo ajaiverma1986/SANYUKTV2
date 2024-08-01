@@ -27,7 +27,7 @@ namespace SANYUKT.Repository
             var dbCommand = _database.GetStoredProcCommand("usp_NewTransactionNonFinancial");
             _database.AddInParameter(dbCommand, "@agencyid", request.agencyid);
             _database.AddInParameter(dbCommand, "@serviceid", request.serviceid);
-            _database.AddInParameter(dbCommand, "@partnerid", request.partnerid);
+            _database.AddInParameter(dbCommand, "@partnerid", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@partnerretailorid", request.partnerretailorid);
             _database.AddInParameter(dbCommand, "@partnerreferenceno", request.partnerreferenceno);
             _database.AddInParameter(dbCommand, "@createdby", serviceUser.UserMasterID);
@@ -68,7 +68,7 @@ namespace SANYUKT.Repository
             var dbCommand = _database.GetStoredProcCommand("[TXN].usp_NewTransaction");
             _database.AddInParameter(dbCommand, "@agencyid", request.agencyid);
             _database.AddInParameter(dbCommand, "@serviceid", request.serviceid);
-            _database.AddInParameter(dbCommand, "@partnerid", request.partnerid);
+            _database.AddInParameter(dbCommand, "@partnerid", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@partnertxnid", request.partnerreferenceno);
             _database.AddInParameter(dbCommand, "@partnerretailorid", request.partnerretailorid);
             _database.AddInParameter(dbCommand, "@description", request.description);

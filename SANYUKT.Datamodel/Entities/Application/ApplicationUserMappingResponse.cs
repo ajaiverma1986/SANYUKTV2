@@ -14,6 +14,7 @@ namespace SANYUKT.Datamodel.Entities.Application
         public Int32? UserMasterID { get; set; }
 
         public Int32? OrganizationID { get; set; }
+        public Int32? UserID { get; set; }
 
         public ApplicationTypes AppType { get; set; }
     }

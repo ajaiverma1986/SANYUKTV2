@@ -14,7 +14,6 @@ namespace SANYUKT.Datamodel.Entities.Transactions
     {
         public int AgencyId { get; set; }
         public int ServiceId { get; set; }
-        public long PartnerId { get; set; }
         public string TransactionCode { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
@@ -62,7 +61,6 @@ namespace SANYUKT.Datamodel.Entities.Transactions
 
     public class AddPaymentRequestRequest
     {
-        public long UserId { get; set; }
         public int PaymentChanelID { get; set; }
         public int PaymentModeId { get; set; }
         public decimal? Amount { get; set; }
@@ -89,7 +87,6 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public int  PaymentChanelID { get; set; }
         public int PaymentModeId { get; set; }
         public int Status { get; set; }
-        public long UserId { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
     }

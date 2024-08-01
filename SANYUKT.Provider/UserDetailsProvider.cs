@@ -1,5 +1,6 @@
 ﻿using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
+using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
 using SANYUKT.Repository;
 using System;
@@ -68,6 +69,30 @@ namespace SANYUKT.Provider
             long outputresponse = 0;
 
             outputresponse = await _repository.ChangeBenficairyStatus(request, serviceUser);
+
+            return outputresponse;
+        }
+        public async Task<long> CreateNewUserRequest(CreateUserWithlogoRequest request,string Filename, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+            CreateUserRequest request1 =new CreateUserRequest();
+            request1.LogoUrl=Filename.ToString();
+            request1.FirstName=request.FirstName;
+            request1.LastName=request.LastName;
+            request1.MiddleName=request.MiddleName;
+            request1.UserTypeId =request.UserTypeId;
+            request1.EmailId=request.EmailId;
+            request1.MobileNo=request.MobileNo;
+            
+            outputresponse = await _repository.CreateNewUserRequest(request1, serviceUser);
+
+            return outputresponse;
+        }
+        public async Task<long> AddOriginatorAccounts(CreateOriginatorAccountRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+            
+            outputresponse = await _repository.AddOriginatorAccounts(request, serviceUser);
 
             return outputresponse;
         }

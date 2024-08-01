@@ -28,7 +28,7 @@ namespace SANYUKT.Repository
             var dbCommand = _database.GetStoredProcCommand("usp_NewTransactionNonFinancial");
             _database.AddInParameter(dbCommand, "@agencyid", request.agencyid);
             _database.AddInParameter(dbCommand, "@serviceid", request.serviceid);
-            _database.AddInParameter(dbCommand, "@partnerid", request.partnerid);
+            _database.AddInParameter(dbCommand, "@partnerid", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@partnerretailorid", request.partnerretailorid);
             _database.AddInParameter(dbCommand, "@partnerreferenceno", request.partnerreferenceno);
             _database.AddInParameter(dbCommand, "@createdby", serviceUser.UserMasterID);
@@ -69,7 +69,7 @@ namespace SANYUKT.Repository
             var dbCommand = _database.GetStoredProcCommand("[TXN].usp_NewTransaction");
             _database.AddInParameter(dbCommand, "@agencyid", request.agencyid);
             _database.AddInParameter(dbCommand, "@serviceid", request.serviceid);
-            _database.AddInParameter(dbCommand, "@partnerid", request.partnerid);
+            _database.AddInParameter(dbCommand, "@partnerid", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@partnertxnid", request.partnerreferenceno);
             _database.AddInParameter(dbCommand, "@partnerretailorid", request.partnerretailorid);
             _database.AddInParameter(dbCommand, "@description", request.description);
@@ -143,13 +143,13 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
-        public async Task<List<TransactionDetailListResponse>> GetAllListTransactionDetail(TransactionDetailsRequest request)
+        public async Task<List<TransactionDetailListResponse>> GetAllListTransactionDetail(TransactionDetailsRequest request, ISANYUKTServiceUser serviceUser)
         {
             List<TransactionDetailListResponse> response = new List<TransactionDetailListResponse> ();
             var dbCommand = _database.GetStoredProcCommand("[TXN].uspGetTransactionDetails");
             _database.AddInParameter(dbCommand, "@AgencyId", request.AgencyId);
             _database.AddInParameter(dbCommand, "@ServiceId", request.ServiceId);
-            _database.AddInParameter(dbCommand, "@PartnerId", request.PartnerId);
+            _database.AddInParameter(dbCommand, "@PartnerId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
             _database.AddInParameter(dbCommand, "@ToDate", request.ToDate );
             _database.AddInParameter(dbCommand, "@TxnType", request.TxnType);
@@ -199,7 +199,7 @@ namespace SANYUKT.Repository
         {
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[TXN].AddNewPaymentRequest");
-            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@PaymentChanelID", request.PaymentChanelID);
             _database.AddInParameter(dbCommand, "@PaymentModeId", request.PaymentModeId);
             _database.AddInParameter(dbCommand, "@Amount", request.Amount);
@@ -237,7 +237,7 @@ namespace SANYUKT.Repository
             return response;
 
         }
-        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request)
+        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response1 =new SimpleResponse();
             List< PayinRequestListResponse> response =new List<PayinRequestListResponse> ();
@@ -245,7 +245,7 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@PaymentChanelID", request.PaymentChanelID);
             _database.AddInParameter(dbCommand, "@PaymentModeId", request.PaymentModeId);
             _database.AddInParameter(dbCommand, "@Status", request.Status);
-            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
             _database.AddInParameter(dbCommand, "@ToDate", request.ToDate);
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))

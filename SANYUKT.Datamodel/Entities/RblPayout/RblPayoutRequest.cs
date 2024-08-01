@@ -9,7 +9,6 @@ namespace SANYUKT.Datamodel.Entities.RblPayout
     {
         public int agencyid { get; set; }
         public int serviceid { get; set; }
-        public long? partnerid { get; set; }
         public string partnerretailorid { get; set; }
         public string partnerreferenceno { get; set; }
         public string TxnPlateForm { get; set; }

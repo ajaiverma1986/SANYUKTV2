@@ -67,17 +67,17 @@ namespace SANYUKT.Provider
             }
             return response;
         }
-        public async Task<List<TransactionDetailListResponse>> GetAllListTransactionDetail(TransactionDetailsRequest request)
+        public async Task<List<TransactionDetailListResponse>> GetAllListTransactionDetail(TransactionDetailsRequest request, ISANYUKTServiceUser serviceUser)
         {
             List<TransactionDetailListResponse> response = new List<TransactionDetailListResponse>();
-            response = await _repository.GetAllListTransactionDetail(request);
+            response = await _repository.GetAllListTransactionDetail(request, serviceUser);
             return response;
         }
-        public async Task<TransactionDetailListResponse> GetTransactionDetail(TransactionDetailsRequest request)
+        public async Task<TransactionDetailListResponse> GetTransactionDetail(TransactionDetailsRequest request, ISANYUKTServiceUser serviceUser)
         {
             TransactionDetailListResponse resp = new TransactionDetailListResponse();
             List<TransactionDetailListResponse> response = new List<TransactionDetailListResponse>();
-            response = await _repository.GetAllListTransactionDetail(request);
+            response = await _repository.GetAllListTransactionDetail(request, serviceUser);
             if(response.Count > 0)
             {
                 resp = response[0];
@@ -96,10 +96,10 @@ namespace SANYUKT.Provider
             resp = await _repository.ApproveRejectPayinRequest(request, serviceUser);
             return resp;
         }
-        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request)
+        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request, ISANYUKTServiceUser serviceUser)
         {
           SimpleResponse response = new SimpleResponse();
-            response = await _repository.GetallPayinRequest(request);
+            response = await _repository.GetallPayinRequest(request, serviceUser);
             return response;
         }
     }

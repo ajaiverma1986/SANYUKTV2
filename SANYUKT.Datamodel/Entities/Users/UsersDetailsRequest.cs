@@ -55,4 +55,36 @@ namespace SANYUKT.Datamodel.Entities.Users
         public long BenFiciaryId { get; set; }
       
     }
+    public class CreateUserRequest
+    {
+        public int UserTypeId { get; set; }
+        public string MobileNo { get; set; }
+        public string EmailId { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string LogoUrl { get; set; }
+
+    }
+    public class CreateUserWithlogoRequest
+    {
+        public Byte[] FileBytes { get; set; }
+        public string FileName { get; set; }
+        public int UserTypeId { get; set; }
+        public string MobileNo { get; set; }
+        public string EmailId { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+    }
+    public class CreateOriginatorAccountRequest
+    {
+        public long  UserId { get; set; }
+        public int BankId { get; set; }
+        public string AccountName { get; set; }
+        public string AccountNo { get; set; }
+        public string Ifsccode { get; set; }
+        public string BranchAddress { get; set; }
+      
+    }
 }

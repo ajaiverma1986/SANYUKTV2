@@ -30,6 +30,7 @@ namespace SANYUKT.Datamodel.Common
         public const string APPLICATION_API_TOKEN = "data:apitoken";
         public const string ID = "data:id:{0}";
         public const string USERMASTER_ID = "data:userToken:{0}:userMasterID";
+        public const string USER_ID = "data:userToken:{0}:userID";
         public const string BLOCKED_IP = "data:blockedip";
     }
 
