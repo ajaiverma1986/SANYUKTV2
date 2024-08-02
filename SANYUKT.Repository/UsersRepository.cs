@@ -23,13 +23,13 @@ namespace SANYUKT.Repository
         {
             UsersDetailsResponse response = new UsersDetailsResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].CheckAvailableBalance");
-            _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserID);
         
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
                 if (dataReader.Read())
                 {
-                    response.UserMasterId = GetInt64Value(dataReader, "UserMasterId").Value;
+                   
                     response.UserId = GetInt64Value(dataReader, "UserId").Value;
                     response.Usercode = GetStringValue(dataReader, "Usercode");
                     response.ThresoldLimit = GetDecimalValue(dataReader, "ThresoldLimit");

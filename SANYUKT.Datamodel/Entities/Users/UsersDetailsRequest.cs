@@ -7,7 +7,6 @@ namespace SANYUKT.Datamodel.Entities.Users
     public class UsersDetailsResponse
     {
         public long UserId { get; set; }
-        public long UserMasterId { get; set; }
         public int UserTypeId { get; set; }
         public string Usercode { get; set; }
         public decimal? AvailableLimit { get; set; }
