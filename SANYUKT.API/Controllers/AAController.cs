@@ -8,6 +8,8 @@ using SANYUKT.Datamodel.Shared;
 using SANYUKT.API.Common;
 using SANYUKT.Provider;
 using System.Threading.Tasks;
+using SANYUKT.Datamodel.Entities.Users;
+using SANYUKT.Provider.Shared;
 
 namespace SANYUKT.API.Controllers
 {
@@ -19,11 +21,12 @@ namespace SANYUKT.API.Controllers
     {
         private AuthenticationProvider _authenticationProvider;
         private AuthenticationHelper _callValidator = null;
-
+        public readonly UserDetailsProvider _Provider;
         public AAController()
         {
             _authenticationProvider = new AuthenticationProvider();
             _callValidator = new AuthenticationHelper();
+            _Provider = new UserDetailsProvider();
         }
         [HttpGet]
         public async Task<IActionResult> TestAPI(string Name)

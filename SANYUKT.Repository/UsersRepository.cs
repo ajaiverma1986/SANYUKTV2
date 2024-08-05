@@ -155,6 +155,7 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@FirstName", request.FirstName);
             _database.AddInParameter(dbCommand, "@MiddleName", request.MiddleName);
             _database.AddInParameter(dbCommand, "@LastName", request.LastName);
+            _database.AddInParameter(dbCommand, "@LogoUrl", request.LogoUrl);
             _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
 

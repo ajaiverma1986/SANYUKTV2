@@ -27,11 +27,17 @@ namespace SANYUKT.API.Controllers
             _Provider = new UserDetailsProvider();
             _callValidator = new AuthenticationHelper();
         }
-        
+
+        /// <summary>
+        /// User Creation
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
-        [AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        //[AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
         public async Task<IActionResult> CreateNewUser([FromBody] CreateUserWithlogoRequest request)
         {
+            string filename = "";
             SimpleResponse response = new SimpleResponse();
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
             if (error.HasError)
@@ -42,12 +48,13 @@ namespace SANYUKT.API.Controllers
 
 
             FileManager obj = new FileManager();
-            string filename = obj.SaveFile(request.FileBytes, request.MobileNo, request.FileName);
+             filename = obj.SaveFile(request.FileBytes, request.MobileNo, request.FileName);
+            
             response.Result = await _Provider.CreateNewUserRequest(request, filename, this.CallerUser);
             return Json(response);
         }
         [HttpPost]
-        [AuditApi(EventTypeName = "POST UserController/AddOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        //[AuditApi(EventTypeName = "POST UserController/AddOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
         public async Task<IActionResult> AddOriginatorAccounts([FromBody] CreateOriginatorAccountRequest request)
         {
             SimpleResponse response = new SimpleResponse();
