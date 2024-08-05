@@ -23,13 +23,13 @@ namespace SANYUKT.Repository
         {
             UsersDetailsResponse response = new UsersDetailsResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].CheckAvailableBalance");
-            _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserID);
         
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
                 if (dataReader.Read())
                 {
-                    response.UserMasterId = GetInt64Value(dataReader, "UserMasterId").Value;
+                   
                     response.UserId = GetInt64Value(dataReader, "UserId").Value;
                     response.Usercode = GetStringValue(dataReader, "Usercode");
                     response.ThresoldLimit = GetDecimalValue(dataReader, "ThresoldLimit");
@@ -187,6 +187,155 @@ namespace SANYUKT.Repository
 
             return outputstr;
 
+        }
+        public async Task<List<OriginatorListAccountResponse>> GetallOriginatorsAccount(ISANYUKTServiceUser serviceUser)
+        {
+           List< OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetallOriginatorsAccounts");
+
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+                    OriginatorListAccountResponse row = new OriginatorListAccountResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.BankId = GetInt32Value(dataReader, "BankId").Value;
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.OriginatorAccountID = GetInt32Value(dataReader, "OriginatorAccountID").Value;
+                    row.CreatedOn = GetDateValue(dataReader, "BenBranchCode");
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.AccountName = GetStringValue(dataReader, "AccountName");
+                    row.BankName = GetStringValue(dataReader, "BankName");
+                    row.AccountNo = GetStringValue(dataReader, "AccountNo");
+                    row.BranchAddress = GetStringValue(dataReader, "BranchAddress");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.Fullname = GetStringValue(dataReader, "Fullname");
+                    row.Usercode  = GetStringValue(dataReader, "Usercode");
+                    row.Ifsccode = GetStringValue(dataReader, "Ifsccode");
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
+
+        public async Task<long> AddUserAddress(CreateUserDetailAddressRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].Add_UserDetailAddress");
+            _database.AddInParameter(dbCommand, "@UserID", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@AddressTypeId", request.AddressTypeId);
+            _database.AddInParameter(dbCommand, "@Pincode", request.Pincode);
+            _database.AddInParameter(dbCommand, "@Address1", request.Address1);
+            _database.AddInParameter(dbCommand, "@@Address2", request.Address2);
+            _database.AddInParameter(dbCommand, "@@Address3", request.Address3);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@PincodeDataId", request.PincodeDataId);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+
+        public async Task<List<UserAddressListResponse>> GetAllUserAddress(ISANYUKTServiceUser serviceUser)
+        {
+            List<UserAddressListResponse> response = new List<UserAddressListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetallUserAddresses");
+
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+                    UserAddressListResponse row = new UserAddressListResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.AddressTypeId = GetInt32Value(dataReader, "AddressTypeId").Value;
+                    row.UserID = GetInt32Value(dataReader, "UserID").Value;
+                    row.UserAddressID = GetInt32Value(dataReader, "UserAddressID").Value;
+                    row.CreatedOn = GetDateValue(dataReader, "BenBranchCode");
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.Address1 = GetStringValue(dataReader, "Address1");
+                    row.Address2 = GetStringValue(dataReader, "Address2");
+                    row.Address3 = GetStringValue(dataReader, "Address3");
+                    row.AddressTypeName = GetStringValue(dataReader, "AddressTypeName");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.AreaName = GetStringValue(dataReader, "AreaName");
+                    row.PincodeDataId = GetInt32Value(dataReader, "PincodeDataId").Value;
+                    row.DistrictName = GetStringValue(dataReader, "DistrictName");
+                    row.StateName = GetStringValue(dataReader, "StateName");
+                    row.SubDistrictName = GetStringValue(dataReader, "SubDistrictName");
+                    row.Pincode = GetStringValue(dataReader, "Pincode");
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
+
+        public async Task<long> AddUserDeatilKYC(CreateUserDetailKyc request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].Add_UserDetailKyc");
+            _database.AddInParameter(dbCommand, "@UserID", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@KycID", request.KycID);
+            _database.AddInParameter(dbCommand, "@DocumentNo", request.DocumentNo);
+            _database.AddInParameter(dbCommand, "@FileUrl", request.FileUrl);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<List<UserKYYCResponse>> GetAllUserKyc(ISANYUKTServiceUser serviceUser)
+        {
+            List<UserKYYCResponse> response = new List<UserKYYCResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetallUserDeatilsKyc");
+
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+                    UserKYYCResponse row = new UserKYYCResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.KycID = GetInt32Value(dataReader, "KycID").Value;
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.UserKYCID = GetInt32Value(dataReader, "UserKYCID").Value;
+                    row.CreatedOn = GetDateValue(dataReader, "CreatedOn");
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.DocumentNo = GetStringValue(dataReader, "DocumentNo");
+                    row.FileUrl = GetStringValue(dataReader, "FileUrl");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    
+                    response.Add(row);
+                }
+            }
+            return response;
         }
     }
 }

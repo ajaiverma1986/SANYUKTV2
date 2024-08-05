@@ -67,5 +67,79 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.AddOriginatorAccounts(request, this.CallerUser);
             return Json(response);
         }
+        [HttpGet]
+        [AuditApi(EventTypeName = "POST UserController/ListOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ListOriginatorAccounts()
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetallOriginatorsAccount(CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        [AuditApi(EventTypeName = "POST UserController/AddUserAddress", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> AddUserAddress([FromBody] CreateUserDetailAddressRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.AddUserAddress(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        [AuditApi(EventTypeName = "POST UserController/ListUserAddresses", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ListUserAddresses()
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetAllUserAddress(CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        [AuditApi(EventTypeName = "POST UserController/AddUserDeatilKYC", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> AddUserDeatilKYC([FromBody] CreateUserDetailKyc1 request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+
+            FileManager obj = new FileManager();
+            string filename = obj.SaveFile(request.FileBytes, request.DocumentNo, request.FileName);
+            response.Result = await _Provider.AddUserDeatilKYC(request, filename, this.CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        [AuditApi(EventTypeName = "POST UserController/ListUserKYC", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ListUserKYC()
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetAllUserKyc(CallerUser);
+            return Json(response);
+        }
     }
 }

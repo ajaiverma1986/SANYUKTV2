@@ -96,5 +96,48 @@ namespace SANYUKT.Provider
 
             return outputresponse;
         }
+        public async Task<SimpleResponse> GetallOriginatorsAccount(ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result= await _repository.GetallOriginatorsAccount( serviceUser);
+            return response;
+        }
+        public async Task<long> AddUserAddress(CreateUserDetailAddressRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+
+            outputresponse = await _repository.AddUserAddress(request, serviceUser);
+
+            return outputresponse;
+        }
+        public async Task<SimpleResponse> GetAllUserAddress(ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetAllUserAddress(serviceUser);
+            return response;
+        }
+        
+        public async Task<long> AddUserDeatilKYC(CreateUserDetailKyc1 request, string Filename, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+            CreateUserDetailKyc request1 = new CreateUserDetailKyc();
+            request1.FileUrl = Filename.ToString();
+            request1.DocumentNo = request.DocumentNo;
+            request1.KycID = request.KycID;
+           
+
+            outputresponse = await _repository.AddUserDeatilKYC(request1, serviceUser);
+
+            return outputresponse;
+        }
+        public async Task<SimpleResponse> GetAllUserKyc(ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetAllUserKyc(serviceUser);
+            return response;
+        }
     }
 }

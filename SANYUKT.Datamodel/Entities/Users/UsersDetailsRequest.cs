@@ -7,7 +7,6 @@ namespace SANYUKT.Datamodel.Entities.Users
     public class UsersDetailsResponse
     {
         public long UserId { get; set; }
-        public long UserMasterId { get; set; }
         public int UserTypeId { get; set; }
         public string Usercode { get; set; }
         public decimal? AvailableLimit { get; set; }
@@ -86,5 +85,91 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string Ifsccode { get; set; }
         public string BranchAddress { get; set; }
       
+    }
+    public class OriginatorListAccountResponse
+    {
+        public long OriginatorAccountID { get; set; }
+        public long UserId { get; set; }
+        public int BankId { get; set; }
+        public string AccountName { get; set; }
+        public string AccountNo { get; set; }
+        public string Ifsccode { get; set; }
+        public string BranchAddress { get; set; }
+        public string StatusName { get; set; }
+        public string BankName { get; set; }
+        public string Usercode { get; set; }
+        public string Fullname { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public int Status { get; set; }
+
+
+    }
+    public class CreateUserDetailAddressRequest
+    {
+        public int AddressTypeId { get; set; }
+        public string Pincode { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string Address3 { get; set; }
+        public long PincodeDataId { get; set; }
+        
+    }
+    public class UserAddressListResponse
+    {
+        public long UserAddressID { get; set; }
+        public long UserID { get; set; }
+        public int AddressTypeId { get; set; }
+        public long PincodeDataId { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string Address3 { get; set; }
+        public string AddressTypeName { get; set; }
+        public string StatusName { get; set; }
+        public string AreaName { get; set; }
+        public string SubDistrictName { get; set; }
+        public string DistrictName { get; set; }
+        public string StateName { get; set; }
+        public string CreatedBy { get; set; }
+        public string Pincode { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public int Status { get; set; }
+
+
+    }
+
+    public class CreateUserDetailKyc
+    {
+        public string DocumentNo { get; set; }
+        public string FileUrl { get; set; }
+        public int KycID { get; set; }
+
+    }
+    public class CreateUserDetailKyc1
+    {
+        public Byte[] FileBytes { get; set; }
+        public string FileName { get; set; }
+        public string DocumentNo { get; set; }
+        public int KycID { get; set; }
+    }
+    public class UserKYYCResponse
+    {
+        public long UserKYCID { get; set; }
+        public long UserId { get; set; }
+        public int KycID { get; set; }
+        public string DocumentNo { get; set; }
+        public string FileUrl { get; set; }
+        public string StatusName { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public int Status { get; set; }
+
+
     }
 }
