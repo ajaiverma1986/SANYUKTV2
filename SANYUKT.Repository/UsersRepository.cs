@@ -155,7 +155,24 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@FirstName", request.FirstName);
             _database.AddInParameter(dbCommand, "@MiddleName", request.MiddleName);
             _database.AddInParameter(dbCommand, "@LastName", request.LastName);
-            _database.AddInParameter(dbCommand, "@LogoUrl", request.LogoUrl);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<long> UpdateUserLogo(UploadLogoRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].usp_UserOrgLogo");
+            _database.AddInParameter(dbCommand, "@Userid", request.UserId);
+            _database.AddInParameter(dbCommand, "@Logourl", request.Logourl);
             _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -65,10 +66,13 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string LogoUrl { get; set; }
 
     }
+    public class UploadLogoRequest
+    {
+        public string Logourl { get; set; }
+        public long UserId { get; set; }
+    }
     public class CreateUserWithlogoRequest
     {
-        public Byte[] FileBytes { get; set; }
-        public string FileName { get; set; }
         public int UserTypeId { get; set; }
         public string MobileNo { get; set; }
         public string EmailId { get; set; }
@@ -76,6 +80,18 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string MiddleName { get; set; }
         public string LastName { get; set; }
     }
+    public class UploadOrgLogo
+    {
+        public Byte[] FileBytes { get; set; }
+        public string FileName { get; set; }
+        public long UserId { get; set; }
+    }
+    public class UploadOrgLogo1
+    {
+        public IFormFile iform { get; set; }
+        public long UserId { get; set; }
+    }
+
     public class CreateOriginatorAccountRequest
     {
         public long  UserId { get; set; }

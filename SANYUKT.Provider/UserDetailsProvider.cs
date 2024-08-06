@@ -72,11 +72,10 @@ namespace SANYUKT.Provider
 
             return outputresponse;
         }
-        public async Task<long> CreateNewUserRequest(CreateUserWithlogoRequest request,string Filename, ISANYUKTServiceUser serviceUser)
+        public async Task<long> CreateNewUserRequest(CreateUserWithlogoRequest request, ISANYUKTServiceUser serviceUser)
         {
             long outputresponse = 0;
             CreateUserRequest request1 =new CreateUserRequest();
-            request1.LogoUrl=Filename.ToString();
             request1.FirstName=request.FirstName;
             request1.LastName=request.LastName;
             request1.MiddleName=request.MiddleName;
@@ -85,6 +84,18 @@ namespace SANYUKT.Provider
             request1.MobileNo=request.MobileNo;
             
             outputresponse = await _repository.CreateNewUserRequest(request1, serviceUser);
+
+            return outputresponse;
+        }
+        public async Task<long> UpdateUserOrgLogo(UploadOrgLogo request,string Filename, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+            UploadLogoRequest request1 = new UploadLogoRequest();
+            request1.Logourl = Filename;
+            request1.UserId = request.UserId;
+          
+
+            outputresponse = await _repository.UpdateUserLogo(request1, serviceUser);
 
             return outputresponse;
         }
