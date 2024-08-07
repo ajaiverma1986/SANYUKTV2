@@ -7,6 +7,7 @@ using SANYUKT.Connector;
 using SANYUKT.Datamodel.Common;
 using SANYUKT.Datamodel.DTO.Request;
 using SANYUKT.Datamodel.DTO.Response;
+using SANYUKT.Datamodel.Entities.Transactions;
 using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.RblPayoutRequest;
 using SANYUKT.Datamodel.Shared;
@@ -132,6 +133,48 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
         public async Task<IActionResult> TransactionStatus([FromBody] SinglePaymentStatus request)
         {
             SimpleResponse response = (await _Service.TransactionStatus(request, this.CurrentLoggedInUser));
+
+            if (response == null)
+            {
+                response = new SimpleResponse();
+                response.SetError(ErrorCodes.SERVER_ERROR);
+                return Json(response);
+            }
+
+            return Json(response);
+        }
+        /// <summary>
+        /// Direct Payout Transaction List
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        [Route("Payout/TransactionList")]
+        [HttpPost]
+        public async Task<IActionResult> TransactionList([FromBody] TransactionDetailsPayoutRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = (await _Service.TransactionList(request, this.CurrentLoggedInUser)).Deserialize<SimpleResponse>();
+
+            if (response == null)
+            {
+                response = new SimpleResponse();
+                response.SetError(ErrorCodes.SERVER_ERROR);
+                return Json(response);
+            }
+
+            return Json(response);
+        }
+        /// <summary>
+        /// Balance Check API
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        [Route("Payout/GetBalalnce")]
+        [HttpGet]
+        public async Task<IActionResult> GetBalalnce(long PartnerId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = (await _Service.GetBalalnce(PartnerId, this.CurrentLoggedInUser)).Deserialize<SimpleResponse>();
 
             if (response == null)
             {

@@ -40,6 +40,26 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<PartnerLimitResponse> CheckPartnerAvailbleLimit(ISANYUKTServiceUser serviceUser)
+        {
+            PartnerLimitResponse response = new PartnerLimitResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].PartnerCheckAvailableBalance");
+            _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+
+                    response.PartnerID = GetInt64Value(dataReader, "PartnerID").Value;
+                    response.PartnerCode = GetStringValue(dataReader, "PartnerCode");
+                    response.Balance = GetDecimalValue(dataReader, "AvailableLimit");
+                 
+
+                }
+            }
+            return response;
+        }
         public async Task<long> AddNewBenficiary(AddBenficiaryRequest request, ISANYUKTServiceUser serviceUser)
         {
 

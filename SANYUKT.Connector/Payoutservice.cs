@@ -1,5 +1,6 @@
 ﻿using SANYUKT.Connector.Shared;
 using SANYUKT.Datamodel.DTO.Request;
+using SANYUKT.Datamodel.Entities.Transactions;
 using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.RblPayoutRequest;
@@ -58,6 +59,26 @@ namespace SANYUKT.Connector
         public async Task<SimpleResponse> TransactionStatus(SinglePaymentStatus request, ISANUKTLoggedInUser SanyuktLoggedInUser)
         {
             return (await apiHelper.PostAsync<SimpleResponse>("RblPayout/TransactionStatus", request, SanyuktLoggedInUser));
+        }
+        /// <summary>
+        ///  Payout Transaction List
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="SanyuktLoggedInUser"></param>
+        /// <returns>SimpleResponse</returns>
+        public async Task<SimpleResponse> TransactionList(TransactionDetailsPayoutRequest request, ISANUKTLoggedInUser SanyuktLoggedInUser)
+        {
+            return (await apiHelper.PostAsync<SimpleResponse>("Transaction/TransactionList", request, SanyuktLoggedInUser));
+        }
+        /// <summary>
+        ///  Blalnce Check AI
+        /// </summary>
+        /// <param name="PartnerID"></param>
+        /// <param name="SanyuktLoggedInUser"></param>
+        /// <returns>SimpleResponse</returns>
+        public async Task<SimpleResponse> GetBalalnce(long PartnerID, ISANUKTLoggedInUser SanyuktLoggedInUser)
+        {
+            return (await apiHelper.GetAsync<SimpleResponse>("User/CheckBalance?PartnerID=" + PartnerID, SanyuktLoggedInUser));
         }
     }
 }

@@ -4,6 +4,7 @@ using SANYUKT.Datamodel.DTO.Request;
 using SANYUKT.Datamodel.Entities.Authorization;
 using SANYUKT.Datamodel.Entities.RblPayout;
 using SANYUKT.Datamodel.Entities.Transactions;
+using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Repository.Shared;
@@ -193,6 +194,52 @@ namespace SANYUKT.Repository
             }
 
             return response;
+        }
+
+        public async Task<SimpleResponse> GetAllPayoutTxnList(TransactionDetailsPayoutRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            List<TransactionDetailListPayoutResponse> response = new List<TransactionDetailListPayoutResponse>();
+            SimpleResponse resp3=new SimpleResponse ();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].uspGetTransactionDetails");
+            _database.AddInParameter(dbCommand, "@AgencyId", 1);
+            _database.AddInParameter(dbCommand, "@ServiceId", 1);
+            _database.AddInParameter(dbCommand, "@PartnerId", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
+            _database.AddInParameter(dbCommand, "@ToDate", request.ToDate);
+            _database.AddInParameter(dbCommand, "@TxnType", request.TxnType);
+            _database.AddInParameter(dbCommand, "@PartnerTransactionId", request.PartnerTransactionId);
+            _database.AddInParameter(dbCommand, "@TransactionCode", request.TransactionCode);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    TransactionDetailListPayoutResponse response2 = new TransactionDetailListPayoutResponse();
+                    response2.TransactionId = GetInt64Value(dataReader, "TransactionId").Value;
+                    response2.Transactioncode = GetStringValue(dataReader, "Transactioncode");
+                    response2.PartnerTxnId = GetStringValue(dataReader, "PartnerTxnId");
+                    response2.RefNo = GetStringValue(dataReader, "RefNo");
+                    response2.RelatedReference = GetStringValue(dataReader, "RelatedReference");
+                    response2.BankTxnDatetime = GetStringValue(dataReader, "BankTxnDatetime");
+                    response2.Amount = GetDecimalValue(dataReader, "Amount") ?? 0;
+                    //response2.RefNo1 = GetStringValue(dataReader, "RefNo1");
+                    //response2.RefNo2 = GetStringValue(dataReader, "RefNo2");
+                    //response2.RefNo3 = GetStringValue(dataReader, "RefNo3");
+                    //response2.RefNo4 = GetStringValue(dataReader, "RefNo4");
+                    //response2.RefNo5 = GetStringValue(dataReader, "RefNo5");
+                    //response2.RefNo6 = GetStringValue(dataReader, "RefNo6");
+                    //response2.RefNo7 = GetStringValue(dataReader, "RefNo7");
+                    //response2.RefNo8 = GetStringValue(dataReader, "RefNo8");
+                    //response2.RefNo9 = GetStringValue(dataReader, "RefNo9");
+                    //response2.RefNo10 = GetStringValue(dataReader, "RefNo10");
+                    response2.FailureReason = GetStringValue(dataReader, "FailureReason");
+                    response2.Status = GetInt32Value(dataReader, "Status").Value;
+                    response2.PartnerName = GetStringValue(dataReader, "PartnerName");
+                    response.Add(response2);
+                }
+            }
+            resp3.Result = response;
+            return resp3;
         }
 
         public async Task<SimpleResponse> AddNewPayinRequest(AddPaymentRequestRequest request, ISANYUKTServiceUser serviceUser)
