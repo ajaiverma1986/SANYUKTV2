@@ -188,5 +188,19 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetAllUserKyc(CallerUser);
             return Json(response);
         }
+        [HttpGet]
+        // [AuditApi(EventTypeName = "POST UserController/ListUserAddresses", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> CheckBalance()
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.CheckBalalnce(CallerUser);
+            return Json(response);
+        }
     }
 }

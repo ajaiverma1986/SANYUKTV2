@@ -14,6 +14,13 @@ namespace SANYUKT.Datamodel.Entities.Users
         public decimal? ThresoldLimit { get; set; }
        
     }
+    public class PartnerLimitResponse
+    {
+        public long PartnerID { get; set; }
+        public string PartnerCode { get; set; }
+        public decimal? Balance { get; set; }
+
+    }
     public class AddBenficiaryRequest
     {
         public string BenficiaryName { get; set; }

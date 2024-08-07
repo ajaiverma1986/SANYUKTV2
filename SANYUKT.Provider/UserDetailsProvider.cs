@@ -48,6 +48,14 @@ namespace SANYUKT.Provider
             }
             return avail;
         }
+        public async Task<SimpleResponse> CheckBalalnce( ISANYUKTServiceUser serviceUser)
+        {
+            UsersDetailsResponse response = new UsersDetailsResponse();
+            SimpleResponse response1=new SimpleResponse ();
+          
+            response1.Result = await _repository.CheckPartnerAvailbleLimit(serviceUser);
+            return response1;
+        }
         public async Task<long> AddNewBenficiary(AddBenficiaryRequest request, ISANYUKTServiceUser serviceUser)
         {
             long outputresponse = 0;
