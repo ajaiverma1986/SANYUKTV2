@@ -58,10 +58,11 @@ namespace SANYUKT.API.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
+        [Consumes("multipart/form-data")]
         [HttpPost]
        
         //[AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
-        public async Task<IActionResult> UploadUserLogo( [FromBody] UploadOrgLogo1 upload)
+        public async Task<IActionResult> UploadUserLogo(IFormFile formFile)
         {
             string filename = "";
             SimpleResponse response = new SimpleResponse();
@@ -75,11 +76,12 @@ namespace SANYUKT.API.Controllers
 
             FileManager obj = new FileManager();
             UploadOrgLogo logore=new UploadOrgLogo ();
+            //HttpContext.Request.Form.Files
            
-                 filename = obj.SaveFile(GetStreamBytes(upload.iform.OpenReadStream()), upload.UserId.ToString(), filename);
+                 filename = obj.SaveFile(GetStreamBytes(formFile.OpenReadStream()), 3.ToString(), filename);
             logore.FileName = filename;
-            logore .UserId = upload.UserId;
-            logore.FileBytes = GetStreamBytes(upload.iform.OpenReadStream());
+            logore .UserId = 3;
+            logore.FileBytes = GetStreamBytes(formFile.OpenReadStream());
 
 
 
