@@ -394,7 +394,7 @@ namespace SANYUKT.Repository
             SimpleResponse response = new SimpleResponse();
             List<serviceTypeListResponse> objMaster = new List<serviceTypeListResponse>();
 
-            var dbCommand = _database.GetStoredProcCommand("[MDM].usp_GetDistrict");
+            var dbCommand = _database.GetStoredProcCommand("[MDM].ListServiceTypeMaster");
             _database.AddInParameter(dbCommand, "@AgencyId", AgencyId);
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
@@ -422,7 +422,7 @@ namespace SANYUKT.Repository
             SimpleResponse response = new SimpleResponse();
             List<ListPaymentChanelResponse> objMaster = new List<ListPaymentChanelResponse>();
 
-            var dbCommand = _database.GetStoredProcCommand("[MDM].usp_GetDistrict");
+            var dbCommand = _database.GetStoredProcCommand("[MDM].ListPaymentChanel");
             
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
