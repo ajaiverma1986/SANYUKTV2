@@ -98,7 +98,7 @@ namespace SANYUKT.Repository
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
-                if (dataReader.Read())
+                while (dataReader.Read())
                 {
                     BenficiaryResponse objp = new BenficiaryResponse();
                     objp.PartnerId = GetInt64Value(dataReader, "PartnerId").Value;

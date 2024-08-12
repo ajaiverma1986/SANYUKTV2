@@ -56,6 +56,7 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
         }
         private async Task<UserLoginResponse> ValidateUser(UserLoginRequest userLoginRequest)
         {
+            //UserLoginResponse userLoginResponse = null;
             UserLoginResponse userLoginResponse = JsonConvert.DeserializeObject<UserLoginResponse>(await _Service.Login(userLoginRequest, this.CurrentLoggedInUser));
             if (userLoginResponse != null && !userLoginResponse.HasError)
             {
@@ -101,7 +102,7 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
                 return Json(response);
             }
 
-            return Ok(response);
+            return Json(response);
         }
         /// <summary>
         /// Direct Payout Transaction
@@ -175,6 +176,7 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
         {
             SimpleResponse response = new SimpleResponse();
             response = (await _Service.GetBalalnce(PartnerId, this.CurrentLoggedInUser)).Deserialize<SimpleResponse>();
+           
 
             if (response == null)
             {

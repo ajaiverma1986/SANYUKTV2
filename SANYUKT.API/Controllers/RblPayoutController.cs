@@ -166,7 +166,7 @@ namespace SANYUKT.API.Controllers
         [AuditApi(EventTypeName = "POST RblPayoutController/GetAllBenficiary", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
         public async Task<IActionResult> GetAllBenficiary([FromBody] ListBenficaryRequest request)
         {
-            UserLoginResponse response = new UserLoginResponse();
+            SimpleResponse response = new SimpleResponse();
 
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
             if (error.HasError)
@@ -174,12 +174,11 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
-            SimpleResponse response1 = new SimpleResponse();
+            
 
+            response.Result = await _userProvider.GetAllBenficiary(request, this.CallerUser);
 
-            response1.Result = await _userProvider.GetAllBenficiary(request, this.CallerUser);
-
-            return Ok(response1);
+            return Ok(response);
 
         }
     }

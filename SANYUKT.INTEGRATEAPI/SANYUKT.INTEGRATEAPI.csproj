@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Audit.Mvc.Core" Version="14.5.7" />
+    <PackageReference Include="Audit.Mvc.Core" Version="13.0.0" />
     <PackageReference Include="Audit.NET.SqlServer" Version="13.0.0" />
     <PackageReference Include="Audit.WebApi" Version="13.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.1.0" />
