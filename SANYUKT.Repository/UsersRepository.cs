@@ -102,6 +102,7 @@ namespace SANYUKT.Repository
                 {
                     BenficiaryResponse objp = new BenficiaryResponse();
                     objp.PartnerId = GetInt64Value(dataReader, "PartnerId").Value;
+                    objp.BenFiciaryId = GetInt64Value(dataReader, "BenFiciaryId").Value;
                     objp.BenBranchCode = GetStringValue(dataReader, "BenBranchCode");
                     objp.BenAddress = GetStringValue(dataReader, "BenAddress");
                     objp.BenBankcode = GetStringValue(dataReader, "BenBankcode");

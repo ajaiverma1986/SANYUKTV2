@@ -88,7 +88,7 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
         /// </summary>
         /// <param name="request">request</param>
         /// <returns></returns>
-        [Route("Payout/AddBenficiary")]
+        [Route("Payout/ListBenficiary")]
         [HttpPost]
         public async Task<IActionResult> ListBenficiary([FromBody] ListBenficaryRequest request)
         {
@@ -101,7 +101,7 @@ namespace SANYUKT.INTEGRATEAPI.Controllers
                 return Json(response);
             }
 
-            return Json(response);
+            return Ok(response);
         }
         /// <summary>
         /// Direct Payout Transaction
