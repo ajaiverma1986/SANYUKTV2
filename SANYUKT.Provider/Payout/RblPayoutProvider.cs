@@ -1922,10 +1922,9 @@ namespace SANYUKT.Provider.Payout
 
             return response;
         }
-
-        public async Task<SimpleResponse> PayoutTransaction(PayoutTransaction req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
+        public async Task<SimpleResponse> PayoutTransactionwithoutBenIDFT(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
-            PaymentRequest requestreq = new PaymentRequest();
+            PaymentRequestFT requestreq = new PaymentRequestFT();
             SimpleResponse response = new SimpleResponse();
             RblTransactionResponse resp = new RblTransactionResponse();
             decimal txnFee = 0;
@@ -1981,7 +1980,11 @@ namespace SANYUKT.Provider.Payout
                 response.SetError(ErrorCodes.SP_127);
                 return response;
             }
-
+            if (Convert.ToDecimal(req.Amount) <= 0)
+            {
+                response.SetError(ErrorCodes.SP_131);
+                return response;
+            }
 
             RblAccountBalalnceResponse respbal = new RblAccountBalalnceResponse();
             RblPayoutRequest payoutRequest = new RblPayoutRequest();
@@ -2104,50 +2107,60 @@ namespace SANYUKT.Provider.Payout
                 response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
+            long benid = 0;
 
-            BenficiaryResponse resben=new BenficiaryResponse ();
-            resben = await _userprovider.GetBenficiaryDetailsByID(Convert.ToInt64(req.BenficiaryID));
-            if (resben == null)
+            AddBenficiaryRequest objb = new AddBenficiaryRequest();
+            objb.BenBankcode = req.Ben_BankCd;
+            objb.BenBranchCode = req.Ben_BranchCd;
+            objb.BenAddress = "";
+            objb.BenAccountNo = req.Ben_Acct_No;
+            objb.BenbankName = req.Ben_BankName;
+            objb.BenficiaryName = req.Ben_Name;
+            objb.BenIfsccode = req.Ben_IFSC;
+            objb.BenMobile = req.Ben_Mobile;
+            benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
+            if (benid == 0)
             {
-                response.SetError(ErrorCodes.SP_129);
+                response.SetError(ErrorCodes.SP_128);
                 return response;
             }
 
+
             //api payment initiations
-            SinglePaymentCorpReq spr = new SinglePaymentCorpReq();
-            Signature1 si = new Signature1();
+            Single_Payment_Corp_ReqFT spr = new Single_Payment_Corp_ReqFT();
+            SignatureFT si = new SignatureFT();
             si.Signature = "";
             spr.Signature = si;
-            HeaderPayment hp = new HeaderPayment();
-            hp.Approver_ID ="";
+            HeaderFT hp = new HeaderFT();
+            hp.Approver_ID = "";
             hp.Checker_ID = "";
             hp.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID.ToString();
             hp.TranID = transactionResponse.Transactioncode;
             hp.Maker_ID = "";
             spr.Header = hp;
 
-            BodyPayment bp = new BodyPayment();
+            BodyFT bp = new BodyFT();
             bp.Amount = req.Amount;
-            bp.Ben_BranchCd = resben.BenBranchCode;
-            bp.Ben_BankCd = resben.BenBankcode;
+            bp.Ben_BranchCd = req.Ben_BranchCd;
+            bp.Ben_BankCd = req.Ben_BankCd;
             bp.Ben_Address = "";
             bp.Issue_BranchCd = "";
-            bp.Ben_Acct_No = resben.BenAccountNo;
+            bp.Ben_Acct_No = req.Ben_Acct_No;
             bp.Ben_TrnParticulars = req.Ben_TrnParticulars;
             bp.Ben_PartTrnRmks = "SINGLE PAYMENT";
             bp.Debit_PartTrnRmks = "";
-            bp.Ben_BankName = resben.BenbankName;
-            bp.Remarks = req.Remarks;
+            bp.Ben_BankName = req.Ben_BankName;
+            bp.Remarks = "PAYEMNT QUEUE";
             bp.Ben_Email = "";
-            bp.Ben_IFSC = resben.BenIfsccode;
-            bp.Ben_Mobile = resben.BenMobile;
-            bp.Ben_Name = resben.BenficiaryName;
+            bp.Ben_IFSC = req.Ben_IFSC;
+            bp.Ben_Mobile = req.Ben_Mobile;
+            bp.Ben_Name = req.Ben_Name;
             bp.Debit_Acct_Name = serviceList.ServiceAccName;
             bp.Debit_Acct_No = serviceList.ServiceAccountNo;
             bp.Debit_IFSC = serviceList.ServcieIfsccode;
             bp.Debit_Mobile = serviceList.ServiceMobileNo;
-            bp.Debit_TrnParticulars = req.Debit_TrnParticulars;
-            bp.Mode_of_Pay = req.Mode_of_Pay;
+            bp.Debit_TrnParticulars = "Transaction By-" + req.PartnerRetailorId;
+            bp.Mode_of_Pay = "FT";
             spr.Body = bp;
             requestreq.Single_Payment_Corp_Req = spr;
 
@@ -2174,7 +2187,7 @@ namespace SANYUKT.Provider.Payout
             var response1 = await client.SendAsync(request);
             response.Result = await response1.Content.ReadAsStringAsync();
             await _commonProvider.ApilogResponse("RBL Payout Transaction", fullurl, "", jsonstr, response.Result.ToString());
-            SingleRblPaymentResponse nnn = new SingleRblPaymentResponse();
+            SinglePaymentResponseFT nnn = new SinglePaymentResponseFT();
             UpdateTransactionStatusRequest request3 = new UpdateTransactionStatusRequest();
             if (response1.StatusCode == HttpStatusCode.OK)
             {
@@ -2186,7 +2199,7 @@ namespace SANYUKT.Provider.Payout
                 string strRemSlash = jsonn.Replace("\"", "\'");
                 string strRemNline = strRemSlash.Replace("\n", " ");
                 // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<SingleRblPaymentResponse>(@strRemNline);
+                nnn = JsonConvert.DeserializeObject<SinglePaymentResponseFT>(@strRemNline);
                 resp.Status = nnn.Single_Payment_Corp_Resp.Header.Status;
                 resp.ChanelPartnerRefNo = req.PartnerRefNo;
                 resp.ErorrDescription = nnn.Single_Payment_Corp_Resp.Header.Error_Desc;
@@ -2194,19 +2207,20 @@ namespace SANYUKT.Provider.Payout
                 resp.TransactionId = nnn.Single_Payment_Corp_Resp.Header.TranID;
                 if (resp.Status == "Success")
                 {
-                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.channelpartnerrefno;
+                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+                    resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
+                    resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
+                    resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
+                    resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
+                    resp.BankRefNo = "";
                 }
                 else
                 {
                     resp.RefNo = "";
                 }
 
-                resp.RRN = nnn.Single_Payment_Corp_Resp.Body.RRN;
-                resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
-                resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
-                resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
-                resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
-                resp.BankRefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
+                resp.RRN = "";
+
 
                 request3.RefNo = resp.BankRefNo;
                 request3.RelatedReference = resp.RefNo;
@@ -2307,6 +2321,45 @@ namespace SANYUKT.Provider.Payout
 
             return response;
         }
+
+        public async Task<SimpleResponse> PayoutTransaction(PayoutTransaction req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            BenficiaryResponse resben = new BenficiaryResponse();
+            resben = await _userprovider.GetBenficiaryDetailsByID(Convert.ToInt64(req.BenficiaryID));
+            if (resben == null)
+            {
+                response.SetError(ErrorCodes.SP_129);
+                return response;
+            }
+
+            if (req.Mode_of_Pay == "FT")
+            {
+                //response = await PayoutTransactionwithoutBenIDFT(req, Certificatetext, serviceUser);
+            }
+            else if (req.Mode_of_Pay == "NEFT")
+            {
+                //response = await PayoutTransactionwithoutBenNEFT(req, Certificatetext, serviceUser);
+            }
+            else if (req.Mode_of_Pay == "RTGS")
+            {
+                //response = await PayoutTransactionwithoutBenRTGS(req, Certificatetext, serviceUser);
+
+            }
+            else if (req.Mode_of_Pay == "IMPS")
+            {
+               // response = await PayoutTransactionwithoutBenIMPS(req, Certificatetext, serviceUser);
+            }
+            else
+            {
+                response.SetError(ErrorCodes.SP_130);
+            }
+
+            return response;
+        }
+
+      
         public async Task<RblStatusResponse> PayoutTransactionStatus(SinglePaymentStatusNew obbb, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
