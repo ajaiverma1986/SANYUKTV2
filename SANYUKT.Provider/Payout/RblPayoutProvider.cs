@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto.Agreement.Srp;
@@ -276,7 +277,7 @@ namespace SANYUKT.Provider.Payout
             return response;
         }
 
-        public async Task<SimpleResponse> PayoutTransactionwithoutBenFT(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
+        public async Task<SimpleResponse> PayoutTransactionwithoutBenFT(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser,int Caaltypeid=0)
         {
             PaymentRequestFT requestreq = new PaymentRequestFT();
             SimpleResponse response = new SimpleResponse();
@@ -461,6 +462,8 @@ namespace SANYUKT.Provider.Payout
                 response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
+            if(Caaltypeid==0)
+            {
             long benid = 0;
 
             AddBenficiaryRequest objb = new AddBenficiaryRequest();
@@ -477,6 +480,7 @@ namespace SANYUKT.Provider.Payout
             {
                 response.SetError(ErrorCodes.SP_128);
                 return response;
+            }
             }
 
 
@@ -676,7 +680,7 @@ namespace SANYUKT.Provider.Payout
             return response;
         }
 
-        public async Task<SimpleResponse> PayoutTransactionwithoutBenNEFT(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
+        public async Task<SimpleResponse> PayoutTransactionwithoutBenNEFT(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser, int Caaltypeid = 0)
         {
             PaymentRequestNEFT requestreq = new PaymentRequestNEFT();
             SimpleResponse response = new SimpleResponse();
@@ -863,22 +867,25 @@ namespace SANYUKT.Provider.Payout
                 response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
-            long benid = 0;
-
-            AddBenficiaryRequest objb = new AddBenficiaryRequest();
-            objb.BenBankcode = req.Ben_BankCd;
-            objb.BenBranchCode = req.Ben_BranchCd;
-            objb.BenAddress = "";
-            objb.BenAccountNo = req.Ben_Acct_No;
-            objb.BenbankName = req.Ben_BankName;
-            objb.BenficiaryName = req.Ben_Name;
-            objb.BenIfsccode = req.Ben_IFSC;
-            objb.BenMobile = req.Ben_Mobile;
-            benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
-            if (benid == 0)
+            if (Caaltypeid == 0)
             {
-                response.SetError(ErrorCodes.SP_128);
-                return response;
+                long benid = 0;
+
+                AddBenficiaryRequest objb = new AddBenficiaryRequest();
+                objb.BenBankcode = req.Ben_BankCd;
+                objb.BenBranchCode = req.Ben_BranchCd;
+                objb.BenAddress = "";
+                objb.BenAccountNo = req.Ben_Acct_No;
+                objb.BenbankName = req.Ben_BankName;
+                objb.BenficiaryName = req.Ben_Name;
+                objb.BenIfsccode = req.Ben_IFSC;
+                objb.BenMobile = req.Ben_Mobile;
+                benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
+                if (benid == 0)
+                {
+                    response.SetError(ErrorCodes.SP_128);
+                    return response;
+                }
             }
 
 
@@ -1082,7 +1089,7 @@ namespace SANYUKT.Provider.Payout
             return response;
         }
 
-        public async Task<SimpleResponse> PayoutTransactionwithoutBenRTGS(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
+        public async Task<SimpleResponse> PayoutTransactionwithoutBenRTGS(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser, int Caaltypeid = 0)
         {
             PaymentRequestRTGS requestreq = new PaymentRequestRTGS();
             SimpleResponse response = new SimpleResponse();
@@ -1273,22 +1280,25 @@ namespace SANYUKT.Provider.Payout
                 response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
-            long benid = 0;
-
-            AddBenficiaryRequest objb = new AddBenficiaryRequest();
-            objb.BenBankcode = req.Ben_BankCd;
-            objb.BenBranchCode = req.Ben_BranchCd;
-            objb.BenAddress = "";
-            objb.BenAccountNo = req.Ben_Acct_No;
-            objb.BenbankName = req.Ben_BankName;
-            objb.BenficiaryName = req.Ben_Name;
-            objb.BenIfsccode = req.Ben_IFSC;
-            objb.BenMobile = req.Ben_Mobile;
-            benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
-            if (benid == 0)
+            if (Caaltypeid == 0)
             {
-                response.SetError(ErrorCodes.SP_128);
-                return response;
+                long benid = 0;
+
+                AddBenficiaryRequest objb = new AddBenficiaryRequest();
+                objb.BenBankcode = req.Ben_BankCd;
+                objb.BenBranchCode = req.Ben_BranchCd;
+                objb.BenAddress = "";
+                objb.BenAccountNo = req.Ben_Acct_No;
+                objb.BenbankName = req.Ben_BankName;
+                objb.BenficiaryName = req.Ben_Name;
+                objb.BenIfsccode = req.Ben_IFSC;
+                objb.BenMobile = req.Ben_Mobile;
+                benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
+                if (benid == 0)
+                {
+                    response.SetError(ErrorCodes.SP_128);
+                    return response;
+                }
             }
 
 
@@ -1489,7 +1499,7 @@ namespace SANYUKT.Provider.Payout
             return response;
         }
 
-        public async Task<SimpleResponse> PayoutTransactionwithoutBenIMPS(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
+        public async Task<SimpleResponse> PayoutTransactionwithoutBenIMPS(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser, int Caaltypeid = 0)
         {
             PaymentRequestIMPS requestreq = new PaymentRequestIMPS();
             SimpleResponse response = new SimpleResponse();
@@ -1674,22 +1684,25 @@ namespace SANYUKT.Provider.Payout
                 response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
                 return response;
             }
-            long benid = 0;
-
-            AddBenficiaryRequest objb = new AddBenficiaryRequest();
-            objb.BenBankcode = req.Ben_BankCd;
-            objb.BenBranchCode = req.Ben_BranchCd;
-            objb.BenAddress = "";
-            objb.BenAccountNo = req.Ben_Acct_No;
-            objb.BenbankName = req.Ben_BankName;
-            objb.BenficiaryName = req.Ben_Name;
-            objb.BenIfsccode = req.Ben_IFSC;
-            objb.BenMobile = req.Ben_Mobile;
-            benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
-            if (benid == 0)
+            if (Caaltypeid == 0)
             {
-                response.SetError(ErrorCodes.SP_128);
-                return response;
+                long benid = 0;
+
+                AddBenficiaryRequest objb = new AddBenficiaryRequest();
+                objb.BenBankcode = req.Ben_BankCd;
+                objb.BenBranchCode = req.Ben_BranchCd;
+                objb.BenAddress = "";
+                objb.BenAccountNo = req.Ben_Acct_No;
+                objb.BenbankName = req.Ben_BankName;
+                objb.BenficiaryName = req.Ben_Name;
+                objb.BenIfsccode = req.Ben_IFSC;
+                objb.BenMobile = req.Ben_Mobile;
+                benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
+                if (benid == 0)
+                {
+                    response.SetError(ErrorCodes.SP_128);
+                    return response;
+                }
             }
 
 
@@ -1900,20 +1913,20 @@ namespace SANYUKT.Provider.Payout
            SimpleResponse response=new SimpleResponse();
             if(req.Mode_of_Pay=="FT")
             {
-                response=await PayoutTransactionwithoutBenFT(req, Certificatetext, serviceUser);
+                response=await PayoutTransactionwithoutBenFT(req, Certificatetext, serviceUser,0);
             }
             else if(req.Mode_of_Pay=="NEFT")
             {
-                response=await PayoutTransactionwithoutBenNEFT(req, Certificatetext, serviceUser);  
+                response=await PayoutTransactionwithoutBenNEFT(req, Certificatetext, serviceUser,0);  
             }
             else if(req.Mode_of_Pay=="RTGS")
             {
-                response= await PayoutTransactionwithoutBenRTGS(req, Certificatetext, serviceUser);
+                response= await PayoutTransactionwithoutBenRTGS(req, Certificatetext, serviceUser,0);
 
             }
             else if( req.Mode_of_Pay=="IMPS")
             {
-                response=await PayoutTransactionwithoutBenIMPS(req, Certificatetext, serviceUser);
+                response=await PayoutTransactionwithoutBenIMPS(req, Certificatetext, serviceUser,0);
             }
             else
             {
@@ -1922,406 +1935,7 @@ namespace SANYUKT.Provider.Payout
 
             return response;
         }
-        public async Task<SimpleResponse> PayoutTransactionwithoutBenIDFT(SinglePaymentRequestFT req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
-        {
-            PaymentRequestFT requestreq = new PaymentRequestFT();
-            SimpleResponse response = new SimpleResponse();
-            RblTransactionResponse resp = new RblTransactionResponse();
-            decimal txnFee = 0;
-            decimal Margin = 0;
-
-            //service list validation
-            ServiceListResponse serviceList = new ServiceListResponse();
-
-            serviceList = await _masterdatarepos.GetAllServcieList(1);
-
-            if (serviceList == null)
-            {
-                response.SetError(ErrorCodes.SP_123);
-                return response;
-            }
-            if (serviceList.ServiceAccountNo == null)
-            {
-                response.SetError(ErrorCodes.SP_124);
-                return response;
-            }
-            if (serviceList.ServiceAccountNo == "")
-            {
-                response.SetError(ErrorCodes.SP_124);
-                return response;
-            }
-            if (serviceList.ServcieIfsccode == null)
-            {
-                response.SetError(ErrorCodes.SP_125);
-                return response;
-            }
-            if (serviceList.ServcieIfsccode == "")
-            {
-                response.SetError(ErrorCodes.SP_125);
-                return response;
-            }
-            if (serviceList.ServiceAccName == null)
-            {
-                response.SetError(ErrorCodes.SP_126);
-                return response;
-            }
-            if (serviceList.ServiceAccName == "")
-            {
-                response.SetError(ErrorCodes.SP_126);
-                return response;
-            }
-            if (serviceList.ServiceMobileNo == null)
-            {
-                response.SetError(ErrorCodes.SP_127);
-                return response;
-            }
-            if (serviceList.ServiceMobileNo == "")
-            {
-                response.SetError(ErrorCodes.SP_127);
-                return response;
-            }
-            if (Convert.ToDecimal(req.Amount) <= 0)
-            {
-                response.SetError(ErrorCodes.SP_131);
-                return response;
-            }
-
-            RblAccountBalalnceResponse respbal = new RblAccountBalalnceResponse();
-            RblPayoutRequest payoutRequest = new RblPayoutRequest();
-            payoutRequest.ApproverId = "";
-            payoutRequest.PartnerRetailorId = req.PartnerRetailorId;
-            payoutRequest.AccountNo = serviceList.ServiceAccountNo;
-
-
-
-            //api balance chaeck validation
-            SimpleResponse resbal = new SimpleResponse();
-
-            resbal = await GetBalalceNew(payoutRequest, Certificatetext, serviceUser);
-            if (resbal == null)
-            {
-                response.SetError(ErrorCodes.ACC_BAL_INSUFCIANT);
-                return response;
-            }
-            respbal = resbal.Result as RblAccountBalalnceResponse;
-            if (respbal == null)
-            {
-                response.SetError(ErrorCodes.ACC_BAL_INSUFCIANT);
-                return response;
-            }
-            if (respbal.BalalnceAmount == "0.00")
-            {
-                response.SetError(ErrorCodes.ACC_BAL_INSUFCIANT);
-                return response;
-            }
-            if (Convert.ToDecimal(respbal.BalalnceAmount) <= 0)
-            {
-                response.SetError(ErrorCodes.ACC_BAL_INSUFCIANT);
-                return response;
-            }
-            if (Convert.ToDecimal(respbal.BalalnceAmount) <= Convert.ToDecimal(req.Amount))
-            {
-                response.SetError(ErrorCodes.ACC_BAL_INSUFCIANT);
-                return response;
-            }
-
-            //service charge calculation and validation
-            SevicechargeRequest sevicechargeRequest = new SevicechargeRequest();
-            sevicechargeRequest.ServiceId = 1;
-            sevicechargeRequest.AgencyId = 1;
-            sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
-
-
-            SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
-            sevicechargeResponse = await _provider.GetServiceChargeDetail(sevicechargeRequest);
-            if (sevicechargeResponse == null)
-            {
-                response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
-                return response;
-            }
-            if (sevicechargeResponse.SlabType == 1)
-            {
-                if (sevicechargeResponse.CalculationType == 1)
-                {
-                    txnFee = sevicechargeResponse.CalculationValue;
-                    Margin = 0;
-                }
-                else
-                {
-                    txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
-                    Margin = 0;
-                }
-            }
-            else
-            {
-                if (sevicechargeResponse.CalculationType == 1)
-                {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue;
-                }
-                else
-                {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
-                }
-            }
-
-            //wallet balance check and validation
-
-            bool isavaillimit = false;
-            isavaillimit = await _userprovider.CheckAvailableBalance(Convert.ToDecimal(req.Amount), txnFee, serviceUser);
-            if (isavaillimit)
-            {
-                response.SetError(ErrorCodes.INSUFFICIENT_LIMIT);
-                return response;
-
-            }
-
-            //initiate transaction
-            NewTransactionRequest request1 = new NewTransactionRequest();
-            request1.description = "Payout Transaction";
-            request1.amount = Convert.ToDecimal(req.Amount);
-            request1.partnerretailorid = req.PartnerRetailorId;
-            request1.TxnPlateForm = "API";
-            request1.agencyid = 1;
-            request1.serviceid = 1;
-            request1.partnerreferenceno = req.PartnerRefNo;
-            request1.TxnType = "D";
-            request1.txnFee = txnFee;
-            request1.margincom = Margin;
-            TransactionResponse transactionResponse = new TransactionResponse();
-
-            transactionResponse = await _provider.NewTransaction(request1, serviceUser);
-            if (transactionResponse == null)
-            {
-                response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
-                return response;
-            }
-            if (transactionResponse.Transactioncode == null)
-            {
-                response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
-                return response;
-            }
-            if (transactionResponse.Transactioncode == "")
-            {
-                response.SetError(ErrorCodes.TRANSACTION_NOT_DONE);
-                return response;
-            }
-            long benid = 0;
-
-            AddBenficiaryRequest objb = new AddBenficiaryRequest();
-            objb.BenBankcode = req.Ben_BankCd;
-            objb.BenBranchCode = req.Ben_BranchCd;
-            objb.BenAddress = "";
-            objb.BenAccountNo = req.Ben_Acct_No;
-            objb.BenbankName = req.Ben_BankName;
-            objb.BenficiaryName = req.Ben_Name;
-            objb.BenIfsccode = req.Ben_IFSC;
-            objb.BenMobile = req.Ben_Mobile;
-            benid = await _userprovider.AddNewBenficiary(objb, serviceUser);
-            if (benid == 0)
-            {
-                response.SetError(ErrorCodes.SP_128);
-                return response;
-            }
-
-
-            //api payment initiations
-            Single_Payment_Corp_ReqFT spr = new Single_Payment_Corp_ReqFT();
-            SignatureFT si = new SignatureFT();
-            si.Signature = "";
-            spr.Signature = si;
-            HeaderFT hp = new HeaderFT();
-            hp.Approver_ID = "";
-            hp.Checker_ID = "";
-            hp.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID.ToString();
-            hp.TranID = transactionResponse.Transactioncode;
-            hp.Maker_ID = "";
-            spr.Header = hp;
-
-            BodyFT bp = new BodyFT();
-            bp.Amount = req.Amount;
-            bp.Ben_BranchCd = req.Ben_BranchCd;
-            bp.Ben_BankCd = req.Ben_BankCd;
-            bp.Ben_Address = "";
-            bp.Issue_BranchCd = "";
-            bp.Ben_Acct_No = req.Ben_Acct_No;
-            bp.Ben_TrnParticulars = req.Ben_TrnParticulars;
-            bp.Ben_PartTrnRmks = "SINGLE PAYMENT";
-            bp.Debit_PartTrnRmks = "";
-            bp.Ben_BankName = req.Ben_BankName;
-            bp.Remarks = "PAYEMNT QUEUE";
-            bp.Ben_Email = "";
-            bp.Ben_IFSC = req.Ben_IFSC;
-            bp.Ben_Mobile = req.Ben_Mobile;
-            bp.Ben_Name = req.Ben_Name;
-            bp.Debit_Acct_Name = serviceList.ServiceAccName;
-            bp.Debit_Acct_No = serviceList.ServiceAccountNo;
-            bp.Debit_IFSC = serviceList.ServcieIfsccode;
-            bp.Debit_Mobile = serviceList.ServiceMobileNo;
-            bp.Debit_TrnParticulars = "Transaction By-" + req.PartnerRetailorId;
-            bp.Mode_of_Pay = "FT";
-            spr.Body = bp;
-            requestreq.Single_Payment_Corp_Req = spr;
-
-
-            //api execution 
-
-            var _clientHandler = new HttpClientHandler();
-            _clientHandler.ClientCertificates.Add(Certificatetext);
-            _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            var client = new HttpClient(_clientHandler);
-            string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
-            var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
-            string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
-            string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
-            var authenticationString = $"{username}:{pass}";
-            var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(authenticationString));
-            request.Headers.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
-
-            //response generation
-            string jsonstr = JsonConvert.SerializeObject(requestreq, Formatting.Indented);
-            var content = new StringContent(jsonstr);
-            request.Content = content;
-            var response1 = await client.SendAsync(request);
-            response.Result = await response1.Content.ReadAsStringAsync();
-            await _commonProvider.ApilogResponse("RBL Payout Transaction", fullurl, "", jsonstr, response.Result.ToString());
-            SinglePaymentResponseFT nnn = new SinglePaymentResponseFT();
-            UpdateTransactionStatusRequest request3 = new UpdateTransactionStatusRequest();
-            if (response1.StatusCode == HttpStatusCode.OK)
-            {
-                string jsonData = JsonConvert.SerializeObject(response.Result);
-                dynamic jsonn = JsonConvert.DeserializeObject(jsonData);
-
-
-
-                string strRemSlash = jsonn.Replace("\"", "\'");
-                string strRemNline = strRemSlash.Replace("\n", " ");
-                // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<SinglePaymentResponseFT>(@strRemNline);
-                resp.Status = nnn.Single_Payment_Corp_Resp.Header.Status;
-                resp.ChanelPartnerRefNo = req.PartnerRefNo;
-                resp.ErorrDescription = nnn.Single_Payment_Corp_Resp.Header.Error_Desc;
-                resp.ErrorCode = nnn.Single_Payment_Corp_Resp.Header.Error_Cde;
-                resp.TransactionId = nnn.Single_Payment_Corp_Resp.Header.TranID;
-                if (resp.Status == "Success")
-                {
-                    resp.RefNo = nnn.Single_Payment_Corp_Resp.Body.RefNo;
-                    resp.BenIFSC = nnn.Single_Payment_Corp_Resp.Body.BenIFSC;
-                    resp.Ben_Acct_No = nnn.Single_Payment_Corp_Resp.Body.Ben_Acct_No;
-                    resp.Amount = nnn.Single_Payment_Corp_Resp.Body.Amount;
-                    resp.Txn_Time = nnn.Single_Payment_Corp_Resp.Body.Txn_Time;
-                    resp.BankRefNo = "";
-                }
-                else
-                {
-                    resp.RefNo = "";
-                }
-
-                resp.RRN = "";
-
-
-                request3.RefNo = resp.BankRefNo;
-                request3.RelatedReference = resp.RefNo;
-                request3.RefNo1 = resp.RRN;
-                request3.RefNo2 = resp.Ben_Acct_No;
-                request3.RefNo3 = resp.BenIFSC;
-                request3.BankTxnDatetime = resp.Txn_Time;
-                request3.RefNo4 = resp.Status;
-                request3.RefNo5 = resp.Amount;
-                request3.RefNo6 = resp.ErrorCode;
-                request3.RefNo7 = req.Mode_of_Pay;
-                request3.RefNo10 = resp.ErrorCode;
-                request3.FailureReason = resp.ErorrDescription;
-                request3.Transactioncode = resp.TransactionId;
-                if (resp.Status == "Failure")
-                {
-                    request3.status = 4;
-                }
-                else if (resp.Status == "In Progress")
-                {
-                    request3.status = 3;
-                }
-                else if (resp.Status == "Success")
-                {
-                    request3.status = 2;
-                }
-                await _provider.NewTransactionUpdateStatus(request3, serviceUser);
-            }
-            else if (response1.StatusCode == HttpStatusCode.Unauthorized)
-            {
-
-
-                resp.Status = "Unauthorized";
-                resp.ChanelPartnerRefNo = req.PartnerRefNo;
-                resp.ErorrDescription = "";
-                resp.ErrorCode = response1.ReasonPhrase;
-                resp.TransactionId = hp.TranID;
-                resp.RefNo = "";
-                resp.RRN = "";
-                resp.BenIFSC = "";
-                resp.Ben_Acct_No = "";
-                resp.Amount = "";
-                resp.Txn_Time = "";
-                resp.BankRefNo = "";
-
-                request3.RefNo = "";
-                request3.RelatedReference = "";
-                request3.RefNo1 = "";
-                request3.RefNo2 = "";
-                request3.RefNo3 = "";
-                request3.BankTxnDatetime = "";
-                request3.RefNo4 = "Unauthorized";
-                request3.RefNo5 = req.Amount;
-                request3.RefNo6 = "Unauthorized";
-                request3.RefNo7 = req.Mode_of_Pay;
-                request3.RefNo10 = "Unauthorized";
-                request3.FailureReason = "";
-                request3.Transactioncode = resp.TransactionId;
-                request3.status = 4;
-                await _provider.NewTransactionUpdateStatus(request3, serviceUser);
-
-            }
-            else if (response1.StatusCode == HttpStatusCode.InternalServerError)
-            {
-
-
-                resp.Status = "InternalServerError";
-                resp.ChanelPartnerRefNo = req.PartnerRefNo;
-                resp.ErorrDescription = "";
-                resp.ErrorCode = response1.ReasonPhrase;
-                resp.TransactionId = hp.TranID;
-                resp.RefNo = "";
-                resp.RRN = "";
-                resp.BenIFSC = "";
-                resp.Ben_Acct_No = "";
-                resp.Amount = "";
-                resp.Txn_Time = "";
-                resp.BankRefNo = "";
-
-                request3.RefNo = "";
-                request3.RelatedReference = "";
-                request3.RefNo1 = "";
-                request3.RefNo2 = "";
-                request3.RefNo3 = "";
-                request3.BankTxnDatetime = "";
-                request3.RefNo4 = "InternalServerError";
-                request3.RefNo5 = req.Amount;
-                request3.RefNo6 = "InternalServerError";
-                request3.RefNo7 = req.Mode_of_Pay;
-                request3.RefNo10 = "InternalServerError";
-                request3.FailureReason = "";
-                request3.Transactioncode = resp.TransactionId;
-                request3.status = 4;
-                await _provider.NewTransactionUpdateStatus(request3, serviceUser);
-
-            }
-            response.Result = resp;
-
-            return response;
-        }
-
+      
         public async Task<SimpleResponse> PayoutTransaction(PayoutTransaction req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
@@ -2333,23 +1947,36 @@ namespace SANYUKT.Provider.Payout
                 response.SetError(ErrorCodes.SP_129);
                 return response;
             }
+            SinglePaymentRequestFT fT = new SinglePaymentRequestFT();
+            fT.Amount = req.Amount;
+            fT.Ben_BankName=resben.BenbankName;
+            fT.Ben_BankCd = resben.BenBankcode;
+            fT.Ben_BranchCd=resben.BenBranchCode;
+            fT.Mode_of_Pay=req.Mode_of_Pay;
+            fT.Ben_TrnParticulars=req.Ben_TrnParticulars;
+            fT.Ben_Acct_No = resben.BenAccountNo;
+            fT.Ben_IFSC=resben.BenIfsccode;
+            fT.Ben_Mobile=resben.BenMobile;
+            fT.Ben_Name=resben.BenficiaryName;
+            fT.PartnerRefNo=req.PartnerRefNo;
+            fT.PartnerRetailorId=req.PartnerRetailorId;
 
             if (req.Mode_of_Pay == "FT")
             {
-                //response = await PayoutTransactionwithoutBenIDFT(req, Certificatetext, serviceUser);
+                response = await PayoutTransactionwithoutBenFT(fT, Certificatetext, serviceUser,1);
             }
             else if (req.Mode_of_Pay == "NEFT")
             {
-                //response = await PayoutTransactionwithoutBenNEFT(req, Certificatetext, serviceUser);
+                response = await PayoutTransactionwithoutBenNEFT(fT, Certificatetext, serviceUser,1);
             }
             else if (req.Mode_of_Pay == "RTGS")
             {
-                //response = await PayoutTransactionwithoutBenRTGS(req, Certificatetext, serviceUser);
+                response = await PayoutTransactionwithoutBenRTGS(fT, Certificatetext, serviceUser, 1);
 
             }
             else if (req.Mode_of_Pay == "IMPS")
             {
-               // response = await PayoutTransactionwithoutBenIMPS(req, Certificatetext, serviceUser);
+                response = await PayoutTransactionwithoutBenIMPS(fT, Certificatetext, serviceUser,1);
             }
             else
             {
