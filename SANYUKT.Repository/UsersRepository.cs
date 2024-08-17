@@ -268,12 +268,12 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].Add_UserDetailAddress");
-            _database.AddInParameter(dbCommand, "@UserID", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@UserID", request.userId);
             _database.AddInParameter(dbCommand, "@AddressTypeId", request.AddressTypeId);
             _database.AddInParameter(dbCommand, "@Pincode", request.Pincode);
             _database.AddInParameter(dbCommand, "@Address1", request.Address1);
-            _database.AddInParameter(dbCommand, "@@Address2", request.Address2);
-            _database.AddInParameter(dbCommand, "@@Address3", request.Address3);
+            _database.AddInParameter(dbCommand, "@Address2", request.Address2);
+            _database.AddInParameter(dbCommand, "@Address3", request.Address3);
             _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
             _database.AddInParameter(dbCommand, "@PincodeDataId", request.PincodeDataId);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);

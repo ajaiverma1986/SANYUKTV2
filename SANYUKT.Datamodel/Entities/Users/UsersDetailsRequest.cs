@@ -133,6 +133,7 @@ namespace SANYUKT.Datamodel.Entities.Users
     public class CreateUserDetailAddressRequest
     {
         public int AddressTypeId { get; set; }
+        public int userId { get; set; }
         public string Pincode { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
