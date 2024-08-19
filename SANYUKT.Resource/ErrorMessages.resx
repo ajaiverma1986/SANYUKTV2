@@ -219,4 +219,10 @@
   <data name="CODE_132" xml:space="preserve">
     <value>RTGS Transaction Amount must be more than 200000</value>
   </data>
+  <data name="CODE_133" xml:space="preserve">
+    <value>Invalid Parameter</value>
+  </data>
+  <data name="CODE_134" xml:space="preserve">
+    <value>Application Name is Required</value>
+  </data>
 </root>

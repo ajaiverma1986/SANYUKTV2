@@ -41,4 +41,10 @@ namespace SANYUKT.Datamodel.Masters
         public long CreatedBy { get; set; }
 
     }
+    public class CreateapplicationRequest
+    {
+        public string ApplicationName { get; set; }
+        public string ApplicationDescription { get; set; }
+
+    }
 }

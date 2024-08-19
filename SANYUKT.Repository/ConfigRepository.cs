@@ -301,5 +301,25 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<long> CreateNewApplication(CreateapplicationRequest request,string AppToken, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[AAC].CreateApp");
+            _database.AddInParameter(dbCommand, "@OrganizationID", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@ApplicationToken", AppToken);
+            _database.AddInParameter(dbCommand, "@ApplicationName", request.ApplicationName);
+            _database.AddInParameter(dbCommand, "@ApplicationDescription", request.ApplicationDescription);
+            _database.AddInParameter(dbCommand, "@Createdby", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", 100);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
     }
 }

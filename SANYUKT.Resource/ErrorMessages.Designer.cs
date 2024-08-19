@@ -365,5 +365,23 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_132", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Parameter.
+        /// </summary>
+        public static string CODE_133 {
+            get {
+                return ResourceManager.GetString("CODE_133", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Name is Required.
+        /// </summary>
+        public static string CODE_134 {
+            get {
+                return ResourceManager.GetString("CODE_134", resourceCulture);
+            }
+        }
     }
 }

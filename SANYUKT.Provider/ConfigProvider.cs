@@ -5,6 +5,7 @@ using SANYUKT.Provider.Shared;
 using SANYUKT.Repository;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -69,6 +70,28 @@ namespace SANYUKT.Provider
         {
             SimpleResponse response = new SimpleResponse();
             response.Result = await _repository.AddPaymentAccounts(request, serviceUser);
+            return response;
+        }
+        public async Task<SimpleResponse> CreateNewApplication(CreateapplicationRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            if(request==null)
+            {
+                response.SetError(ErrorCodes.SP_133);
+                return response;
+            }
+            if(request.ApplicationName=="")
+            {
+                response.SetError(ErrorCodes.SP_133);
+                return response;
+            }
+
+            var key = new byte[32];
+            using (var generator = RandomNumberGenerator.Create())
+                generator.GetBytes(key);
+            string apiKey = Convert.ToBase64String(key);
+
+            response.Result = await _repository.CreateNewApplication(request, apiKey.ToUpper(), serviceUser);
             return response;
         }
     }
