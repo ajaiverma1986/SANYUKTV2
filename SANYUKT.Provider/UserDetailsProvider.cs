@@ -1,4 +1,7 @@
-﻿using SANYUKT.Datamodel.Entities.Users;
+﻿using SANYUKT.Commonlib.Utility;
+using SANYUKT.Datamodel.DTO.Request;
+using SANYUKT.Datamodel.Entities.Authorization;
+using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
@@ -127,6 +130,23 @@ namespace SANYUKT.Provider
             long outputresponse = 0;
 
             outputresponse = await _repository.AddUserAddress(request, serviceUser);
+
+            return outputresponse;
+        }
+        public async Task<long> CreateOrgAPIPartner(CreateNewPartnerRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+            string pwd = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+            SyatemConfig obj = new SyatemConfig();
+            obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
+
+            outputresponse = await _repository.CreateOrgAPIPartner(request, pwd, serviceUser);
+            //if (outputresponse>0)
+            //{
+            //    SyatemConfig obj =new SyatemConfig();
+            //    obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
+            //}
 
             return outputresponse;
         }

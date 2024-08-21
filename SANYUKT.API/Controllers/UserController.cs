@@ -204,5 +204,19 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.CheckBalalnce(CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        // [AuditApi(EventTypeName = "POST UserController/CreateOrgAPIPartner", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> CreateOrgAPIPartner([FromBody] CreateNewPartnerRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.CreateOrgAPIPartner(request, this.CallerUser);
+            return Json(response);
+        }
     }
 }

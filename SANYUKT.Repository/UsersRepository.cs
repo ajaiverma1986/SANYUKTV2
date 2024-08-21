@@ -285,6 +285,27 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<long> CreateOrgAPIPartner(CreateNewPartnerRequest request,string Password, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].CreateApiPartner");
+            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
+            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
+            _database.AddInParameter(dbCommand, "@OrganisationName", request.OrganisationName);
+            _database.AddInParameter(dbCommand, "@FirstName", request.FirstName);
+            _database.AddInParameter(dbCommand, "@LastName", request.LastName);
+            _database.AddInParameter(dbCommand, "@Password", Password);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
 
         public async Task<List<UserAddressListResponse>> GetAllUserAddress(ISANYUKTServiceUser serviceUser)
         {
