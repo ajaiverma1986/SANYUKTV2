@@ -205,4 +205,18 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string LastName { get; set; }
         public string Password { get; set; }
     }
+    public class ApplicationListResponse
+    {
+        public int? ApplicationID { get; set; }
+        public long? OrganizationID { get; set; }
+        public string ApplicationName { get; set; }
+        public string ApplicationDescription { get; set; }
+        public string ApplicationToken { get; set; }
+        public string CreatedBy { get; set; }
+        public string OrganisationName { get; set; }
+        public string EmailId { get; set; }
+        public string MobileNo { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        
+    }
 }

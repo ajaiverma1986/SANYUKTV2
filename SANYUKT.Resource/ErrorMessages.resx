@@ -225,4 +225,10 @@
   <data name="CODE_134" xml:space="preserve">
     <value>Application Name is Required</value>
   </data>
+  <data name="CODE_135" xml:space="preserve">
+    <value>Password is Required</value>
+  </data>
+  <data name="CODE_136" xml:space="preserve">
+    <value>Email is Required</value>
+  </data>
 </root>

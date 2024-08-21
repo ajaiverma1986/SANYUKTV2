@@ -365,6 +365,35 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<List<ApplicationListResponse>> Getallapplication( ISANYUKTServiceUser serviceUser)
+        {
+            List<ApplicationListResponse> response = new List<ApplicationListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[AAC].ListAllApplication");
+            _database.AddInParameter(dbCommand, "@OrganizationID", serviceUser.UserID);
+           
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    ApplicationListResponse objp = new ApplicationListResponse();
+                    objp.ApplicationID = GetInt32Value(dataReader, "ApplicationID").Value;
+                    objp.OrganizationID = GetInt64Value(dataReader, "OrganizationID").Value;
+                    objp.ApplicationName = GetStringValue(dataReader, "ApplicationName");
+                    objp.ApplicationDescription = GetStringValue(dataReader, "ApplicationDescription");
+                    objp.ApplicationToken = GetStringValue(dataReader, "ApplicationToken");
+                    objp.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    objp.EmailId = GetStringValue(dataReader, "EmailId");
+                    objp.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    objp.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    objp.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
+                    
+                    response.Add(objp);
+                }
+            }
+            return response;
+        }
         public async Task<List<UserKYYCResponse>> GetAllUserKyc(ISANYUKTServiceUser serviceUser)
         {
             List<UserKYYCResponse> response = new List<UserKYYCResponse>();

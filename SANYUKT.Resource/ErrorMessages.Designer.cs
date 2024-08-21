@@ -383,5 +383,23 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_134", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password is Required.
+        /// </summary>
+        public static string CODE_135 {
+            get {
+                return ResourceManager.GetString("CODE_135", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email is Required.
+        /// </summary>
+        public static string CODE_136 {
+            get {
+                return ResourceManager.GetString("CODE_136", resourceCulture);
+            }
+        }
     }
 }

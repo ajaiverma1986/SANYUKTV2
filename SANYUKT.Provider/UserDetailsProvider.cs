@@ -71,6 +71,10 @@ namespace SANYUKT.Provider
         {
             return await _repository.GetAllBenficiary(request, serviceUser);
         }
+        public async Task<List<ApplicationListResponse>> Getallapplication(ISANYUKTServiceUser serviceUser)
+        {
+            return await _repository.Getallapplication( serviceUser);
+        }
         public async Task<BenficiaryResponse> GetBenficiaryDetailsByID(long BenFiciaryId)
         {
             return await _repository.GetBenficiaryDetailsByID(BenFiciaryId);
@@ -136,10 +140,12 @@ namespace SANYUKT.Provider
         public async Task<long> CreateOrgAPIPartner(CreateNewPartnerRequest request, ISANYUKTServiceUser serviceUser)
         {
             long outputresponse = 0;
+
+
             string pwd = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            SyatemConfig obj = new SyatemConfig();
-            obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
+            //SyatemConfig obj = new SyatemConfig();
+            //obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
 
             outputresponse = await _repository.CreateOrgAPIPartner(request, pwd, serviceUser);
             //if (outputresponse>0)

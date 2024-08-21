@@ -215,7 +215,36 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Json(response);
             }
+            if (request == null)
+            {
+                response.SetError(ErrorCodes.INVALID_PARAMETERS);
+                return Json(response);
+            }
+            if (request.Password.ToString()=="")
+            {
+                response.SetError(ErrorCodes.SP_135);
+                return Json(response);
+            }
+            if (request.EmailId.ToString() == "")
+            {
+                response.SetError(ErrorCodes.SP_135);
+                return Json(response);
+            }
             response.Result = await _Provider.CreateOrgAPIPartner(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        // [AuditApi(EventTypeName = "POST UserController/ListUserAddresses", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> GetAllapplication()
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.Getallapplication(CallerUser);
             return Json(response);
         }
     }
