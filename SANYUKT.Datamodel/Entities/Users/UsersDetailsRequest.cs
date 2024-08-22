@@ -219,4 +219,27 @@ namespace SANYUKT.Datamodel.Entities.Users
         public DateTime? CreatedOn { get; set; }
         
     }
+    public class CreateNewUserRequest
+    {
+        public string EmailId { get; set; }
+        public string MobileNo { get; set; }
+        public int applicationID { get; set; }
+        public int OrganisationID { get; set; }
+        public int UserTypeId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Password { get; set; }
+    }
+    public class UserrListResponse
+    {
+        public long? UserMasterID { get; set; }
+        public long? UserId { get; set; }
+        public string UserName { get; set; }
+        public string DisplayName { get; set; }
+        public string OrganisationName { get; set; }
+        public string UserType { get; set; }
+        public string EmailId { get; set; }
+        public string MobileNo { get; set; }
+
+    }
 }

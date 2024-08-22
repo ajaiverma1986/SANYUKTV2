@@ -156,6 +156,25 @@ namespace SANYUKT.Provider
 
             return outputresponse;
         }
+        public async Task<long> CreateNewUser(CreateNewUserRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+
+
+            string pwd = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+            //SyatemConfig obj = new SyatemConfig();
+            //obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
+
+            outputresponse = await _repository.CreateNewUser(request, pwd, serviceUser);
+            //if (outputresponse>0)
+            //{
+            //    SyatemConfig obj =new SyatemConfig();
+            //    obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
+            //}
+
+            return outputresponse;
+        }
         public async Task<SimpleResponse> GetAllUserAddress(ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
@@ -183,6 +202,10 @@ namespace SANYUKT.Provider
 
             response.Result = await _repository.GetAllUserKyc(serviceUser);
             return response;
+        }
+        public async Task<List<UserrListResponse>> GetallUserByOrg(ISANYUKTServiceUser serviceUser)
+        {
+            return await _repository.GetallUserByOrg(serviceUser);
         }
     }
 }

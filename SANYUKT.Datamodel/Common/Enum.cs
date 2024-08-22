@@ -9,7 +9,7 @@ namespace SANYUKT.Datamodel.Common
 {
     public enum ApplicationTypes
     {
-        [Display(Name = "FIA Admin")]
+        [Display(Name = "Sanyukt Admin")]
         FIAAdmin = 1,
         [Display(Name = "FIA Reconciliation")]
         FIAReconciliation = 2,

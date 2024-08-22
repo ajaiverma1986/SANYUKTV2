@@ -425,5 +425,56 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+
+        public async Task<long> CreateNewUser(CreateNewUserRequest request, string Password, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].usp_CreateNewUser");
+            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
+            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
+            _database.AddInParameter(dbCommand, "@applicationID", request.applicationID);
+            _database.AddInParameter(dbCommand, "@FirstName", request.FirstName);
+            _database.AddInParameter(dbCommand, "@LastName", request.LastName);
+            _database.AddInParameter(dbCommand, "@OrganisationID", request.OrganisationID);
+            _database.AddInParameter(dbCommand, "@UserTypeId", request.UserTypeId);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@Password", Password);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<List<UserrListResponse>> GetallUserByOrg(ISANYUKTServiceUser serviceUser)
+        {
+            List<UserrListResponse> response = new List<UserrListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetAllUserList");
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    UserrListResponse objp = new UserrListResponse();
+                    objp.UserMasterID = GetInt32Value(dataReader, "UserMasterID").Value;
+                    objp.UserId = GetInt64Value(dataReader, "UserId").Value;
+                    objp.UserName = GetStringValue(dataReader, "UserName");
+                    objp.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    objp.UserType = GetStringValue(dataReader, "UserType");
+                    objp.DisplayName = GetStringValue(dataReader, "DisplayName");
+                    objp.EmailId = GetStringValue(dataReader, "EmailId");
+                    objp.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    response.Add(objp);
+                }
+            }
+            return response;
+        }
     }
 }
