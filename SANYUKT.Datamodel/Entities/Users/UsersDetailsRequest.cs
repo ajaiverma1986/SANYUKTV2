@@ -221,14 +221,10 @@ namespace SANYUKT.Datamodel.Entities.Users
     }
     public class CreateNewUserRequest
     {
-        public string EmailId { get; set; }
-        public string MobileNo { get; set; }
         public int applicationID { get; set; }
-        public int OrganisationID { get; set; }
         public int UserTypeId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
         public string Password { get; set; }
+        public string AccessID { get; set; }
     }
     public class UserrListResponse
     {

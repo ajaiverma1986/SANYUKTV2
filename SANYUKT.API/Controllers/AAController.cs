@@ -14,7 +14,7 @@ using SANYUKT.Provider.Shared;
 namespace SANYUKT.API.Controllers
 {
     
-   // [EnableCors("AllowAll")]
+    [EnableCors("AllowAll")]
     [ResponseCache(Duration = -1, Location = ResponseCacheLocation.None, NoStore = true)]
     [ServiceFilter(typeof(SANYUKTExceptionFilterService))]
     public class AAController : BaseApiController

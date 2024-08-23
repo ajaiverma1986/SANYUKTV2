@@ -432,14 +432,11 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].usp_CreateNewUser");
-            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
-            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
             _database.AddInParameter(dbCommand, "@applicationID", request.applicationID);
-            _database.AddInParameter(dbCommand, "@FirstName", request.FirstName);
-            _database.AddInParameter(dbCommand, "@LastName", request.LastName);
-            _database.AddInParameter(dbCommand, "@OrganisationID", request.OrganisationID);
+            _database.AddInParameter(dbCommand, "@OrganisationID", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@UserTypeId", request.UserTypeId);
             _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@AccessID", request.AccessID);
             _database.AddInParameter(dbCommand, "@Password", Password);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
 

@@ -1,4 +1,5 @@
 ﻿using Audit.WebApi;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
@@ -19,6 +20,7 @@ using System.Threading.Tasks;
 
 namespace SANYUKT.API.Controllers
 {
+    [EnableCors("AllowAll")]
     [ResponseCache(Duration = -1, Location = ResponseCacheLocation.None, NoStore = true)]
     [ServiceFilter(typeof(SANYUKTExceptionFilterService))]
     public class UserController : BaseApiController
@@ -235,7 +237,7 @@ namespace SANYUKT.API.Controllers
         }
         [HttpPost]
         // [AuditApi(EventTypeName = "POST UserController/CreateOrgAPIPartner", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
-        public async Task<IActionResult> CreateNewUser([FromBody] CreateNewUserRequest request)
+        public async Task<IActionResult> CreateNewAPIUser([FromBody] CreateNewUserRequest request)
         {
             SimpleResponse response = new SimpleResponse();
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
@@ -254,11 +256,7 @@ namespace SANYUKT.API.Controllers
                 response.SetError(ErrorCodes.SP_135);
                 return Json(response);
             }
-            if (request.EmailId.ToString() == "")
-            {
-                response.SetError(ErrorCodes.SP_135);
-                return Json(response);
-            }
+           
             response.Result = await _Provider.CreateNewUser(request, this.CallerUser);
             return Json(response);
         }
