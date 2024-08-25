@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Org.BouncyCastle.Crypto.Tls;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Net;
@@ -13,44 +14,47 @@ namespace SANYUKT.Commonlib.Utility
         {
             try
             {
-                //using (MailMessage mail = new MailMessage())
+                
+
+                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com",587);
+
+                smtpClient.EnableSsl = true;
+                smtpClient.UseDefaultCredentials = false ;
+
+                MailAddress from = new MailAddress("alert@sanyuktpay.com","Alert");
+                MailAddress to = new MailAddress("ajaibit@gmail.com");
+
+                MailMessage msg = new MailMessage(from, to);
+
+                msg.Subject = "hello";
+                msg.Body = "how are u";
+
+                msg.IsBodyHtml = false;
+
+                smtpClient.Send(msg);
+
+                //MailMessage msg = new MailMessage();
+
+                //msg.From = new MailAddress("alert@sanyuktpay.com");
+                //msg.To.Add("ajaibit@gmail.com");
+                //msg.Subject = "test";
+                //msg.Body = "Test Content";
+                ////msg.Priority = MailPriority.High;
+
+
+                //using (SmtpClient client = new SmtpClient())
                 //{
-                //    mail.From = new MailAddress("alert@sanyuktpay.com");
-                //    mail.To.Add("somebody@domain.com");
-                //    mail.Subject = "Hello World";
-                //    mail.Body = "<h1>Hello</h1>";
-                //    mail.IsBodyHtml = true;
+                //    client.EnableSsl = true;
+                //    client.UseDefaultCredentials = false;
+                //    client.Credentials = new NetworkCredential("alert@sanyuktpay.com", "Finpay@12345@");
+                //    client.Host = "smtp.gmail.com";
+                //    client.Port = 587;
+                //    client.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-
-                //    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
-                //    {
-                //        smtp.Credentials = new NetworkCredential("alert@sanyuktpay.com", "X9u%54m4=&VH3aX<");
-                //        smtp.EnableSsl = true;
-                //        smtp.Send(mail);
-                //    }
+                //    client.Send(msg);
                 //}
 
 
-
-
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-
-                mail.From = new MailAddress("alert@sanyuktpay.com");
-                mail.To.Add(Tomail);
-
-                mail.Subject = Subject;
-
-                mail.IsBodyHtml = true;
-
-                mail.Body = Bodyyy;
-                SmtpServer.Port = 587;
-
-                SmtpServer.Credentials = new System.Net.NetworkCredential("alert@sanyuktpay.com", "X9u%54m4=&VH3aX<");
-                SmtpServer.EnableSsl = true;
-                SmtpServer.UseDefaultCredentials = false;
-
-                SmtpServer.Send(mail);
 
 
             }

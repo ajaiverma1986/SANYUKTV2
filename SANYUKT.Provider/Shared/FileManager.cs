@@ -23,7 +23,22 @@ namespace SANYUKT.Provider.Shared
             ms.Close();
             return Filename;
         }
-       
+        public String SaveKYCDocument(Byte[] filestream, string UserID = "", string FileName = "",string FullFileName="")
+        {
+
+            String FolderPath = SANYUKTApplicationConfiguration.Instance.FileUploadPath + "\\PartnerDocument\\" + UserID.ToString();
+            if (!Directory.Exists(FolderPath))
+                Directory.CreateDirectory(FolderPath);
+            String Filename = FullFileName + Path.GetExtension(FileName);
+            MemoryStream ms = new MemoryStream(filestream);
+            FileStream file = new FileStream(FolderPath + "\\" + Filename, FileMode.Create, FileAccess.Write);
+
+            ms.WriteTo(file);
+            file.Close();
+            ms.Close();
+            return Filename;
+        }
+
 
         public Byte[] ReadFile(string fileName, string DocumentFolderName)
         {

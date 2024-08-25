@@ -13,6 +13,7 @@ using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider;
 using SANYUKT.Provider.Shared;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
@@ -60,13 +61,14 @@ namespace SANYUKT.API.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [Consumes("multipart/form-data")]
+        
         [HttpPost]
        
         //[AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
-        public async Task<IActionResult> UploadUserLogo(IFormFile formFile)
+        public async Task<IActionResult> UploadUserLogo()
         {
             string filename = "";
+          IFormFile newfile=  Request.Form.Files[0];
             SimpleResponse response = new SimpleResponse();
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
             if (error.HasError)
@@ -78,12 +80,11 @@ namespace SANYUKT.API.Controllers
 
             FileManager obj = new FileManager();
             UploadOrgLogo logore=new UploadOrgLogo ();
-            //HttpContext.Request.Form.Files
-           
-                 filename = obj.SaveFile(GetStreamBytes(formFile.OpenReadStream()), 3.ToString(), filename);
+            
+            filename = obj.SaveFile(GetStreamBytes(newfile.OpenReadStream()), CallerUser.UserID.ToString(), newfile.FileName);
             logore.FileName = filename;
-            logore .UserId = 3;
-            logore.FileBytes = GetStreamBytes(formFile.OpenReadStream());
+            logore .UserId = CallerUser.UserID;
+            logore.FileBytes = GetStreamBytes(newfile.OpenReadStream());
 
 
 
@@ -286,6 +287,39 @@ namespace SANYUKT.API.Controllers
                 return Json(response);
             }
             response.Result = await _Provider.GetallUserByOrg(CallerUser);
+            return Json(response);
+        }
+        public async Task<IActionResult> UploadUserKYC(int kycTypeId,string DocumentNo)
+        {
+            string filename = "";
+            IFormFile newfile = Request.Form.Files[0];
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            FileManager obj = new FileManager();
+            UploadUserKYCFileRequest request1 = new UploadUserKYCFileRequest();
+            request1.DocumentNo = DocumentNo;
+            request1.KycID = kycTypeId;
+            string Fullfilename = "";
+            if(DocumentNo!="")
+            {
+                Fullfilename = CallerUser.UserID.ToString() + "_" + kycTypeId.ToString() + "_" + DocumentNo;
+            }
+            else if(DocumentNo!=null)
+            {
+                Fullfilename = CallerUser.UserID.ToString() + "_" + kycTypeId.ToString() + "_" + DocumentNo;
+            }
+            else
+            {
+                Fullfilename = CallerUser.UserID.ToString() + "_" + kycTypeId.ToString() ;
+            }
+             
+            filename = obj.SaveKYCDocument(GetStreamBytes(newfile.OpenReadStream()), CallerUser.UserID.ToString(), newfile.FileName, Fullfilename);
+            response.Result = await _Provider.UploadUserKYC(request1, filename, this.CallerUser);
             return Json(response);
         }
     }

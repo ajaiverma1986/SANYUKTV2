@@ -76,7 +76,7 @@ namespace SANYUKT.Datamodel.Entities.Users
     public class UploadLogoRequest
     {
         public string Logourl { get; set; }
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
     }
     public class CreateUserWithlogoRequest
     {
@@ -91,7 +91,7 @@ namespace SANYUKT.Datamodel.Entities.Users
     {
         public Byte[] FileBytes { get; set; }
         public string FileName { get; set; }
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
     }
     public class UploadOrgLogo1
     {
@@ -186,6 +186,8 @@ namespace SANYUKT.Datamodel.Entities.Users
         public long UserId { get; set; }
         public int KycID { get; set; }
         public string DocumentNo { get; set; }
+        public string KycTypeName { get; set; }
+        public string FullName { get; set; }
         public string FileUrl { get; set; }
         public string StatusName { get; set; }
         public string CreatedBy { get; set; }
@@ -236,6 +238,28 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string UserType { get; set; }
         public string EmailId { get; set; }
         public string MobileNo { get; set; }
+
+    }
+    public class UploadUserKYCRequest
+    {
+        public string DocumentNo { get; set; }
+        public string fileurl { get; set; }
+        public int? KycID { get; set; }
+    }
+    public class UploadUserKYCFileRequest
+    {
+        public int? KycID { get; set; }
+        public string DocumentNo { get; set;}
+    }
+    public class UserrKYCListResponse
+    {
+        public long? UserKYCID { get; set; }
+        public int? KycID { get; set; }
+        public string KycTypeName { get; set; }
+        public string DocumentNo { get; set; }
+        public string FileUrl { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public string CreatedBy { get; set; }
 
     }
 }

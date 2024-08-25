@@ -404,7 +404,7 @@ namespace SANYUKT.Repository
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
-                if (dataReader.Read())
+                while (dataReader.Read())
                 {
                     UserKYYCResponse row = new UserKYYCResponse();
 
@@ -416,6 +416,8 @@ namespace SANYUKT.Repository
                     row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
                     row.StatusName = GetStringValue(dataReader, "StatusName");
                     row.DocumentNo = GetStringValue(dataReader, "DocumentNo");
+                    row.KycTypeName = GetStringValue(dataReader, "KycTypeName");
+                    row.FullName = GetStringValue(dataReader, "FullName");
                     row.FileUrl = GetStringValue(dataReader, "FileUrl");
                     row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
                     row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
@@ -468,6 +470,52 @@ namespace SANYUKT.Repository
                     objp.DisplayName = GetStringValue(dataReader, "DisplayName");
                     objp.EmailId = GetStringValue(dataReader, "EmailId");
                     objp.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    response.Add(objp);
+                }
+            }
+            return response;
+        }
+        public async Task<long> UploadUserKYC(UploadUserKYCRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].UploadKycDocument");
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@KycID", request.KycID);
+            _database.AddInParameter(dbCommand, "@fileurl", request.fileurl);
+            _database.AddInParameter(dbCommand, "@DocumentNo", request.DocumentNo);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<List<UserrKYCListResponse>> ListKYCByUser(ISANYUKTServiceUser serviceUser)
+        {
+            List<UserrKYCListResponse> response = new List<UserrKYCListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetallUserKYC");
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    UserrKYCListResponse objp = new UserrKYCListResponse();
+                    objp.UserKYCID = GetInt32Value(dataReader, "UserKYCID").Value;
+                    objp.KycID = GetInt32Value(dataReader, "KycID").Value;
+                    objp.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    objp.FileUrl = GetStringValue(dataReader, "FileUrl");
+                    objp.DocumentNo = GetStringValue(dataReader, "DocumentNo");
+                    objp.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
+                    objp.KycTypeName = GetStringValue(dataReader, "KycTypeName");
+                    
                     response.Add(objp);
                 }
             }

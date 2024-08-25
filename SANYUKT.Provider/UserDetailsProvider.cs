@@ -165,7 +165,7 @@ namespace SANYUKT.Provider
 
             //SyatemConfig obj = new SyatemConfig();
             //obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
-
+            //return 0;
             outputresponse = await _repository.CreateNewUser(request, pwd, serviceUser);
             //if (outputresponse>0)
             //{
@@ -206,6 +206,19 @@ namespace SANYUKT.Provider
         public async Task<List<UserrListResponse>> GetallUserByOrg(ISANYUKTServiceUser serviceUser)
         {
             return await _repository.GetallUserByOrg(serviceUser);
+        }
+        public async Task<long> UploadUserKYC(UploadUserKYCFileRequest request, string Filename, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+            UploadUserKYCRequest request1 = new UploadUserKYCRequest();
+            request1.fileurl = Filename;
+            request1.KycID =request.KycID;
+            request1.DocumentNo=request.DocumentNo;
+
+
+            outputresponse = await _repository.UploadUserKYC(request1, serviceUser);
+
+            return outputresponse;
         }
     }
 }
