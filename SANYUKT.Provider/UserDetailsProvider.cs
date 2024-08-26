@@ -203,6 +203,13 @@ namespace SANYUKT.Provider
             response.Result = await _repository.GetAllUserKyc(serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> GetAllUserKycById(long KycId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetAllUserKycById(KycId,serviceUser);
+            return response;
+        }
         public async Task<List<UserrListResponse>> GetallUserByOrg(ISANYUKTServiceUser serviceUser)
         {
             return await _repository.GetallUserByOrg(serviceUser);
