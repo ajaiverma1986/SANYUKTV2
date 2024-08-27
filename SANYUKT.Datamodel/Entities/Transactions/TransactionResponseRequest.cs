@@ -106,7 +106,6 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public string RefNo1 { get; set; }
         public string RefNo2 { get; set; }
         public string Remarks { get; set; }
-        public long CreatedBy { get; set; }
         
     }
     public class ApproveRejectPayinRequest
