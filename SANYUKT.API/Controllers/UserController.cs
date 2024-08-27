@@ -8,6 +8,7 @@ using SANYUKT.API.Security;
 using SANYUKT.Configuration;
 using SANYUKT.Datamodel.DTO.Response;
 using SANYUKT.Datamodel.Entities.Users;
+using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.RblPayoutRequest;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider;
@@ -334,6 +335,27 @@ namespace SANYUKT.API.Controllers
                 return Json(response);
             }
             response = await _Provider.GetAllUserKycById(KycId,CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        
+        public async Task<IActionResult> DocumentView_Search(long KYCID)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, true, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+            if (KYCID == 0)
+            {
+                response.SetError(ErrorCodes.INVALID_PARAMETERS);
+                return Json(response);
+            }
+
+            response = await _Provider.DocumentView_Search(KYCID, CallerUser);
             return Json(response);
         }
     }

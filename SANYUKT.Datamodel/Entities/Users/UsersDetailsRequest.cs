@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SANYUKT.Datamodel.Common;
+using SANYUKT.Datamodel.Library;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SANYUKT.Datamodel.Entities.Users
 {
@@ -262,4 +266,22 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string CreatedBy { get; set; }
 
     }
+    public class UserKycdownloadListResponse
+    {
+        public long? UserKYCID { get; set; }
+        public int? KycID { get; set; }
+        public string KycTypeName { get; set; }
+        public string DocumentNo { get; set; }
+        public string FileUrl { get; set; }
+
+        public string ContentType { get; set; }
+        public Byte[] FileBytes { get; set; }
+
+        public string Base64String { get; set; }
+
+        public string MediaContentType { get; set; }
+        public string MediaExtension { get; set; }
+
+    }
+
 }

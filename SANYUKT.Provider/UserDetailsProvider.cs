@@ -227,5 +227,41 @@ namespace SANYUKT.Provider
 
             return outputresponse;
         }
+        public async Task<SimpleResponse> DocumentView_Search(long  KYCID, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            List<UserKYYCResponse> list = new  List<UserKYYCResponse>();
+             list = await _repository.GetAllUserKycById(KYCID, serviceUser);
+         
+            FileManager fileManager = new FileManager();
+            UserKycdownloadListResponse resp=new UserKycdownloadListResponse();
+            
+
+            foreach (UserKYYCResponse item in list)
+                {
+                if (item.FileUrl!=null && item.FileUrl!="")
+                {
+                    resp.UserKYCID = item.UserKYCID;
+                    resp.DocumentNo = item.DocumentNo;
+                    resp.KycID = item.KycID;
+                    resp.ContentType = "image";
+                    resp.MediaContentType = "png";
+                    resp.FileBytes = fileManager.ReadFile(item.FileUrl, serviceUser.UserID.ToString());
+                    resp.Base64String = Convert.ToBase64String(resp.FileBytes);
+                    resp.MediaExtension = System.IO.Path.GetExtension(item.FileUrl).ToLower();
+                    resp.FileUrl = item.FileUrl;
+
+                }
+                else
+                {
+                    response.SetError("File not Exists");
+                }
+
+
+            }
+            
+            response.Result = resp;
+            return response;
+        }
     }
 }
