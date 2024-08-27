@@ -125,4 +125,10 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
     }
+    public class PayinRecieptRequest
+    {
+        public long RequestID { get; set; }
+        public string RecieptFile { get; set; }
+     
+    }
 }

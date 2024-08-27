@@ -109,5 +109,11 @@ namespace SANYUKT.Provider
             response = await _repository.GetallPayinRequest(request, serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> UpdatePayinRecieptFile(PayinRecieptRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse resp = new SimpleResponse();
+            resp.Result = await _repository.UpdatePayinRecieptFile(request, serviceUser);
+            return resp;
+        }
     }
 }

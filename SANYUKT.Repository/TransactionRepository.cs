@@ -341,5 +341,22 @@ namespace SANYUKT.Repository
             response1.Result= response;
             return response1;
         }
+        public async Task<long> UpdatePayinRecieptFile(PayinRecieptRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].usp_UpdatePayinRequest");
+            _database.AddInParameter(dbCommand, "@RequestID", request.RequestID);
+            _database.AddInParameter(dbCommand, "@RecieptFile", request.RecieptFile);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
     }
 }

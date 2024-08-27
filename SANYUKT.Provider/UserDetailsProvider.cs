@@ -246,7 +246,7 @@ namespace SANYUKT.Provider
                     resp.KycID = item.KycID;
                     resp.ContentType = "image";
                     resp.MediaContentType = "png";
-                    resp.FileBytes = fileManager.ReadFile(item.FileUrl, serviceUser.UserID.ToString());
+                    resp.FileBytes = fileManager.ReadFile(item.FileUrl, "PartnerDocument", serviceUser.UserID.ToString());
                     resp.Base64String = Convert.ToBase64String(resp.FileBytes);
                     resp.MediaExtension = System.IO.Path.GetExtension(item.FileUrl).ToLower();
                     resp.FileUrl = item.FileUrl;

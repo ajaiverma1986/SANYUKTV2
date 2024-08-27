@@ -8,13 +8,13 @@ namespace SANYUKT.Provider.Shared
 {
     public class FileManager
     {
-        public String SaveFile( Byte[] filestream, string MobileNo ="", string FileName = "")
+        public string SaveFile( Byte[] filestream, string MobileNo ="", string FileName = "")
         {
 
-            String FolderPath = SANYUKTApplicationConfiguration.Instance.FileUploadPath + "\\PartnerDocument\\" + MobileNo.ToString();
+            string FolderPath = SANYUKTApplicationConfiguration.Instance.FileUploadPath + "\\PartnerDocument\\" + MobileNo.ToString();
             if (!Directory.Exists(FolderPath))
                 Directory.CreateDirectory(FolderPath);
-            String Filename = MobileNo.ToString() + "_Logo"  + Path.GetExtension(FileName);
+            string Filename = MobileNo.ToString() + "_Logo"  + Path.GetExtension(FileName);
             MemoryStream ms = new MemoryStream(filestream);
             FileStream file = new FileStream(FolderPath + "\\" + Filename, FileMode.Create, FileAccess.Write);
 
@@ -23,13 +23,13 @@ namespace SANYUKT.Provider.Shared
             ms.Close();
             return Filename;
         }
-        public String SaveKYCDocument(Byte[] filestream, string UserID = "", string FileName = "",string FullFileName="")
+        public string SaveKYCDocument(Byte[] filestream, string UserID = "", string FileName = "",string FullFileName="")
         {
 
-            String FolderPath = SANYUKTApplicationConfiguration.Instance.FileUploadPath + "\\PartnerDocument\\" + UserID.ToString();
+            string FolderPath = SANYUKTApplicationConfiguration.Instance.FileUploadPath + "\\PartnerDocument\\" + UserID.ToString();
             if (!Directory.Exists(FolderPath))
                 Directory.CreateDirectory(FolderPath);
-            String Filename = FullFileName + Path.GetExtension(FileName);
+            string Filename = FullFileName + Path.GetExtension(FileName);
             MemoryStream ms = new MemoryStream(filestream);
             FileStream file = new FileStream(FolderPath + "\\" + Filename, FileMode.Create, FileAccess.Write);
 
@@ -38,14 +38,29 @@ namespace SANYUKT.Provider.Shared
             ms.Close();
             return Filename;
         }
-
-
-        public Byte[] ReadFile(string fileName, string DocumentFolderName)
+        public string SaveOtherDocument(Byte[] filestream, string FolderName = "",string filename="",string fullFilename="", string filevalue = "")
         {
-            String FolderPath = "";
-            FolderPath = SANYUKTApplicationConfiguration.Instance.FileDownloadPath + "\\PartnerDocument\\" + DocumentFolderName.ToString();
 
-            String FileToRead = FolderPath + "\\" + fileName;
+            string FolderPath = SANYUKTApplicationConfiguration.Instance.FileUploadPath + "\\" + FolderName + "\\";
+            if (!Directory.Exists(FolderPath))
+                Directory.CreateDirectory(FolderPath);
+            string newFilename = fullFilename+"_"+ filevalue + Path.GetExtension(filename);
+            MemoryStream ms = new MemoryStream(filestream);
+            FileStream file = new FileStream(FolderPath + "\\" + newFilename, FileMode.Create, FileAccess.Write);
+
+            ms.WriteTo(file);
+            file.Close();
+            ms.Close();
+            return newFilename;
+        }
+
+
+        public Byte[] ReadFile(string fileName,string MainFolder, string DocumentFolderName)
+        {
+            string FolderPath = "";
+            FolderPath = SANYUKTApplicationConfiguration.Instance.FileDownloadPath + "\\"+ MainFolder + "\\" + DocumentFolderName.ToString();
+
+            string FileToRead = FolderPath + "\\" + fileName;
             if (File.Exists(FileToRead))
             {
                 FileStream fs = new FileStream(FileToRead, FileMode.Open, FileAccess.Read);

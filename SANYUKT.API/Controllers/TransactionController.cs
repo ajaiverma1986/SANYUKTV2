@@ -75,5 +75,18 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetPayoutTransactionList(request, CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdatePayinRecieptFile([FromBody] PayinRecieptRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.UpdatePayinRecieptFile(request, CallerUser);
+            return Json(response);
+        }
     }
 }
