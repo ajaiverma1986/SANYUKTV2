@@ -57,7 +57,7 @@ namespace SANYUKT.API.Controllers
         [HttpPost]
         public async Task<IActionResult> ListPayinRequest([FromBody] ListPayinRequestRequest request)
         {
-            SimpleResponse response = new SimpleResponse();
+            ListResponse response = new ListResponse();
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
             if (error.HasError)
             {

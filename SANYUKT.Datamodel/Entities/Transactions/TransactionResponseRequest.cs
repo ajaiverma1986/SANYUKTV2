@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SANYUKT.Datamodel.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -116,7 +117,7 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public long UpdatedBy { get; set; }
 
     }
-    public class ListPayinRequestRequest
+    public class ListPayinRequestRequest:ListRequest
     {
         public int  PaymentChanelID { get; set; }
         public int PaymentModeId { get; set; }

@@ -284,9 +284,10 @@ namespace SANYUKT.Repository
             return response;
 
         }
-        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request, ISANYUKTServiceUser serviceUser)
+       
+        public async Task<ListResponse> GetallPayinRequest(ListPayinRequestRequest request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response1 =new SimpleResponse();
+            ListResponse response1 =new ListResponse();
             List< PayinRequestListResponse> response =new List<PayinRequestListResponse> ();
             var dbCommand = _database.GetStoredProcCommand("[TXN].usp_ListPayinRequest");
             _database.AddInParameter(dbCommand, "@PaymentChanelID", request.PaymentChanelID);
@@ -295,6 +296,11 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
             _database.AddInParameter(dbCommand, "@ToDate", request.ToDate);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
                 dataReader.Read();
@@ -312,7 +318,7 @@ namespace SANYUKT.Repository
                     obj.Charge = GetDecimalValue(dataReader, "Charge").Value;
                     obj.DepositDate = GetDateValue(dataReader, "DepositDate").Value;
                     obj.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
-                    obj.UpdatedOn = GetDateValue(dataReader, "UpdatedOn").Value;
+                    obj.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
                     obj.StatusName = GetStringValue(dataReader, "StatusName");
                     obj.CreatedBy = GetStringValue(dataReader, "CreatedBy");
                     obj.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
@@ -337,7 +343,10 @@ namespace SANYUKT.Repository
                     
                     response.Add(obj);
                 }
+
             }
+            response1.SetPagingOutput(dbCommand);
+            response1.CurrentPage = request.PageNo;
             response1.Result= response;
             return response1;
         }

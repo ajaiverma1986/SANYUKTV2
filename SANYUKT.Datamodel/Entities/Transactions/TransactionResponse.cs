@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Data.SqlClient;
+
 
 namespace SANYUKT.Datamodel.Entities.Transactions
 {
@@ -39,5 +39,6 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public DateTime? DepositDate { get; set; }
+
     }
 }

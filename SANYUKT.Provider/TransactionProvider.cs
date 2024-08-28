@@ -102,9 +102,9 @@ namespace SANYUKT.Provider
             resp = await _repository.ApproveRejectPayinRequest(request, serviceUser);
             return resp;
         }
-        public async Task<SimpleResponse> GetallPayinRequest(ListPayinRequestRequest request, ISANYUKTServiceUser serviceUser)
+        public async Task<ListResponse> GetallPayinRequest(ListPayinRequestRequest request, ISANYUKTServiceUser serviceUser)
         {
-          SimpleResponse response = new SimpleResponse();
+            ListResponse response = new ListResponse();
             
             response = await _repository.GetallPayinRequest(request, serviceUser);
             return response;
