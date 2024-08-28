@@ -7,6 +7,7 @@ using SANYUKT.API.Common;
 using SANYUKT.API.Security;
 using SANYUKT.Configuration;
 using SANYUKT.Datamodel.DTO.Response;
+using SANYUKT.Datamodel.Entities.Transactions;
 using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.RblPayoutRequest;
@@ -356,6 +357,30 @@ namespace SANYUKT.API.Controllers
             }
 
             response = await _Provider.DocumentView_Search(KYCID, CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateOriginatorChequeFile(long AccountID)
+        {
+            SimpleResponse response = new SimpleResponse();
+            string filename = "";
+            IFormFile newfile = Request.Form.Files[0];
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            FileManager obj = new FileManager();
+            PayinAccountRegistrationChequeRequest request1 = new PayinAccountRegistrationChequeRequest();
+            request1.AccountId = AccountID;
+
+            string Fullfilename = "";
+            Fullfilename = AccountID.ToString() + "_" + this.CallerUser.UserID.ToString();
+
+            filename = obj.SaveOtherDocument(GetStreamBytes(newfile.OpenReadStream()), "AccountCheque", newfile.FileName, Fullfilename, AccountID.ToString());
+            request1.Filename = filename;
+            response = await _Provider.UpdateOriginatorChequeFile(request1, CallerUser);
             return Json(response);
         }
     }

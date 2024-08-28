@@ -2,6 +2,7 @@
 using SANYUKT.Datamodel.Common;
 using SANYUKT.Datamodel.Entities.Application;
 using SANYUKT.Datamodel.Entities.RblPayout;
+using SANYUKT.Datamodel.Entities.Transactions;
 using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
@@ -210,7 +211,7 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].CreateOriginatorAccountMaster");
-            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@BankId", request.BankId);
             _database.AddInParameter(dbCommand, "@AccountName", request.AccountName);
             _database.AddInParameter(dbCommand, "@AccountNo", request.AccountNo);
@@ -244,7 +245,6 @@ namespace SANYUKT.Repository
                     row.BankId = GetInt32Value(dataReader, "BankId").Value;
                     row.UserId = GetInt32Value(dataReader, "UserId").Value;
                     row.OriginatorAccountID = GetInt32Value(dataReader, "OriginatorAccountID").Value;
-                    row.CreatedOn = GetDateValue(dataReader, "BenBranchCode");
                     row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
                     row.StatusName = GetStringValue(dataReader, "StatusName");
                     row.AccountName = GetStringValue(dataReader, "AccountName");
@@ -555,6 +555,23 @@ namespace SANYUKT.Repository
             }
             return response;
         }
-       
+        public async Task<long> UpdateOriginatorChequeFile(PayinAccountRegistrationChequeRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].OriginatorChequeUpload");
+            _database.AddInParameter(dbCommand, "@AccountId", request.AccountId);
+            _database.AddInParameter(dbCommand, "@Filename", request.Filename);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+
     }
 }

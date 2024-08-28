@@ -105,7 +105,6 @@ namespace SANYUKT.Datamodel.Entities.Users
 
     public class CreateOriginatorAccountRequest
     {
-        public long  UserId { get; set; }
         public int BankId { get; set; }
         public string AccountName { get; set; }
         public string AccountNo { get; set; }
@@ -282,6 +281,11 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string MediaContentType { get; set; }
         public string MediaExtension { get; set; }
 
+    }
+    public class PayinAccountRegistrationChequeRequest
+    {
+        public string Filename { get; set; }
+        public long? AccountId { get; set; }
     }
 
 }

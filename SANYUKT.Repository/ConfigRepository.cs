@@ -266,8 +266,7 @@ namespace SANYUKT.Repository
                     obj.BranchAddress = GetStringValue(dataReader, "BranchAddress");
                     obj.Micrcode = GetStringValue(dataReader, "Micrcode");
                     obj.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
-                    obj.UpdatedOn = GetDateValue(dataReader, "UpdatedOn").Value;
-
+                   
 
                     objMaster.Add(obj);
                 }

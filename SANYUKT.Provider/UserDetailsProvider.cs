@@ -263,5 +263,14 @@ namespace SANYUKT.Provider
             response.Result = resp;
             return response;
         }
+        public async Task<SimpleResponse> UpdateOriginatorChequeFile(PayinAccountRegistrationChequeRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+           SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.UpdateOriginatorChequeFile(request, serviceUser);
+
+            return response;
+        }
     }
 }
