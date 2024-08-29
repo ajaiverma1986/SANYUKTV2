@@ -255,6 +255,82 @@ namespace SANYUKT.Repository
                     row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
                     row.Fullname = GetStringValue(dataReader, "Fullname");
                     row.Usercode  = GetStringValue(dataReader, "Usercode");
+                    row.Filename = GetStringValue(dataReader, "Filename");
+                    row.Ifsccode = GetStringValue(dataReader, "Ifsccode");
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
+        public async Task<List<OriginatorListAccountResponse>> GetallOriginatorsAccountByID(long AccountID, ISANYUKTServiceUser serviceUser)
+        {
+            List<OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetallOriginatorsAccountsByID");
+
+            _database.AddInParameter(dbCommand, "@RequestID", AccountID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+                    OriginatorListAccountResponse row = new OriginatorListAccountResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.BankId = GetInt32Value(dataReader, "BankId").Value;
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.OriginatorAccountID = GetInt32Value(dataReader, "OriginatorAccountID").Value;
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.AccountName = GetStringValue(dataReader, "AccountName");
+                    row.BankName = GetStringValue(dataReader, "BankName");
+                    row.AccountNo = GetStringValue(dataReader, "AccountNo");
+                    row.BranchAddress = GetStringValue(dataReader, "BranchAddress");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.Fullname = GetStringValue(dataReader, "Fullname");
+                    row.Usercode = GetStringValue(dataReader, "Usercode");
+                    row.Filename = GetStringValue(dataReader, "Filename");
+                    row.Ifsccode = GetStringValue(dataReader, "Ifsccode");
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
+        public async Task<List<OriginatorListAccountResponse>> ListAllOriginatorsAccounts(OriginatorListAccountRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            List<OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].ListallOriginatorsAccounts");
+
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+                    OriginatorListAccountResponse row = new OriginatorListAccountResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.BankId = GetInt32Value(dataReader, "BankId").Value;
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.OriginatorAccountID = GetInt32Value(dataReader, "OriginatorAccountID").Value;
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.AccountName = GetStringValue(dataReader, "AccountName");
+                    row.BankName = GetStringValue(dataReader, "BankName");
+                    row.AccountNo = GetStringValue(dataReader, "AccountNo");
+                    row.BranchAddress = GetStringValue(dataReader, "BranchAddress");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.Fullname = GetStringValue(dataReader, "Fullname");
+                    row.Usercode = GetStringValue(dataReader, "Usercode");
+                    row.Filename = GetStringValue(dataReader, "Filename");
                     row.Ifsccode = GetStringValue(dataReader, "Ifsccode");
                     response.Add(row);
                 }

@@ -1,6 +1,7 @@
 ﻿using SANYUKT.Datamodel.Entities;
 using SANYUKT.Datamodel.Entities.RblPayout;
 using SANYUKT.Datamodel.Entities.Transactions;
+using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
@@ -114,6 +115,37 @@ namespace SANYUKT.Provider
             SimpleResponse resp = new SimpleResponse();
             resp.Result = await _repository.UpdatePayinRecieptFile(request, serviceUser);
             return resp;
+        }
+        public async Task<SimpleResponse> DocumentViewPayinRequest_Search(long RequestID, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            List<PayinRequestReciptListResponse> list = new List<PayinRequestReciptListResponse>();
+            list = await _repository.GetAllfilePayinFiles(RequestID, serviceUser) ;
+
+            FileManager fileManager = new FileManager();
+            PayinRequestReciptDownloadResponse resp = new PayinRequestReciptDownloadResponse();
+
+
+            foreach (PayinRequestReciptListResponse item in list)
+            {
+                if (item.RecieptFile != null && item.RecieptFile != "")
+                {
+                    resp.RequestID = item.RequestID;
+                    resp.RecieptFile = item.RecieptFile;
+                    resp.FileBytes = fileManager.ReadFileOther(item.RecieptFile, "Wallet");
+                    resp.Base64String = Convert.ToBase64String(resp.FileBytes);
+                    resp.MediaExtension = System.IO.Path.GetExtension(item.RecieptFile).ToLower();
+                }
+                else
+                {
+                    response.SetError("File not Exists");
+                }
+
+
+            }
+
+            response.Result = resp;
+            return response;
         }
     }
 }

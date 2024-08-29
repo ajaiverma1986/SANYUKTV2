@@ -135,6 +135,34 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetallOriginatorsAccount(CallerUser);
             return Json(response);
         }
+        [HttpGet]
+        // [AuditApi(EventTypeName = "POST UserController/ListOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ListOriginatorAccountsByID(long AccountID)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetallOriginatorsAccountByID(AccountID,CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        // [AuditApi(EventTypeName = "POST UserController/ListOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ListallOriginatorsAccounts([FromBody] OriginatorListAccountRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.ListAllOriginatorsAccounts(request,CallerUser);
+            return Json(response);
+        }
         [HttpPost]
        // [AuditApi(EventTypeName = "POST UserController/AddUserAddress", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
         public async Task<IActionResult> AddUserAddress([FromBody] CreateUserDetailAddressRequest request)
@@ -381,6 +409,26 @@ namespace SANYUKT.API.Controllers
             filename = obj.SaveOtherDocument(GetStreamBytes(newfile.OpenReadStream()), "AccountCheque", newfile.FileName, Fullfilename, AccountID.ToString());
             request1.Filename = filename;
             response = await _Provider.UpdateOriginatorChequeFile(request1, CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetOriginatorChequePhoto(long AccountID)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, true, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+            if (AccountID == 0)
+            {
+                response.SetError(ErrorCodes.INVALID_PARAMETERS);
+                return Json(response);
+            }
+
+            response = await _Provider.DocumentViewOriginatorAcc_Search(AccountID, CallerUser);
             return Json(response);
         }
     }

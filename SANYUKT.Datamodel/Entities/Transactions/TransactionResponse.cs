@@ -41,4 +41,20 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public DateTime? DepositDate { get; set; }
 
     }
+
+    public class PayinRequestReciptListResponse
+    {
+        public long RequestID { get; set; }
+        public string RecieptFile { get; set; }
+     
+    }
+    public class PayinRequestReciptDownloadResponse
+    {
+        public long RequestID { get; set; }
+        public string RecieptFile { get; set; }
+        public Byte[] FileBytes { get; set; }
+        public string Base64String { get; set; }
+        public string MediaExtension { get; set; }
+
+    }
 }

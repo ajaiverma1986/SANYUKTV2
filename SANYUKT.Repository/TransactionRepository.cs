@@ -222,16 +222,6 @@ namespace SANYUKT.Repository
                     response2.RelatedReference = GetStringValue(dataReader, "RelatedReference");
                     response2.BankTxnDatetime = GetStringValue(dataReader, "BankTxnDatetime");
                     response2.Amount = GetDecimalValue(dataReader, "Amount") ?? 0;
-                    //response2.RefNo1 = GetStringValue(dataReader, "RefNo1");
-                    //response2.RefNo2 = GetStringValue(dataReader, "RefNo2");
-                    //response2.RefNo3 = GetStringValue(dataReader, "RefNo3");
-                    //response2.RefNo4 = GetStringValue(dataReader, "RefNo4");
-                    //response2.RefNo5 = GetStringValue(dataReader, "RefNo5");
-                    //response2.RefNo6 = GetStringValue(dataReader, "RefNo6");
-                    //response2.RefNo7 = GetStringValue(dataReader, "RefNo7");
-                    //response2.RefNo8 = GetStringValue(dataReader, "RefNo8");
-                    //response2.RefNo9 = GetStringValue(dataReader, "RefNo9");
-                    //response2.RefNo10 = GetStringValue(dataReader, "RefNo10");
                     response2.FailureReason = GetStringValue(dataReader, "FailureReason");
                     response2.Status = GetInt32Value(dataReader, "Status").Value;
                     response2.PartnerName = GetStringValue(dataReader, "PartnerName");
@@ -350,6 +340,28 @@ namespace SANYUKT.Repository
             response1.CurrentPage = request.PageNo;
             response1.Result= response;
             return response1;
+        }
+
+        public async Task<List<PayinRequestReciptListResponse>> GetAllfilePayinFiles(long RequestId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response1 = new SimpleResponse();
+            List<PayinRequestReciptListResponse> response = new List<PayinRequestReciptListResponse>();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].usp_ListPayinRequestRecieptById");
+            _database.AddInParameter(dbCommand, "@RequestID", RequestId);
+            
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    PayinRequestReciptListResponse obj = new PayinRequestReciptListResponse();
+                    obj.RequestID = GetInt32Value(dataReader, "RequestID").Value;
+                    obj.RecieptFile = GetStringValue(dataReader, "RecieptFile");
+                    response.Add(obj);
+                }
+
+            }
+            
+            return response;
         }
         public async Task<long> UpdatePayinRecieptFile(PayinRecieptRequest request, ISANYUKTServiceUser serviceUser)
         {

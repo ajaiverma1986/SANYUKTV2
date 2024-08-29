@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SANYUKT.Datamodel.Common;
 using SANYUKT.Datamodel.Library;
+using SANYUKT.Datamodel.Shared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -125,6 +126,7 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string BankName { get; set; }
         public string Usercode { get; set; }
         public string Fullname { get; set; }
+        public string Filename { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
@@ -132,6 +134,11 @@ namespace SANYUKT.Datamodel.Entities.Users
         public int Status { get; set; }
 
 
+    }
+    public class OriginatorListAccountRequest:ListRequest
+    {
+        public int Status { get; set; }
+  
     }
     public class CreateUserDetailAddressRequest
     {
@@ -286,6 +293,15 @@ namespace SANYUKT.Datamodel.Entities.Users
     {
         public string Filename { get; set; }
         public long? AccountId { get; set; }
+    }
+    public class UserAccountsChecueFileResponse
+    {
+        public long OriginatorAccountID { get; set; }
+        public string FileUrl { get; set; }
+        public Byte[] FileBytes { get; set; }
+        public string Base64String { get; set; }
+        public string MediaExtension { get; set; }
+
     }
 
 }

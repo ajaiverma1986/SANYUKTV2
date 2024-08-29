@@ -117,5 +117,24 @@ namespace SANYUKT.API.Controllers
            response = await _Provider.UpdatePayinRecieptFile(request1, CallerUser);
             return Json(response);
         }
+        public async Task<IActionResult> DocumentViewPauinrequest_Search(long RequestID)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, true, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+            if (RequestID == 0)
+            {
+                response.SetError(ErrorCodes.INVALID_PARAMETERS);
+                return Json(response);
+            }
+
+            response = await _Provider.DocumentViewPayinRequest_Search(RequestID, CallerUser);
+            return Json(response);
+        }
     }
 }

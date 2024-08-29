@@ -1,6 +1,7 @@
 ﻿using SANYUKT.Commonlib.Utility;
 using SANYUKT.Datamodel.DTO.Request;
 using SANYUKT.Datamodel.Entities.Authorization;
+using SANYUKT.Datamodel.Entities.Transactions;
 using SANYUKT.Datamodel.Entities.Users;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
@@ -127,6 +128,47 @@ namespace SANYUKT.Provider
             SimpleResponse response = new SimpleResponse();
 
             response.Result= await _repository.GetallOriginatorsAccount( serviceUser);
+            return response;
+        }
+        public async Task<SimpleResponse> GetallOriginatorsAccountByID(long AccountID, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetallOriginatorsAccountByID(AccountID,serviceUser);
+            return response;
+        }
+        public async Task<SimpleResponse> DocumentViewOriginatorAcc_Search(long AccountID, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = await GetallOriginatorsAccountByID(AccountID, serviceUser);
+            List<OriginatorListAccountResponse> objp = response.Result.DeserializeSimpleResponse<List<OriginatorListAccountResponse>>(); 
+
+            FileManager fileManager = new FileManager();
+            UserAccountsChecueFileResponse resp = new UserAccountsChecueFileResponse();
+             if (objp[0].Filename != null && objp[0].Filename != "")
+                {
+                resp.OriginatorAccountID = objp[0].OriginatorAccountID;
+                resp.FileUrl = objp[0].Filename;
+                    resp.FileBytes = fileManager.ReadFileOther(objp[0].Filename, "Wallet");
+                    resp.Base64String = Convert.ToBase64String(resp.FileBytes);
+                    resp.MediaExtension = System.IO.Path.GetExtension(objp[0].Filename).ToLower();
+                }
+                else
+                {
+                    response.SetError("File not Exists");
+                }
+
+
+          
+
+            response.Result = resp;
+            return response;
+        }
+        public async Task<SimpleResponse> ListAllOriginatorsAccounts(OriginatorListAccountRequest request,ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.ListAllOriginatorsAccounts(request,serviceUser);
             return response;
         }
         public async Task<long> AddUserAddress(CreateUserDetailAddressRequest request, ISANYUKTServiceUser serviceUser)

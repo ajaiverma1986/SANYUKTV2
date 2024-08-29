@@ -71,5 +71,21 @@ namespace SANYUKT.Provider.Shared
 
             return null;
         }
+        public Byte[] ReadFileOther(string fileName, string MainFolder)
+        {
+            string FolderPath = "";
+            FolderPath = SANYUKTApplicationConfiguration.Instance.FileDownloadPath + "\\" + MainFolder.ToString();
+
+            string FileToRead = FolderPath + "\\" + fileName;
+            if (File.Exists(FileToRead))
+            {
+                FileStream fs = new FileStream(FileToRead, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
+                Int64 numBytes = new FileInfo(FileToRead).Length;
+                return br.ReadBytes((Int32)numBytes);
+            }
+
+            return null;
+        }
     }
 }
