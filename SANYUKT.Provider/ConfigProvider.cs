@@ -86,10 +86,8 @@ namespace SANYUKT.Provider
                 return response;
             }
 
-            var key = new byte[32];
-            using (var generator = RandomNumberGenerator.Create())
-                generator.GetBytes(key);
-            string apiKey = Convert.ToBase64String(key);
+            Guid specificGuid = Guid.NewGuid();
+            string apiKey = specificGuid.ToString();
 
             response.Result = await _repository.CreateNewApplication(request, apiKey.ToUpper(), serviceUser);
             return response;

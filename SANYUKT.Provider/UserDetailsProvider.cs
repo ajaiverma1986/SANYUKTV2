@@ -205,9 +205,9 @@ namespace SANYUKT.Provider
 
             string pwd = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            //SyatemConfig obj = new SyatemConfig();
-            //obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
-            //return 0;
+           // SyatemConfig obj = new SyatemConfig();
+           // obj.SendEmail("Test", "Hello how are You", "ajaibit@gmail.com");
+           // return 0;
             outputresponse = await _repository.CreateNewUser(request, pwd, serviceUser);
             //if (outputresponse>0)
             //{
@@ -289,7 +289,15 @@ namespace SANYUKT.Provider
                     resp.ContentType = "image";
                     resp.MediaContentType = "png";
                     resp.FileBytes = fileManager.ReadFile(item.FileUrl, "PartnerDocument", serviceUser.UserID.ToString());
-                    resp.Base64String = Convert.ToBase64String(resp.FileBytes);
+                    if(resp.FileBytes!=null && resp.FileBytes.Length>0)
+                    {
+                        resp.Base64String = "";
+                    }
+                    else
+                    {
+                        resp.Base64String = Convert.ToBase64String(resp.FileBytes);
+                    }
+                    
                     resp.MediaExtension = System.IO.Path.GetExtension(item.FileUrl).ToLower();
                     resp.FileUrl = item.FileUrl;
 
