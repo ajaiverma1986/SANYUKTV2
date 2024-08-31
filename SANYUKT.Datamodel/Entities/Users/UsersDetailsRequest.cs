@@ -303,5 +303,31 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string MediaExtension { get; set; }
 
     }
+    public class ApplicationParentMenuResponse
+    {
+        public long MenuID { get; set; }
+        public string Title { get; set; }
+        public string Tooltip { get; set; }
+        public string Description { get; set; }
+        public string RoutePath { get; set; }
+        public int DisplayOrder { get; set; }
+        public string Target { get; set; }
+        public List<ApplicationMenuResponse> submenu { get; set; }
+
+
+    }
+    public class ApplicationMenuResponse
+    {
+        public long MenuID { get; set; }
+        public long? ParentID { get; set; }
+        public string Title { get; set; }
+        public string Tooltip { get; set; }
+        public string Description { get; set; }
+        public string RoutePath { get; set; }
+        public int DisplayOrder { get; set; }
+        public string Target { get; set; }
+
+
+    }
 
 }

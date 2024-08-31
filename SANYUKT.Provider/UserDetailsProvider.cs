@@ -312,11 +312,25 @@ namespace SANYUKT.Provider
         }
         public async Task<SimpleResponse> UpdateOriginatorChequeFile(PayinAccountRegistrationChequeRequest request, ISANYUKTServiceUser serviceUser)
         {
-            long outputresponse = 0;
+           
            SimpleResponse response = new SimpleResponse();
 
             response.Result = await _repository.UpdateOriginatorChequeFile(request, serviceUser);
 
+            return response;
+        }
+        public async Task<List<ApplicationParentMenuResponse>> GetallMenu(ISANYUKTServiceUser serviceUser)
+        {
+            List<ApplicationParentMenuResponse> response = new List<ApplicationParentMenuResponse>();
+
+            response = await _repository.GetAllMenu(serviceUser);
+            return response;
+        }
+        public async Task<List<ApplicationMenuResponse>> GetallSubMenu(int Menuid, ISANYUKTServiceUser serviceUser)
+        {
+            List<ApplicationMenuResponse> response = new List<ApplicationMenuResponse>();
+
+            response = await _repository.GetAllSubMenu(Menuid,serviceUser);
             return response;
         }
     }

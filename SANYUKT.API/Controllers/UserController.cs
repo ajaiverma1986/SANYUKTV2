@@ -431,5 +431,31 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.DocumentViewOriginatorAcc_Search(AccountID, CallerUser);
             return Json(response);
         }
+        [HttpGet]
+        public async Task<IActionResult> ListAllMenu()
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, true, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.GetallMenu( CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ListAllsubMenu(int Menuid)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, true, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.GetallSubMenu(Menuid,CallerUser);
+            return Json(response);
+        }
     }
 }
