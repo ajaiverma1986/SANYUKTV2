@@ -146,7 +146,7 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Json(response);
             }
-            response = await _Provider.GetallOriginatorsAccountByID(AccountID,CallerUser);
+            response.Result = await _Provider.GetallOriginatorsAccountByID(AccountID,CallerUser);
             return Json(response);
         }
         [HttpPost]
@@ -428,7 +428,7 @@ namespace SANYUKT.API.Controllers
                 return Json(response);
             }
 
-            response = await _Provider.DocumentViewOriginatorAcc_Search(AccountID, CallerUser);
+            response.Result = await _Provider.DocumentViewOriginatorAcc_Search(AccountID, CallerUser);
             return Json(response);
         }
     }

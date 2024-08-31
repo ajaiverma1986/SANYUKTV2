@@ -130,39 +130,36 @@ namespace SANYUKT.Provider
             response.Result= await _repository.GetallOriginatorsAccount( serviceUser);
             return response;
         }
-        public async Task<SimpleResponse> GetallOriginatorsAccountByID(long AccountID, ISANYUKTServiceUser serviceUser)
+        public async Task<List<OriginatorListAccountResponse>> GetallOriginatorsAccountByID(long AccountID, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
+            List<OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
 
-            response.Result = await _repository.GetallOriginatorsAccountByID(AccountID,serviceUser);
+            response = await _repository.GetallOriginatorsAccountByID(AccountID,serviceUser);
             return response;
         }
-        public async Task<SimpleResponse> DocumentViewOriginatorAcc_Search(long AccountID, ISANYUKTServiceUser serviceUser)
+        public async Task<UserAccountsChecueFileResponse> DocumentViewOriginatorAcc_Search(long AccountID, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
+            List<OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
             response = await GetallOriginatorsAccountByID(AccountID, serviceUser);
-            List<OriginatorListAccountResponse> objp = response.Result.DeserializeSimpleResponse<List<OriginatorListAccountResponse>>(); 
+           
 
             FileManager fileManager = new FileManager();
             UserAccountsChecueFileResponse resp = new UserAccountsChecueFileResponse();
-             if (objp[0].Filename != null && objp[0].Filename != "")
+             if (response[0].Filename != null && response[0].Filename != "")
                 {
-                resp.OriginatorAccountID = objp[0].OriginatorAccountID;
-                resp.FileUrl = objp[0].Filename;
-                    resp.FileBytes = fileManager.ReadFileOther(objp[0].Filename, "Wallet");
+                resp.OriginatorAccountID = response[0].OriginatorAccountID;
+                resp.FileUrl = response[0].Filename;
+                    resp.FileBytes = fileManager.ReadFileOther(response[0].Filename, "AccountCheque");
                     resp.Base64String = Convert.ToBase64String(resp.FileBytes);
-                    resp.MediaExtension = System.IO.Path.GetExtension(objp[0].Filename).ToLower();
+                    resp.MediaExtension = System.IO.Path.GetExtension(response[0].Filename).ToLower();
                 }
-                else
-                {
-                    response.SetError("File not Exists");
-                }
+                
 
 
           
 
-            response.Result = resp;
-            return response;
+           return resp;
+          
         }
         public async Task<SimpleResponse> ListAllOriginatorsAccounts(OriginatorListAccountRequest request,ISANYUKTServiceUser serviceUser)
         {

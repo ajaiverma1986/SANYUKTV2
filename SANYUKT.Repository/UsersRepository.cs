@@ -312,7 +312,7 @@ namespace SANYUKT.Repository
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
-                if (dataReader.Read())
+                while (dataReader.Read())
                 {
                     OriginatorListAccountResponse row = new OriginatorListAccountResponse();
 
