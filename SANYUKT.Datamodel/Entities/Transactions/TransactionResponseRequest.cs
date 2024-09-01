@@ -131,4 +131,13 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public string RecieptFile { get; set; }
      
     }
+    public class TxnListRequest : ListRequest
+    {
+        public string TransactionCode { get; set; }
+        public string TxnType { get; set; }
+        public string PartnerTransactionId { get; set; }
+        public int Status { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+    }
 }

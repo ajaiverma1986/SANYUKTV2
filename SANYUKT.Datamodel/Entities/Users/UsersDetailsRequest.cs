@@ -330,4 +330,15 @@ namespace SANYUKT.Datamodel.Entities.Users
 
     }
 
+    public class PartnerDeatilsResponse
+    {
+        public long UserId { get; set; }
+        public string Usercode { get; set; }
+        public string OrganisationName { get; set; }
+        public string ContactPersonName { get; set; }
+        public string MobileNo { get; set; }
+        public string EmailId { get; set; }
+        public decimal? AvailableLimit { get; set; }
+       
+    }
 }

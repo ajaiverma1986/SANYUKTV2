@@ -110,6 +110,13 @@ namespace SANYUKT.Provider
             response = await _repository.GetallPayinRequest(request, serviceUser);
             return response;
         }
+        public async Task<ListResponse> GetAllPayoutTransaction(TxnListRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response = new ListResponse();
+
+            response = await _repository.GetAllPayoutTransaction(request, serviceUser);
+            return response;
+        }
         public async Task<SimpleResponse> UpdatePayinRecieptFile(PayinRecieptRequest request, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse resp = new SimpleResponse();

@@ -737,5 +737,30 @@ namespace SANYUKT.Repository
             return response;
         }
 
+        public async Task<PartnerDeatilsResponse> GetAllUserDeatils(ISANYUKTServiceUser serviceUser)
+        {
+            PartnerDeatilsResponse response = new PartnerDeatilsResponse();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetOrganisationDetails");
+
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserMasterID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+
+                    response.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    response.Usercode = GetStringValue(dataReader, "Usercode");
+                    response.ContactPersonName = GetStringValue(dataReader, "ContactPersonName");
+                    response.AvailableLimit = GetDecimalValue(dataReader, "AvailableLimit") ?? 0;
+                    response.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    response.EmailId = GetStringValue(dataReader, "EmailId");
+                    response.MobileNo = GetStringValue(dataReader, "MobileNo");
+                }
+            }
+            return response;
+        }
+
     }
 }

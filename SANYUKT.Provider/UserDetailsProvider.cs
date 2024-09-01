@@ -333,5 +333,12 @@ namespace SANYUKT.Provider
             response = await _repository.GetAllSubMenu(Menuid,serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> GetAllUserDetails( ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetAllUserDeatils(serviceUser);
+            return response;
+        }
     }
 }

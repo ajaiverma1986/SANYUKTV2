@@ -380,5 +380,60 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<ListResponse> GetAllPayoutTransaction(TxnListRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response1 = new ListResponse();
+            List<AllTransactionListResponse> response = new List<AllTransactionListResponse>();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].uspGetPartnerTransactionDetails");
+            _database.AddInParameter(dbCommand, "@TransactionCode", request.TransactionCode);
+            _database.AddInParameter(dbCommand, "@PartnerId", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
+            _database.AddInParameter(dbCommand, "@ToDate", request.ToDate);
+            _database.AddInParameter(dbCommand, "@TxnType", request.TxnType);
+            _database.AddInParameter(dbCommand, "@PartnerTransactionId", request.PartnerTransactionId);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+
+                    AllTransactionListResponse obj = new AllTransactionListResponse();
+                    obj.TransactionId = GetInt32Value(dataReader, "TransactionId").Value;
+                    obj.PartnerId = GetInt32Value(dataReader, "PartnerId").Value;
+                    obj.Amount = GetDecimalValue(dataReader, "Amount").Value;
+                    obj.TxnFee = GetDecimalValue(dataReader, "TxnFee").Value;
+                    obj.RelatedReference = GetStringValue(dataReader, "RelatedReference");
+                    obj.Status = GetInt32Value(dataReader, "Status").Value;
+                    obj.FailureReason = GetStringValue(dataReader, "FailureReason");
+                    obj.PartnerName = GetStringValue(dataReader, "PartnerName");
+                    obj.Transactioncode = GetStringValue(dataReader, "Transactioncode");
+                    obj.PartnerTxnId = GetStringValue(dataReader, "PartnerTxnId");
+                    obj.RefNo1 = GetStringValue(dataReader, "RefNo1");
+                    obj.RefNo2 = GetStringValue(dataReader, "RefNo2");
+                    obj.RefNo3 = GetStringValue(dataReader, "RefNo3");
+                    obj.RefNo4 = GetStringValue(dataReader, "RefNo4");
+                    obj.RefNo5 = GetStringValue(dataReader, "RefNo5");
+                    obj.RefNo6 = GetStringValue(dataReader, "RefNo6");
+                    obj.RefNo7 = GetStringValue(dataReader, "RefNo7");
+                    obj.RefNo8 = GetStringValue(dataReader, "RefNo8");
+                    obj.RefNo9 = GetStringValue(dataReader, "RefNo9");
+                    obj.RefNo10 = GetStringValue(dataReader, "RefNo10");
+                 
+                    response.Add(obj);
+
+                }
+
+            }
+            response1.SetPagingOutput(dbCommand);
+            response1.CurrentPage = request.PageNo;
+            response1.Result = response;
+            return response1;
+        }
+
     }
 }
