@@ -33,6 +33,7 @@ namespace SANYUKT.Datamodel.Common
         public string Headers { get; set; }
 
        public Int64? UserID {  get; set; }
+        public Int32? UserTypeId { get; set; }
 
         public string ClientIPAddress { get; set; }
 

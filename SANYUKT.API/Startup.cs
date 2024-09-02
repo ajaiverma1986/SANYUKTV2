@@ -135,6 +135,7 @@ namespace SANYUKT.API
 
                 Int64 UserMasterID = 0;
                 Int32 UserId = 0;
+                Int32 UserTypeID =0;
 
                 ApplicationUserMappingResponse applicationUserDetails = null;
                 if (!string.IsNullOrEmpty(serviceUser.UserToken))
@@ -158,6 +159,8 @@ namespace SANYUKT.API
 
                         await MemoryCachingService.Put(string.Format(CacheKeys.USER_ID, serviceUser.UserToken), applicationUserDetails.UserID);
                         UserId = applicationUserDetails.UserID.Value;
+                        await MemoryCachingService.Put(string.Format(CacheKeys.USER_Type, serviceUser.UserToken), applicationUserDetails.UserTypeID);
+                        UserTypeID = applicationUserDetails.UserTypeID.Value;
                     }
                 }
 
@@ -170,6 +173,7 @@ namespace SANYUKT.API
                     serviceUser.OrganizationID = applicationUserDetails.OrganizationID;
                     serviceUser.WorkOrganizationID = applicationUserDetails.OrganizationID;
                     serviceUser.UserID = applicationUserDetails.UserID;
+                    serviceUser.UserTypeId = applicationUserDetails.UserTypeID;
 
                     serviceUser.RequestUrl = string.Concat(context.Request.Scheme,
                         "://",

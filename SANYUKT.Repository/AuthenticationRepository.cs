@@ -44,6 +44,7 @@ namespace SANYUKT.Repository
 
                     applicationDetail.OrganizationID = GetInt32Value(dataReader, "OrganizationID");
                     applicationDetail.UserID = GetInt32Value(dataReader, "UserID");
+                    applicationDetail.UserTypeID = GetInt32Value(dataReader, "UserTypeId");
 
                     var applicationType = GetInt32Value(dataReader, "AppType");
                     if (applicationType.HasValue)

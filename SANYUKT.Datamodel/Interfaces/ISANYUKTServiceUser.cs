@@ -11,6 +11,7 @@ namespace SANYUKT.Datamodel.Interfaces
         Int64? UserMasterID { get; set; }
         Int32? OrganizationID { get; set; }
         Int64? UserID { get; set; }
+        Int32? UserTypeId { get; set; }
         Int32? WorkOrganizationID { get; set; }
         string ApplicationName { get; set; }
         int ApplicationID { get; set; }
