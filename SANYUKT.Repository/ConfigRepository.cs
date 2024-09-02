@@ -180,7 +180,7 @@ namespace SANYUKT.Repository
                     obj.TopupChargeId = GetInt32Value(dataReader, "TopupChargeId").Value;
                     obj.SlabTypeId = GetInt32Value(dataReader, "SlabTypeId").Value;
                     obj.CalculationTypeId = GetInt32Value(dataReader, "CalculationTypeId").Value;
-                    obj.FromAmount = GetDecimalValue(dataReader, "CalculationTypeId").Value;
+                    obj.FromAmount = GetDecimalValue(dataReader, "FromAmount").Value;
                     obj.Toamount = GetDecimalValue(dataReader, "Toamount").Value;
                     obj.CalculationValue = GetDecimalValue(dataReader, "CalculationValue").Value;
                     obj.CalculationTypeName = GetStringValue(dataReader, "CalculationTypeName");
