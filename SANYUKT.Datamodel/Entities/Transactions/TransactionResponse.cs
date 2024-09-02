@@ -84,4 +84,18 @@ namespace SANYUKT.Datamodel.Entities.Transactions
        
 
     }
+
+    public class ListStatementResponse
+    {
+        public long LedgerId { get; set; }
+        public DateTime? LedgerDate { get; set; }
+        public string OrganisationName { get; set; }
+        public string LedgerTypeName { get; set; }
+        public string Naration { get; set; }
+        public string DbCr { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? Limit { get; set; }
+        public string ReferenceId { get; set; }
+     
+    }
 }

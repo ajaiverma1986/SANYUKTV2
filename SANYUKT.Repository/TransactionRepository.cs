@@ -423,7 +423,50 @@ namespace SANYUKT.Repository
                     obj.RefNo8 = GetStringValue(dataReader, "RefNo8");
                     obj.RefNo9 = GetStringValue(dataReader, "RefNo9");
                     obj.RefNo10 = GetStringValue(dataReader, "RefNo10");
-                 
+                    obj.BankTxnDatetime = GetStringValue(dataReader, "BankTxnDatetime");
+                    obj.RefNo = GetStringValue(dataReader, "RefNo");
+
+                    response.Add(obj);
+
+                }
+
+            }
+            response1.SetPagingOutput(dbCommand);
+            response1.CurrentPage = request.PageNo;
+            response1.Result = response;
+            return response1;
+        }
+
+        public async Task<ListResponse> GetUSerStatement(UserStatementRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response1 = new ListResponse();
+            List<ListStatementResponse> response = new List<ListStatementResponse>();
+            var dbCommand = _database.GetStoredProcCommand("[TXN].ListAccountStatement");
+            _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
+            _database.AddInParameter(dbCommand, "@ToDate", request.ToDate);
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+
+                    ListStatementResponse obj = new ListStatementResponse();
+                    obj.LedgerId = GetInt32Value(dataReader, "LedgerId").Value;
+                    obj.LedgerDate = GetDateValue(dataReader, "LedgerDate");
+                    obj.Amount = GetDecimalValue(dataReader, "Amount").Value;
+                    obj.Limit = GetDecimalValue(dataReader, "Limit").Value;
+                    obj.ReferenceId = GetStringValue(dataReader, "ReferenceId");
+                    obj.LedgerTypeName = GetStringValue(dataReader, "LedgerTypeName");
+                    obj.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    obj.Naration = GetStringValue(dataReader, "Naration");
+                    obj.DbCr = GetStringValue(dataReader, "DbCr");
+                  
+
                     response.Add(obj);
 
                 }

@@ -140,4 +140,9 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
     }
+    public class UserStatementRequest : ListRequest
+    {
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+    }
 }
