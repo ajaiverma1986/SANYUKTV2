@@ -142,7 +142,7 @@ namespace SANYUKT.Repository
                     obj.AgencyId = GetInt32Value(dataReader, "AgencyId").Value;
                     obj.ServiceId = GetInt32Value(dataReader, "ServiceId").Value;
                     obj.CalculationTypeId = GetInt32Value(dataReader, "CalculationTypeId").Value;
-                    obj.FromAmount = GetDecimalValue(dataReader, "CalculationTypeId").Value;
+                    obj.FromAmount = GetDecimalValue(dataReader, "FromAmount").Value;
                     obj.Toamount = GetDecimalValue(dataReader, "Toamount").Value;
                     obj.CalculationValue = GetDecimalValue(dataReader, "CalculationValue").Value;
                     obj.AgencyName = GetStringValue(dataReader, "AgencyName");

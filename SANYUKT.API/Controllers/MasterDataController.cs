@@ -231,6 +231,19 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetAllPaymentModes(PaymentChanelId);
             return Json(response);
         }
+        [HttpGet]
+        public async Task<IActionResult> ListAllService(int? ServiceTypeId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetAllService(ServiceTypeId);
+            return Json(response);
+        }
     }
 
 }

@@ -417,6 +417,37 @@ namespace SANYUKT.Repository
 
         }
 
+        public async Task<SimpleResponse> GetAllService(int? ServiceTypeId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            List<serviceListResponse> objMaster = new List<serviceListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[MDM].ListAllService");
+            _database.AddInParameter(dbCommand, "@ServiceTypeId", ServiceTypeId);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    serviceListResponse obj = new serviceListResponse();
+                    obj.ServiceId = GetInt32Value(dataReader, "ServiceId").Value;
+                    obj.ServiceTypeId = GetInt32Value(dataReader, "ServiceTypeId").Value;
+                    obj.ServiceCode = GetStringValue(dataReader, "ServiceCode");
+                    obj.ServiceTypeName = GetStringValue(dataReader, "ServiceTypeName");
+                    obj.ServiceAccName = GetStringValue(dataReader, "ServiceAccName");
+                    obj.ServiceAccountNo = GetStringValue(dataReader, "ServiceAccountNo");
+                    obj.ServiceMobileNo = GetStringValue(dataReader, "ServiceMobileNo");
+                    obj.ServcieIfsccode = GetStringValue(dataReader, "ServcieIfsccode");
+                    obj.ServiceName = GetStringValue(dataReader, "ServiceName");
+
+                    objMaster.Add(obj);
+                }
+                response.Result = objMaster;
+                return response;
+            }
+
+        }
+
         public async Task<SimpleResponse> GetAllPaymentChanel()
         {
             SimpleResponse response = new SimpleResponse();
