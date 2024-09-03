@@ -498,7 +498,7 @@ namespace SANYUKT.Provider.Payout
             spr.Header = hp;
 
             BodyFT bp = new BodyFT();
-            bp.Amount = req.Amount;
+            bp.Amount = req.Amount.ToString();
             bp.Ben_BranchCd = req.Ben_BranchCd;
             bp.Ben_BankCd = req.Ben_BankCd;
             bp.Ben_Address = "";
@@ -631,7 +631,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "Unauthorized";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "Unauthorized";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "Unauthorized";
@@ -665,7 +665,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "InternalServerError";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "InternalServerError";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "InternalServerError";
@@ -903,7 +903,7 @@ namespace SANYUKT.Provider.Payout
             spr.Header = hp;
 
             BodyNEFT bp = new BodyNEFT();
-            bp.Amount = req.Amount;
+            bp.Amount = req.Amount.ToString();
             bp.Ben_BranchCd = req.Ben_BranchCd;
             bp.Ben_BankCd = req.Ben_BankCd;
             bp.Ben_Address = "";
@@ -1039,7 +1039,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "Unauthorized";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "Unauthorized";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "Unauthorized";
@@ -1074,7 +1074,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "InternalServerError";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "InternalServerError";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "InternalServerError";
@@ -1316,7 +1316,7 @@ namespace SANYUKT.Provider.Payout
             spr.Header = hp;
 
             BodyRTGS bp = new BodyRTGS();
-            bp.Amount = req.Amount;
+            bp.Amount = req.Amount.ToString();
             bp.Ben_BranchCd = req.Ben_BranchCd;
             bp.Ben_BankCd = req.Ben_BankCd;
             bp.Ben_Address = "";
@@ -1450,7 +1450,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "Unauthorized";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "Unauthorized";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "Unauthorized";
@@ -1484,7 +1484,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "InternalServerError";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "InternalServerError";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "InternalServerError";
@@ -1720,7 +1720,7 @@ namespace SANYUKT.Provider.Payout
             spr.Header = hp;
 
             BodyIMPS bp = new BodyIMPS();
-            bp.Amount = req.Amount;
+            bp.Amount = req.Amount.ToString();
             bp.Ben_BranchCd = req.Ben_BranchCd;
             bp.Ben_BankCd = req.Ben_BankCd;
             bp.Ben_Address = "";
@@ -1859,7 +1859,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "Unauthorized";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "Unauthorized";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "Unauthorized";
@@ -1893,7 +1893,7 @@ namespace SANYUKT.Provider.Payout
                 request3.RefNo3 = "";
                 request3.BankTxnDatetime = "";
                 request3.RefNo4 = "InternalServerError";
-                request3.RefNo5 = req.Amount;
+                request3.RefNo5 = req.Amount.ToString();
                 request3.RefNo6 = "InternalServerError";
                 request3.RefNo7 = req.Mode_of_Pay;
                 request3.RefNo10 = "InternalServerError";
@@ -1948,7 +1948,7 @@ namespace SANYUKT.Provider.Payout
                 return response;
             }
             SinglePaymentRequestFT fT = new SinglePaymentRequestFT();
-            fT.Amount = req.Amount;
+            fT.Amount =Convert.ToDecimal( req.Amount);
             fT.Ben_BankName=resben.BenbankName;
             fT.Ben_BankCd = resben.BenBankcode;
             fT.Ben_BranchCd=resben.BenBranchCode;

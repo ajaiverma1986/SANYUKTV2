@@ -277,7 +277,7 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
     {
         public string PartnerRefNo { get; set; }
         public string PartnerRetailorId { get; set; }
-        public string Amount { get; set; }
+        public decimal  Amount { get; set; }
         public string Ben_IFSC { get; set; }
         public string Ben_Acct_No { get; set; }
         public string Ben_Name { get; set; }
