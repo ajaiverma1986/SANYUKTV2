@@ -152,5 +152,19 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.CreateNewApplication(request, CallerUser);
             return Json(response);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> changesPaymentAccountsStatus([FromBody] ChangePaymentAccStatusRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.changesPaymentAccountsStatus(request, CallerUser);
+            return Json(response);
+        }
     }
 }

@@ -300,6 +300,24 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+
+        public async Task<long> changesPaymentAccountsStatus(ChangePaymentAccStatusRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[CONFG].ChangePaymentAccountsStatus");
+            _database.AddInParameter(dbCommand, "@PaymentAccountID", request.PaymentAccountID);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddOutParameter(dbCommand, "@Out_ID", 100);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
         public async Task<long> CreateNewApplication(CreateapplicationRequest request,string AppToken, ISANYUKTServiceUser serviceUser)
         {
 

@@ -47,4 +47,12 @@ namespace SANYUKT.Datamodel.Masters
         public string ApplicationDescription { get; set; }
 
     }
+    public class ChangePaymentAccStatusRequest
+    {
+        public int? PaymentAccountID { get; set; }
+        public int Status { get; set; }
+        public string Remarks { get; set; }
+
+       
+    }
 }
