@@ -48,117 +48,127 @@ namespace SANYUKT.Provider.Payout
 
         public async Task<SimpleResponse> GetBalalceNew (RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
-            AccountBalalnceRequest requestreq = new AccountBalalnceRequest();
-            RblAccountBalalnceResponse resp = new RblAccountBalalnceResponse();
-            BaseTransactionRequest request1 = new BaseTransactionRequest();
-            request1.agencyid = 1;
-            request1.serviceid = 1;
-            request1.TxnPlateForm = "API";
-            request1.partnerreferenceno = "";
-            request1.partnerretailorid ="";
-
-
-
-            GetAccountBalanceReq aa = new GetAccountBalanceReq();
-            HeaderAcc ha = new HeaderAcc();
-            ha.Approver_ID = objp.ApproverId;
-            ha.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID.ToString();
-            ha.TranID = await _provider.NewNonFinacialTransaction(request1, serviceUser);
-            aa.Header = ha;
-            BodyAcc ba = new BodyAcc();
-            ba.AcctId = objp.AccountNo;
-            aa.Body = ba;
-            Signature1 si = new Signature1();
-            si.Signature = "";
-            aa.Signature = si;
-            requestreq.getAccountBalanceReq = aa;
-
             SimpleResponse response = new SimpleResponse();
-            var _clientHandler = new HttpClientHandler();
-            _clientHandler.ClientCertificates.Add(Certificatetext);
-            _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            var client = new HttpClient(_clientHandler);
-            string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/accounts/balance/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
-            var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
-            string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
-            string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
-            var authenticationString = $"{username}:{pass}";
-            var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(authenticationString));
-            request.Headers.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
-
-
-            //make the request
-            string jsonstr = JsonConvert.SerializeObject(requestreq, Formatting.Indented);
-            var content = new StringContent(jsonstr);
-            request.Content = content;
-            var response1 = await client.SendAsync(request);
-            response.Result = await response1.Content.ReadAsStringAsync();
-            await _commonProvider.ApilogResponse("RBL Payout Balalnce Enq", fullurl, "", jsonstr, response.Result.ToString());
-            GetAccbalResponse nnn = new GetAccbalResponse();
-            UpdateNonfinacialRequest request2 = new UpdateNonfinacialRequest();
-            if (response1.StatusCode == HttpStatusCode.OK)
+            try
             {
-                string jsonData = JsonConvert.SerializeObject(response.Result);
-                dynamic jsonn = JsonConvert.DeserializeObject(jsonData);
+                AccountBalalnceRequest requestreq = new AccountBalalnceRequest();
+                RblAccountBalalnceResponse resp = new RblAccountBalalnceResponse();
+                BaseTransactionRequest request1 = new BaseTransactionRequest();
+                request1.agencyid = 1;
+                request1.serviceid = 1;
+                request1.TxnPlateForm = "API";
+                request1.partnerreferenceno = objp.PartnerRefNo;
+                request1.partnerretailorid = "";
 
-                string strRemSlash = jsonn.Replace("\"", "\'");
-                string strRemNline = strRemSlash.Replace("\n", " ");
-                // Time to desrialize it to convert it into an object class.
-                nnn = JsonConvert.DeserializeObject<GetAccbalResponse>(@strRemNline);
-                resp.Status = nnn.getAccountBalanceRes.Header.Status;
-                resp.ChanelPartnerRefNo = objp.PartnerRefNo;
-                resp.ErorrDescription = nnn.getAccountBalanceRes.Header.Error_Desc;
-                resp.ErrorCode = nnn.getAccountBalanceRes.Header.Error_Cde;
-                resp.TransactionId = nnn.getAccountBalanceRes.Header.TranID;
-                if (resp.Status == "FAILED")
+
+
+                GetAccountBalanceReq aa = new GetAccountBalanceReq();
+                HeaderAcc ha = new HeaderAcc();
+                ha.Approver_ID = objp.ApproverId;
+                ha.Corp_ID = SANYUKTApplicationConfiguration.Instance.RblPayoutCORPID.ToString();
+                ha.TranID = await _provider.NewNonFinacialTransaction(request1, serviceUser);
+                aa.Header = ha;
+                BodyAcc ba = new BodyAcc();
+                ba.AcctId = objp.AccountNo;
+                aa.Body = ba;
+                Signature1 si = new Signature1();
+                si.Signature = "";
+                aa.Signature = si;
+                requestreq.getAccountBalanceReq = aa;
+
+                
+                var _clientHandler = new HttpClientHandler();
+                _clientHandler.ClientCertificates.Add(Certificatetext);
+                _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                var client = new HttpClient(_clientHandler);
+                string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
+                //string fullurl = Url + "test/sb/rbl/v1/accounts/balance/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+                string fullurl = Url + "v1/accounts/balance/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+                var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
+                string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
+                string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
+                var authenticationString = $"{username}:{pass}";
+                var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(authenticationString));
+                request.Headers.Add("Authorization", $"Basic {base64EncodedAuthenticationString}");
+
+
+                //make the request
+                string jsonstr = JsonConvert.SerializeObject(requestreq, Formatting.Indented);
+                var content = new StringContent(jsonstr);
+                request.Content = content;
+                var response1 = await client.SendAsync(request);
+                response.Result = await response1.Content.ReadAsStringAsync();
+                await _commonProvider.ApilogResponse("RBL Payout Balalnce Enq", fullurl, "", jsonstr, response.Result.ToString());
+                GetAccbalResponse nnn = new GetAccbalResponse();
+                UpdateNonfinacialRequest request2 = new UpdateNonfinacialRequest();
+                if (response1.StatusCode == HttpStatusCode.OK)
                 {
+                    string jsonData = JsonConvert.SerializeObject(response.Result);
+                    dynamic jsonn = JsonConvert.DeserializeObject(jsonData);
+
+                    string strRemSlash = jsonn.Replace("\"", "\'");
+                    string strRemNline = strRemSlash.Replace("\n", " ");
+                    // Time to desrialize it to convert it into an object class.
+                    nnn = JsonConvert.DeserializeObject<GetAccbalResponse>(@strRemNline);
+                    resp.Status = nnn.getAccountBalanceRes.Header.Status;
+                    resp.ChanelPartnerRefNo = objp.PartnerRefNo;
+                    resp.ErorrDescription = nnn.getAccountBalanceRes.Header.Error_Desc;
+                    resp.ErrorCode = nnn.getAccountBalanceRes.Header.Error_Cde;
+                    resp.TransactionId = nnn.getAccountBalanceRes.Header.TranID;
+                    if (resp.Status == "FAILED")
+                    {
+                        resp.BalalnceAmount = "0.00";
+                    }
+                    else
+                    {
+                        resp.BalalnceAmount = nnn.getAccountBalanceRes.Body.BalAmt.amountValue;
+                    }
+
+                    request2.errorcode = resp.ErrorCode;
+                    request2.errorDescrtiopn = resp.ErorrDescription;
+                    request2.Txncode = resp.TransactionId;
+                    await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+                }
+                else if (response1.StatusCode == HttpStatusCode.Unauthorized)
+                {
+
+                    resp.Status = "Unauthorized";
+                    resp.ChanelPartnerRefNo = objp.PartnerRefNo;
+                    resp.ErorrDescription = "";
+                    resp.ErrorCode = response1.ReasonPhrase;
+                    resp.TransactionId = ha.TranID;
                     resp.BalalnceAmount = "0.00";
+
+                    request2.errorcode = response1.ReasonPhrase;
+                    request2.errorDescrtiopn = response1.ReasonPhrase;
+                    request2.Txncode = ha.TranID;
+                    await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+
                 }
-                else
+                else if (response1.StatusCode == HttpStatusCode.InternalServerError)
                 {
-                    resp.BalalnceAmount = nnn.getAccountBalanceRes.Body.BalAmt.amountValue;
+
+                    resp.Status = "InternalServerError";
+                    resp.ChanelPartnerRefNo = objp.PartnerRefNo;
+                    resp.ErorrDescription = "";
+                    resp.ErrorCode = response1.ReasonPhrase;
+                    resp.TransactionId = ha.TranID;
+                    resp.BalalnceAmount = "0.00";
+
+                    request2.errorcode = response1.ReasonPhrase;
+                    request2.errorDescrtiopn = response1.ReasonPhrase;
+                    request2.Txncode = ha.TranID;
+                    await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
+
                 }
+                response.Result = resp;
 
-                request2.errorcode = resp.ErrorCode;
-                request2.errorDescrtiopn = resp.ErorrDescription;
-                request2.Txncode = resp.TransactionId;
-                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
             }
-            else if (response1.StatusCode == HttpStatusCode.Unauthorized)
+            catch (Exception ex)
             {
 
-                resp.Status = "Unauthorized";
-                resp.ChanelPartnerRefNo = objp.PartnerRefNo;
-                resp.ErorrDescription = "";
-                resp.ErrorCode = response1.ReasonPhrase;
-                resp.TransactionId = ha.TranID;
-                resp.BalalnceAmount = "0.00";
-
-                request2.errorcode = response1.ReasonPhrase;
-                request2.errorDescrtiopn = response1.ReasonPhrase;
-                request2.Txncode = ha.TranID;
-                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
-
+                response.Result = ex.ToString();
             }
-            else if (response1.StatusCode == HttpStatusCode.InternalServerError)
-            {
-
-                resp.Status = "InternalServerError";
-                resp.ChanelPartnerRefNo = objp.PartnerRefNo;
-                resp.ErorrDescription = "";
-                resp.ErrorCode = response1.ReasonPhrase;
-                resp.TransactionId = ha.TranID;
-                resp.BalalnceAmount = "0.00";
-
-                request2.errorcode = response1.ReasonPhrase;
-                request2.errorDescrtiopn = response1.ReasonPhrase;
-                request2.Txncode = ha.TranID;
-                await _provider.UpdateNonFinacialTransaction(request2, serviceUser);
-
-            }
-            response.Result = resp;
-
             return response;
         }
         public async Task<SimpleResponse> GetBalalce(RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
@@ -194,7 +204,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/accounts/balance/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/accounts/balance/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -530,7 +540,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -935,7 +945,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -1348,7 +1358,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -1752,7 +1762,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -2083,7 +2093,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -2199,7 +2209,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -2316,7 +2326,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -2430,7 +2440,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();
@@ -2556,7 +2566,7 @@ namespace SANYUKT.Provider.Payout
             _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
             var client = new HttpClient(_clientHandler);
             string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
-            string fullurl = Url + "test/sb/rbl/v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
+            string fullurl = Url + "v1/payments/corp/payment/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
             var request = new HttpRequestMessage(HttpMethod.Post, fullurl);
             string username = SANYUKTApplicationConfiguration.Instance.RblPayoutusername.ToString();
             string pass = SANYUKTApplicationConfiguration.Instance.RblPayoutPass.ToString();

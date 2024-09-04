@@ -181,5 +181,28 @@ namespace SANYUKT.API.Controllers
             return Ok(response);
 
         }
+        /// <summary>
+        /// Get transaction Status
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AuditApi(EventTypeName = "POST RblPayoutController/GetAccBalalnce", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
+        public async Task<IActionResult> GetAccBalalnce([FromBody] RblPayoutRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Ok(response);
+            }
+           
+            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
+            response = await _Provider.GetBalalceNew(request, certificate2, this.CallerUser);
+
+            return Ok(response);
+
+        }
     }
 }

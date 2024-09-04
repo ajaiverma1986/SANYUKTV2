@@ -158,7 +158,9 @@ namespace SANYUKT.API
                         UserMasterID = applicationUserDetails.UserMasterID.Value;
 
                         await MemoryCachingService.Put(string.Format(CacheKeys.USER_ID, serviceUser.UserToken), applicationUserDetails.UserID);
-                        UserId = applicationUserDetails.UserID.Value;
+                      
+                            UserId = applicationUserDetails.UserID.Value;
+                        
                         await MemoryCachingService.Put(string.Format(CacheKeys.USER_Type, serviceUser.UserToken), applicationUserDetails.UserTypeID);
                         UserTypeID = applicationUserDetails.UserTypeID.Value;
                     }

@@ -743,7 +743,7 @@ namespace SANYUKT.Repository
 
             var dbCommand = _database.GetStoredProcCommand("[USR].GetOrganisationDetails");
 
-            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
