@@ -136,7 +136,7 @@ namespace SANYUKT.API.Controllers
                 return Ok(response);
             }
             SimpleResponse response1 = new SimpleResponse();
-            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
+            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response1 = await _rblProvider.PayoutTransactionwithoutBen(request, certificate2, this.CallerUser);
 
             return Ok(response1);
@@ -161,7 +161,7 @@ namespace SANYUKT.API.Controllers
                 return Ok(response);
             }
             RblStatusResponse response1 = new RblStatusResponse();
-            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
+            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response1 = await _rblProvider.PayoutTransactionStatus(request, certificate2, this.CallerUser);
 
             return Ok(response1);
@@ -225,7 +225,7 @@ namespace SANYUKT.API.Controllers
                 return Ok(response);
             }
             SimpleResponse response1 = new SimpleResponse();
-            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
+            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response1 = await _rblProvider.PayoutTransaction(request, certificate2, this.CallerUser);
 
             return Ok(response1);

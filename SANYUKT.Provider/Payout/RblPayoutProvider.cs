@@ -49,6 +49,8 @@ namespace SANYUKT.Provider.Payout
         public async Task<SimpleResponse> GetBalalceNew (RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
+
+           
             try
             {
                 AccountBalalnceRequest requestreq = new AccountBalalnceRequest();
@@ -78,8 +80,11 @@ namespace SANYUKT.Provider.Payout
 
                 
                 var _clientHandler = new HttpClientHandler();
+                _clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
                 _clientHandler.ClientCertificates.Add(Certificatetext);
                 _clientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                
                 var client = new HttpClient(_clientHandler);
                 string Url = SANYUKTApplicationConfiguration.Instance.RblPayoutBaseUrl.ToString();
                 //string fullurl = Url + "test/sb/rbl/v1/accounts/balance/query?client_id=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientId.ToString() + "&client_secret=" + SANYUKTApplicationConfiguration.Instance.RblPayoutclientSecrat.ToString();
@@ -167,7 +172,7 @@ namespace SANYUKT.Provider.Payout
             catch (Exception ex)
             {
 
-                response.Result = ex.ToString();
+                response.Result = ex.Message.ToString();
             }
             return response;
         }

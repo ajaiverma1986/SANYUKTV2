@@ -197,8 +197,12 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
-           
-            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "/SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
+            string xxxx = System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString());
+            response.Result = xxxx;
+
+          
+
+            X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response = await _Provider.GetBalalceNew(request, certificate2, this.CallerUser);
 
             return Ok(response);
