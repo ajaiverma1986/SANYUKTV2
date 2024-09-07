@@ -401,5 +401,41 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_136", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction Policy not Defined.
+        /// </summary>
+        public static string CODE_137 {
+            get {
+                return ResourceManager.GetString("CODE_137", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction Amount should be Less than allowed amount.
+        /// </summary>
+        public static string CODE_138 {
+            get {
+                return ResourceManager.GetString("CODE_138", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction amount should be greter than allowed amount.
+        /// </summary>
+        public static string CODE_139 {
+            get {
+                return ResourceManager.GetString("CODE_139", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User not allowed to access this Application.
+        /// </summary>
+        public static string CODE_140 {
+            get {
+                return ResourceManager.GetString("CODE_140", resourceCulture);
+            }
+        }
     }
 }

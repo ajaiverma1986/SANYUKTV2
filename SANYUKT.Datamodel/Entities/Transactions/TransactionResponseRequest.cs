@@ -11,6 +11,13 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public int ServiceId { get; set;}
         public decimal Amount { get; set;}
     }
+    public class SevicechargeByPlanRequest
+    {
+        public int AgencyId { get; set; }
+        public int ServiceId { get; set; }
+        public decimal Amount { get; set; }
+        public int PlanId { get; set; }
+    }
     public class TransactionDetailsRequest
     {
         public int AgencyId { get; set; }

@@ -22,6 +22,7 @@ namespace SANYUKT.Datamodel.Masters
     public class TransactionslabRequest
     {
         public int? SlabId { get; set; }
+        public int? PlanId { get; set; }
         public int? SlabType { get; set; }
         public int? CalculationType { get; set; }
         public int? AgencyID { get; set; }
@@ -51,8 +52,13 @@ namespace SANYUKT.Datamodel.Masters
     {
         public int? PaymentAccountID { get; set; }
         public int Status { get; set; }
-        public string Remarks { get; set; }
-
-       
+        public string Remarks { get; set; } 
+    }
+    public class GetServicePolicyRequest
+    {
+        public int ServiceId { get; set; }
+        public int Agencyid { get; set; }
+        public int PolicyId { get; set; }
+        public string PolicyKey { get; set; }
     }
 }

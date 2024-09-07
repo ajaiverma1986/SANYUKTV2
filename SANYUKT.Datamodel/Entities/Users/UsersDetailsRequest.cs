@@ -341,4 +341,15 @@ namespace SANYUKT.Datamodel.Entities.Users
         public decimal? AvailableLimit { get; set; }
        
     }
+    public class UserConfigResponse
+    {
+        public long ConfigurationId { get; set; }
+        public long UserId { get; set; }
+        public decimal MinTxn { get; set; }
+        public decimal MaxTxn { get; set; }
+        public int ChargeTypeOn { get; set; }
+        public string ChargeDeductionType { get; set; }
+        public int PlanId { get; set; }
+
+    }
 }

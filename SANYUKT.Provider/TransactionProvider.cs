@@ -53,6 +53,12 @@ namespace SANYUKT.Provider
             response = await _repository.GetServiceChargeDetail(request);
             return response;
         }
+        public async Task<SevicechargeResponse> GetServiceChargeDetailByPlan(SevicechargeByPlanRequest request)
+        {
+            SevicechargeResponse response = new SevicechargeResponse();
+            response = await _repository.GetServiceChargeDetailByPlan(request);
+            return response;
+        }
         public async Task<TransactionResponse> NewTransactionUpdateStatus(UpdateTransactionStatusRequest request, ISANYUKTServiceUser serviceUser)
         {
             string TransactionCode = "";

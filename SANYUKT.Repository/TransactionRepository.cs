@@ -112,6 +112,31 @@ namespace SANYUKT.Repository
 
             return response;
         }
+
+        public async Task<SevicechargeResponse> GetServiceChargeDetailByPlan(SevicechargeByPlanRequest request)
+        {
+            SevicechargeResponse response = null;
+            var dbCommand = _database.GetStoredProcCommand("[CONFG].usp_getServiceChargediscount");
+            _database.AddInParameter(dbCommand, "@AgencyID", request.AgencyId);
+            _database.AddInParameter(dbCommand, "@ServiceID", request.ServiceId);
+            _database.AddInParameter(dbCommand, "@amount", request.Amount);
+            _database.AddInParameter(dbCommand, "@PlanId", request.PlanId);
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                dataReader.Read();
+                if (dataReader.HasRows)
+                {
+                    response = new SevicechargeResponse();
+                    response.CalculationType = GetInt32Value(dataReader, "CalculationType").Value;
+                    response.SlabType = GetInt32Value(dataReader, "SlabType").Value;
+                    response.CalculationValue = GetDecimalValue(dataReader, "CalculationValue").Value;
+                    response.CalculationTypeName = GetStringValue(dataReader, "CalculationTypeName");
+
+                }
+            }
+
+            return response;
+        }
         public async Task<string> NewTransactionUpdateStatus(UpdateTransactionStatusRequest request, ISANYUKTServiceUser serviceUser)
         {
 

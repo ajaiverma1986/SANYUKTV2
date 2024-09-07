@@ -69,6 +69,7 @@ namespace SANYUKT.Datamodel.Masters
     public class TransactionslabResponse
     {
         public int SlabId { get; set; }
+        public int PlanId { get; set; }
         public int AgencyID { get; set; }
         public int ServiceID { get; set; }
         public int SlabType { get; set; }
@@ -82,6 +83,7 @@ namespace SANYUKT.Datamodel.Masters
         public string CalculationTypeName { get; set; }
         public string AgencyName { get; set; }
         public string ServiceName { get; set; }
+        public string PlanName { get; set; }
     }
 
     public class PaymentAccountsListResponse
@@ -103,6 +105,14 @@ namespace SANYUKT.Datamodel.Masters
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
 
+    }
+
+    public class GetservicePolicyResponse
+    {
+        public int SysPolicyId { get; set; }
+        public string PolicyKey { get; set; }
+        public string PolicyValue { get; set; }
+       
     }
 
 }

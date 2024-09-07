@@ -98,5 +98,11 @@ namespace SANYUKT.Provider
             response.Result = await _repository.CreateNewApplication(request, apiKey.ToUpper(), serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> GetServicePolicy(GetServicePolicyRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = await _repository.GetServicePolicy(request);
+            return response;
+        }
     }
 }

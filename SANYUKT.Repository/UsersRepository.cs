@@ -41,6 +41,29 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<UserConfigResponse> GetUserConfig(ISANYUKTServiceUser serviceUser)
+        {
+            UserConfigResponse response = new UserConfigResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetAllUserConfigration");
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+
+                    response.UserId = GetInt64Value(dataReader, "UserId").Value;
+                    response.ChargeDeductionType = GetStringValue(dataReader, "ChargeDeductionType");
+                    response.ConfigurationId = GetInt64Value(dataReader, "ConfigurationId").Value;
+                    response.ChargeTypeOn = GetInt32Value(dataReader, "ChargeTypeOn").Value;
+                    response.PlanId = GetInt32Value(dataReader, "PlanId").Value;
+                    response.MaxTxn = GetDecimalValue(dataReader, "MaxTxn").Value;
+                    response.MinTxn = GetDecimalValue(dataReader, "MinTxn").Value;
+
+                }
+            }
+            return response;
+        }
         public async Task<PartnerLimitResponse> CheckPartnerAvailbleLimit(ISANYUKTServiceUser serviceUser)
         {
             PartnerLimitResponse response = new PartnerLimitResponse();

@@ -231,4 +231,16 @@
   <data name="CODE_136" xml:space="preserve">
     <value>Email is Required</value>
   </data>
+  <data name="CODE_137" xml:space="preserve">
+    <value>Transaction Policy not Defined</value>
+  </data>
+  <data name="CODE_138" xml:space="preserve">
+    <value>Transaction Amount should be Less than allowed amount</value>
+  </data>
+  <data name="CODE_139" xml:space="preserve">
+    <value>Transaction amount should be greter than allowed amount</value>
+  </data>
+  <data name="CODE_140" xml:space="preserve">
+    <value>User not allowed to access this Application</value>
+  </data>
 </root>

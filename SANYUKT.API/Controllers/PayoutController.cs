@@ -56,6 +56,11 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
+            if(this.CallerUser.UserTypeId!=2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
+            }
             response = await _authenticationProvider.Login(userLoginRequest, this.CallerUser);
 
             return Ok(response);
@@ -72,6 +77,11 @@ namespace SANYUKT.API.Controllers
         {
             long UserId = 0;
             SimpleResponse response=new SimpleResponse();
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
+            }
             UserId = await _Provider.AddNewBenficiary(request,this.CallerUser);
             if(UserId>0)
             {
@@ -97,7 +107,12 @@ namespace SANYUKT.API.Controllers
         {
             List<BenficiaryResponse> benficiaries=new List<BenficiaryResponse>();
             SimpleResponse response = new SimpleResponse();
-             benficiaries = await _Provider.GetAllBenficiary(request,this.CallerUser);
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
+            }
+            benficiaries = await _Provider.GetAllBenficiary(request,this.CallerUser);
             if (benficiaries == null)
             {
                 response = new SimpleResponse();
@@ -127,7 +142,12 @@ namespace SANYUKT.API.Controllers
         [AuditApi(EventTypeName = "POST Payout/DirectPay", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
         public async Task<IActionResult> DirectPay([FromBody] SinglePaymentRequestFT request)
         {
-            UserLoginResponse response = new UserLoginResponse();
+            SimpleResponse response = new SimpleResponse();
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
+            }
 
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
             if (error.HasError)
@@ -135,11 +155,11 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
-            SimpleResponse response1 = new SimpleResponse();
+           
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
-            response1 = await _rblProvider.PayoutTransactionwithoutBen(request, certificate2, this.CallerUser);
+            response = await _rblProvider.PayoutTransactionwithoutBen(request, certificate2, this.CallerUser);
 
-            return Ok(response1);
+            return Ok(response);
 
         }
         /// <summary>
@@ -152,12 +172,17 @@ namespace SANYUKT.API.Controllers
         [AuditApi(EventTypeName = "POST RblPayoutController/TransactionStatus", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
         public async Task<IActionResult> TransactionStatus([FromBody] SinglePaymentStatusNew request)
         {
-            UserLoginResponse response = new UserLoginResponse();
+            SimpleResponse response = new SimpleResponse();
 
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
             if (error.HasError)
             {
                 response.SetError(error);
+                return Ok(response);
+            }
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
                 return Ok(response);
             }
             RblStatusResponse response1 = new RblStatusResponse();
@@ -177,11 +202,17 @@ namespace SANYUKT.API.Controllers
         public async Task<IActionResult> TransactionList([FromBody] TransactionDetailsPayoutRequest request)
         {
             SimpleResponse response = new SimpleResponse();
+
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
             if (error.HasError)
             {
                 response.SetError(error);
                 return Json(response);
+            }
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
             }
             response = await _TxnProvider.GetPayoutTransactionList(request, CallerUser);
             return Json(response);
@@ -203,6 +234,11 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Json(response);
             }
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
+            }
             response = await _Provider.CheckBalalnce(CallerUser);
             return Json(response);
         }
@@ -216,7 +252,7 @@ namespace SANYUKT.API.Controllers
         [AuditApi(EventTypeName = "POST Payout/TransactionWithBenID", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = false, IncludeModelState = false)]
         public async Task<IActionResult> PayoutTransaction([FromBody] PayoutTransaction request)
         {
-            UserLoginResponse response = new UserLoginResponse();
+            SimpleResponse response = new SimpleResponse();
 
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
             if (error.HasError)
@@ -224,11 +260,15 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
-            SimpleResponse response1 = new SimpleResponse();
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
+            }
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
-            response1 = await _rblProvider.PayoutTransaction(request, certificate2, this.CallerUser);
+            response = await _rblProvider.PayoutTransaction(request, certificate2, this.CallerUser);
 
-            return Ok(response1);
+            return Ok(response);
 
         }
     }

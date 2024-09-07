@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto.Agreement.Srp;
+using Org.BouncyCastle.Crypto.Tls;
 using Org.BouncyCastle.Ocsp;
 using SANYUKT.Commonlib.Cache;
 using SANYUKT.Configuration;
@@ -39,18 +40,35 @@ namespace SANYUKT.Provider.Payout
         public readonly UserDetailsProvider _userprovider= null;
         public readonly CommonProvider _commonProvider = null;
         public readonly MasterDataRepository _masterdatarepos = null;
+        public readonly ConfigProvider _configprovider = null;
         public RblPayoutProvider() {
             _provider = new TransactionProvider();
             _userprovider= new UserDetailsProvider();
             _commonProvider= new CommonProvider();
             _masterdatarepos= new MasterDataRepository();
+            _configprovider= new ConfigProvider();
         }
 
         public async Task<SimpleResponse> GetBalalceNew (RblPayoutRequest objp, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
 
-           
+            // Check if the certificate is valid
+            if (!Certificatetext.Verify())
+            {
+                response.Result = "The certificate is not valid.";
+                return response;
+            }
+
+            // Check certificate expiration
+            DateTime now = DateTime.Now;
+            if (now < Certificatetext.NotBefore || now > Certificatetext.NotAfter)
+            {
+                response.Result = "The certificate is either not yet valid or has expired.";
+                return response;
+            }
+
+
             try
             {
                 AccountBalalnceRequest requestreq = new AccountBalalnceRequest();
@@ -395,46 +413,80 @@ namespace SANYUKT.Provider.Payout
                 return response;
             }
 
-            //service charge calculation and validation
-            SevicechargeRequest sevicechargeRequest = new SevicechargeRequest();
-            sevicechargeRequest.ServiceId = 1;
-            sevicechargeRequest.AgencyId = 1;
-            sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
-
-
-            SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
-            sevicechargeResponse = await _provider.GetServiceChargeDetail(sevicechargeRequest);
-            if (sevicechargeResponse == null)
+            //user transaction configration
+            UserConfigResponse userConfig = new UserConfigResponse();
+            userConfig = await _userprovider.GetUserConfig(serviceUser);
+            if (userConfig == null)
             {
-                response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                response.SetError(ErrorCodes.SP_137);
                 return response;
             }
-            if (sevicechargeResponse.SlabType == 1)
+            if (userConfig.ChargeTypeOn == 0)
             {
-                if (sevicechargeResponse.CalculationType == 1)
+                response.SetError(ErrorCodes.SP_137);
+                return response;
+            }
+            if (userConfig.PlanId == 0)
+            {
+                response.SetError(ErrorCodes.SP_137);
+                return response;
+            }
+            if (req.Amount > userConfig.MaxTxn)
+            {
+                response.SetError(ErrorCodes.SP_138);
+                return response;
+            }
+            if (req.Amount < userConfig.MinTxn)
+            {
+                response.SetError(ErrorCodes.SP_139);
+                return response;
+            }
+
+            if (userConfig.ChargeTypeOn == (int)ChargeDeductionType.FromTransaction)
+            {
+                //service charge calculation and validation
+                SevicechargeByPlanRequest sevicechargeRequest = new SevicechargeByPlanRequest();
+                sevicechargeRequest.ServiceId = 1;
+                sevicechargeRequest.AgencyId = 1;
+                sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
+
+
+                SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
+                sevicechargeResponse = await _provider.GetServiceChargeDetailByPlan(sevicechargeRequest);
+                if (sevicechargeResponse == null)
                 {
-                    txnFee = sevicechargeResponse.CalculationValue;
-                    Margin = 0;
+                    response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                    return response;
+                }
+                if (sevicechargeResponse.SlabType == 1)
+                {
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue;
+                        Margin = 0;
+                    }
+                    else
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                        Margin = 0;
+                    }
                 }
                 else
                 {
-                    txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
-                    Margin = 0;
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue;
+                    }
+                    else
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                    }
                 }
             }
-            else
-            {
-                if (sevicechargeResponse.CalculationType == 1)
-                {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue;
-                }
-                else
-                {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
-                }
-            }
+
+
 
             //wallet balance check and validation
 
@@ -800,44 +852,76 @@ namespace SANYUKT.Provider.Payout
                 return response;
             }
 
-            //service charge calculation and validation
-            SevicechargeRequest sevicechargeRequest = new SevicechargeRequest();
-            sevicechargeRequest.ServiceId = 1;
-            sevicechargeRequest.AgencyId = 1;
-            sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
-
-
-            SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
-            sevicechargeResponse = await _provider.GetServiceChargeDetail(sevicechargeRequest);
-            if (sevicechargeResponse == null)
+            //user transaction configration
+            UserConfigResponse userConfig = new UserConfigResponse();
+            userConfig = await _userprovider.GetUserConfig(serviceUser);
+            if (userConfig == null)
             {
-                response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                response.SetError(ErrorCodes.SP_137);
                 return response;
             }
-            if (sevicechargeResponse.SlabType == 1)
+            if (userConfig.ChargeTypeOn == 0)
             {
-                if (sevicechargeResponse.CalculationType == 1)
-                {
-                    txnFee = sevicechargeResponse.CalculationValue;
-                    Margin = 0;
-                }
-                else
-                {
-                    txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
-                    Margin = 0;
-                }
+                response.SetError(ErrorCodes.SP_137);
+                return response;
             }
-            else
+            if (userConfig.PlanId == 0)
             {
-                if (sevicechargeResponse.CalculationType == 1)
+                response.SetError(ErrorCodes.SP_137);
+                return response;
+            }
+            if (req.Amount > userConfig.MaxTxn)
+            {
+                response.SetError(ErrorCodes.SP_138);
+                return response;
+            }
+            if (req.Amount < userConfig.MinTxn)
+            {
+                response.SetError(ErrorCodes.SP_139);
+                return response;
+            }
+
+            if (userConfig.ChargeTypeOn == (int)ChargeDeductionType.FromTransaction)
+            {
+                //service charge calculation and validation
+                SevicechargeByPlanRequest sevicechargeRequest = new SevicechargeByPlanRequest();
+                sevicechargeRequest.ServiceId = 1;
+                sevicechargeRequest.AgencyId = 1;
+                sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
+
+
+                SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
+                sevicechargeResponse = await _provider.GetServiceChargeDetailByPlan(sevicechargeRequest);
+                if (sevicechargeResponse == null)
                 {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue;
+                    response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                    return response;
+                }
+                if (sevicechargeResponse.SlabType == 1)
+                {
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue;
+                        Margin = 0;
+                    }
+                    else
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                        Margin = 0;
+                    }
                 }
                 else
                 {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue;
+                    }
+                    else
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                    }
                 }
             }
 
@@ -1213,44 +1297,76 @@ namespace SANYUKT.Provider.Payout
                 return response;
             }
 
-            //service charge calculation and validation
-            SevicechargeRequest sevicechargeRequest = new SevicechargeRequest();
-            sevicechargeRequest.ServiceId = 1;
-            sevicechargeRequest.AgencyId = 1;
-            sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
-
-
-            SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
-            sevicechargeResponse = await _provider.GetServiceChargeDetail(sevicechargeRequest);
-            if (sevicechargeResponse == null)
+            //user transaction configration
+            UserConfigResponse userConfig = new UserConfigResponse();
+            userConfig = await _userprovider.GetUserConfig(serviceUser);
+            if (userConfig == null)
             {
-                response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                response.SetError(ErrorCodes.SP_137);
                 return response;
             }
-            if (sevicechargeResponse.SlabType == 1)
+            if (userConfig.ChargeTypeOn == 0)
             {
-                if (sevicechargeResponse.CalculationType == 1)
-                {
-                    txnFee = sevicechargeResponse.CalculationValue;
-                    Margin = 0;
-                }
-                else
-                {
-                    txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
-                    Margin = 0;
-                }
+                response.SetError(ErrorCodes.SP_137);
+                return response;
             }
-            else
+            if (userConfig.PlanId == 0)
             {
-                if (sevicechargeResponse.CalculationType == 1)
+                response.SetError(ErrorCodes.SP_137);
+                return response;
+            }
+            if (req.Amount > userConfig.MaxTxn)
+            {
+                response.SetError(ErrorCodes.SP_138);
+                return response;
+            }
+            if (req.Amount < userConfig.MinTxn)
+            {
+                response.SetError(ErrorCodes.SP_139);
+                return response;
+            }
+
+            if (userConfig.ChargeTypeOn == (int)ChargeDeductionType.FromTransaction)
+            {
+                //service charge calculation and validation
+                SevicechargeByPlanRequest sevicechargeRequest = new SevicechargeByPlanRequest();
+                sevicechargeRequest.ServiceId = 1;
+                sevicechargeRequest.AgencyId = 1;
+                sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
+
+
+                SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
+                sevicechargeResponse = await _provider.GetServiceChargeDetailByPlan(sevicechargeRequest);
+                if (sevicechargeResponse == null)
                 {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue;
+                    response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                    return response;
+                }
+                if (sevicechargeResponse.SlabType == 1)
+                {
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue;
+                        Margin = 0;
+                    }
+                    else
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                        Margin = 0;
+                    }
                 }
                 else
                 {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue;
+                    }
+                    else
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                    }
                 }
             }
 
@@ -1617,44 +1733,76 @@ namespace SANYUKT.Provider.Payout
                 return response;
             }
 
-            //service charge calculation and validation
-            SevicechargeRequest sevicechargeRequest = new SevicechargeRequest();
-            sevicechargeRequest.ServiceId = 1;
-            sevicechargeRequest.AgencyId = 1;
-            sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
-
-
-            SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
-            sevicechargeResponse = await _provider.GetServiceChargeDetail(sevicechargeRequest);
-            if (sevicechargeResponse == null)
+            //user transaction configration
+            UserConfigResponse userConfig = new UserConfigResponse();
+            userConfig = await _userprovider.GetUserConfig(serviceUser);
+            if (userConfig == null)
             {
-                response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                response.SetError(ErrorCodes.SP_137);
                 return response;
             }
-            if (sevicechargeResponse.SlabType == 1)
+            if (userConfig.ChargeTypeOn == 0)
             {
-                if (sevicechargeResponse.CalculationType == 1)
-                {
-                    txnFee = sevicechargeResponse.CalculationValue;
-                    Margin = 0;
-                }
-                else
-                {
-                    txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
-                    Margin = 0;
-                }
+                response.SetError(ErrorCodes.SP_137);
+                return response;
             }
-            else
+            if (userConfig.PlanId == 0)
             {
-                if (sevicechargeResponse.CalculationType == 1)
+                response.SetError(ErrorCodes.SP_137);
+                return response;
+            }
+            if (req.Amount > userConfig.MaxTxn)
+            {
+                response.SetError(ErrorCodes.SP_138);
+                return response;
+            }
+            if (req.Amount < userConfig.MinTxn)
+            {
+                response.SetError(ErrorCodes.SP_139);
+                return response;
+            }
+
+            if (userConfig.ChargeTypeOn == (int)ChargeDeductionType.FromTransaction)
+            {
+                //service charge calculation and validation
+                SevicechargeByPlanRequest sevicechargeRequest = new SevicechargeByPlanRequest();
+                sevicechargeRequest.ServiceId = 1;
+                sevicechargeRequest.AgencyId = 1;
+                sevicechargeRequest.Amount = Convert.ToDecimal(req.Amount);
+
+
+                SevicechargeResponse sevicechargeResponse = new SevicechargeResponse();
+                sevicechargeResponse = await _provider.GetServiceChargeDetailByPlan(sevicechargeRequest);
+                if (sevicechargeResponse == null)
                 {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue;
+                    response.SetError(ErrorCodes.SERVICE_CHARGE_NOT_DEFINE);
+                    return response;
+                }
+                if (sevicechargeResponse.SlabType == 1)
+                {
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue;
+                        Margin = 0;
+                    }
+                    else
+                    {
+                        txnFee = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                        Margin = 0;
+                    }
                 }
                 else
                 {
-                    txnFee = 0;
-                    Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                    if (sevicechargeResponse.CalculationType == 1)
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue;
+                    }
+                    else
+                    {
+                        txnFee = 0;
+                        Margin = sevicechargeResponse.CalculationValue * Convert.ToDecimal(req.Amount);
+                    }
                 }
             }
 
@@ -1954,6 +2102,8 @@ namespace SANYUKT.Provider.Payout
         public async Task<SimpleResponse> PayoutTransaction(PayoutTransaction req, X509Certificate2 Certificatetext, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
+
+           
 
             BenficiaryResponse resben = new BenficiaryResponse();
             resben = await _userprovider.GetBenficiaryDetailsByID(Convert.ToInt64(req.BenficiaryID));

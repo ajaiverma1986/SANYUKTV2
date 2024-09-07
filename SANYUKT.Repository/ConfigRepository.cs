@@ -208,6 +208,7 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@AgencyID", request.AgencyID);
             _database.AddInParameter(dbCommand, "@ServiceID", request.ServiceID);
             _database.AddInParameter(dbCommand, "@Amount", request.Amount);
+            _database.AddInParameter(dbCommand, "@PlanId", request.PlanId);
 
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
@@ -216,6 +217,7 @@ namespace SANYUKT.Repository
                 {
                     TransactionslabResponse obj = new TransactionslabResponse();
                     obj.SlabId = GetInt32Value(dataReader, "SlabId").Value;
+                    obj.PlanId = GetInt32Value(dataReader, "PlanId").Value;
                     obj.SlabType = GetInt32Value(dataReader, "SlabType").Value;
                     obj.CalculationType = GetInt32Value(dataReader, "CalculationType").Value;
                     obj.AgencyID = GetInt32Value(dataReader, "AgencyID").Value;
@@ -225,6 +227,7 @@ namespace SANYUKT.Repository
                     obj.CalculationValue = GetDecimalValue(dataReader, "CalculationValue").Value;
                     obj.CalculationTypeName = GetStringValue(dataReader, "CalculationTypeName");
                     obj.SlabTypeName = GetStringValue(dataReader, "SlabTypeName");
+                    obj.PlanName = GetStringValue(dataReader, "PlanName");
                     obj.ServiceName = GetStringValue(dataReader, "ServiceName");
                     obj.AgencyName = GetStringValue(dataReader, "AgencyName");
                     obj.Status = GetInt32Value(dataReader, "Status").Value;
@@ -336,6 +339,32 @@ namespace SANYUKT.Repository
             outputstr = GetIDOutputLong(dbCommand);
 
             return outputstr;
+
+        }
+        public async Task<SimpleResponse> GetServicePolicy(GetServicePolicyRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            GetservicePolicyResponse objMaster = new GetservicePolicyResponse();
+
+            var dbCommand = _database.GetStoredProcCommand("[CONFG].ListServicePolicy");
+            _database.AddInParameter(dbCommand, "@ServiceId", request.ServiceId);
+            _database.AddInParameter(dbCommand, "@Agencyid", request.Agencyid);
+            _database.AddInParameter(dbCommand, "@PolicyId", request.PolicyId);
+            _database.AddInParameter(dbCommand, "@PolicyKey", request.PolicyKey);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+
+                    objMaster.SysPolicyId = GetInt32Value(dataReader, "SysPolicyId").Value;
+                    objMaster.PolicyKey = GetStringValue(dataReader, "PolicyKey");
+                    objMaster.PolicyValue = GetStringValue(dataReader, "PolicyValue");
+                   
+                }
+                response.Result = objMaster;
+                return response;
+            }
 
         }
     }

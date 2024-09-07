@@ -127,5 +127,13 @@ namespace SANYUKT.Datamodel.Common
         Terminated = 12
 
     }
-   
+
+    public enum ChargeDeductionType
+    {
+        [Display(Name = "From Topup")]
+        FromTopup = 1,
+        [Display(Name = "From Transaction")]
+        FromTransaction = 2
+       
+    }
 }

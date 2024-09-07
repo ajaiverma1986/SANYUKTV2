@@ -60,6 +60,13 @@ namespace SANYUKT.Provider
             response1.Result = await _repository.CheckPartnerAvailbleLimit(serviceUser);
             return response1;
         }
+        public async Task<UserConfigResponse> GetUserConfig(ISANYUKTServiceUser serviceUser)
+        {
+            UserConfigResponse response = new UserConfigResponse();
+
+            response = await _repository.GetUserConfig(serviceUser);
+            return response;
+        }
         public async Task<long> AddNewBenficiary(AddBenficiaryRequest request, ISANYUKTServiceUser serviceUser)
         {
             long outputresponse = 0;
