@@ -130,6 +130,14 @@ namespace SANYUKT.Provider
 
             return outputresponse;
         }
+        public async Task<long> ApproveRejectOriAccounts(ApproveRejectOriAccountRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+
+            outputresponse = await _repository.ApproveRejectOriginatorAccounts(request, serviceUser);
+
+            return outputresponse;
+        }
         public async Task<SimpleResponse> GetallOriginatorsAccount(ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
@@ -173,6 +181,13 @@ namespace SANYUKT.Provider
             SimpleResponse response = new SimpleResponse();
 
             response.Result = await _repository.ListAllOriginatorsAccounts(request,serviceUser);
+            return response;
+        }
+        public async Task<SimpleResponse> ListAllOriginatorsAccountsforAdmin(OriginatorListAccountforadminRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.ListAllOriginatorsAccountsforAdmin(request, serviceUser);
             return response;
         }
         public async Task<long> AddUserAddress(CreateUserDetailAddressRequest request, ISANYUKTServiceUser serviceUser)

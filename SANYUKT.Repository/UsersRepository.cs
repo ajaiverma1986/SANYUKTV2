@@ -14,10 +14,11 @@ using System.Threading.Tasks;
 
 namespace SANYUKT.Repository
 {
-    public class UsersRepository:BaseRepository
+    public class UsersRepository : BaseRepository
     {
         public readonly ISANYUKTDatabase _database = null;
-        public UsersRepository() { 
+        public UsersRepository()
+        {
             _database = new SANYUKTDatabase();
         }
         public async Task<UsersDetailsResponse> CheckAvailbleLimit(ISANYUKTServiceUser serviceUser)
@@ -25,18 +26,18 @@ namespace SANYUKT.Repository
             UsersDetailsResponse response = new UsersDetailsResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].CheckAvailableBalance");
             _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserID);
-        
+
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
                 if (dataReader.Read())
                 {
-                   
+
                     response.UserId = GetInt64Value(dataReader, "UserId").Value;
                     response.Usercode = GetStringValue(dataReader, "Usercode");
                     response.ThresoldLimit = GetDecimalValue(dataReader, "ThresoldLimit");
                     response.AvailableLimit = GetDecimalValue(dataReader, "AvailableLimit");
                     response.UserTypeId = GetInt32Value(dataReader, "UserTypeId").Value;
-                    
+
                 }
             }
             return response;
@@ -78,7 +79,7 @@ namespace SANYUKT.Repository
                     response.PartnerID = GetInt64Value(dataReader, "PartnerID").Value;
                     response.PartnerCode = GetStringValue(dataReader, "PartnerCode");
                     response.Balance = GetDecimalValue(dataReader, "AvailableLimit");
-                 
+
 
                 }
             }
@@ -110,10 +111,10 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
-        public async Task<List<BenficiaryResponse>> GetAllBenficiary(ListBenficaryRequest request,ISANYUKTServiceUser serviceUser)
+        public async Task<List<BenficiaryResponse>> GetAllBenficiary(ListBenficaryRequest request, ISANYUKTServiceUser serviceUser)
         {
-            List<BenficiaryResponse> response=new List<BenficiaryResponse> ();
-          
+            List<BenficiaryResponse> response = new List<BenficiaryResponse>();
+
             var dbCommand = _database.GetStoredProcCommand("[USR].GetAllBenficiary");
             _database.AddInParameter(dbCommand, "@PartnerId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
@@ -147,9 +148,9 @@ namespace SANYUKT.Repository
             BenficiaryResponse response = new BenficiaryResponse();
 
             var dbCommand = _database.GetStoredProcCommand("[USR].GetBenficiaryById");
-           
+
             _database.AddInParameter(dbCommand, "@BenFiciaryId", BenFiciaryId);
-            
+
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
                 if (dataReader.Read())
@@ -166,7 +167,7 @@ namespace SANYUKT.Repository
                     response.BenMobile = GetStringValue(dataReader, "BenMobile");
                     response.EmailId = GetStringValue(dataReader, "EmailId");
                     response.BenficiaryName = GetStringValue(dataReader, "BenficiaryName");
-                   
+
                 }
             }
             return response;
@@ -177,7 +178,7 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].ChangeBenficiaryStatus");
-            _database.AddInParameter(dbCommand, "@PartnerId",serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@PartnerId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@BenficiaryId", request.BenFiciaryId);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
 
@@ -252,7 +253,7 @@ namespace SANYUKT.Repository
         }
         public async Task<List<OriginatorListAccountResponse>> GetallOriginatorsAccount(ISANYUKTServiceUser serviceUser)
         {
-           List< OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
+            List<OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
 
             var dbCommand = _database.GetStoredProcCommand("[USR].GetallOriginatorsAccounts");
 
@@ -277,7 +278,7 @@ namespace SANYUKT.Repository
                     row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
                     row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
                     row.Fullname = GetStringValue(dataReader, "Fullname");
-                    row.Usercode  = GetStringValue(dataReader, "Usercode");
+                    row.Usercode = GetStringValue(dataReader, "Usercode");
                     row.Filename = GetStringValue(dataReader, "Filename");
                     row.Ifsccode = GetStringValue(dataReader, "Ifsccode");
                     response.Add(row);
@@ -384,7 +385,7 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
-        public async Task<long> CreateOrgAPIPartner(CreateNewPartnerRequest request,string Password, ISANYUKTServiceUser serviceUser)
+        public async Task<long> CreateOrgAPIPartner(CreateNewPartnerRequest request, string Password, ISANYUKTServiceUser serviceUser)
         {
 
             long outputstr = 0;
@@ -464,13 +465,13 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
-        public async Task<List<ApplicationListResponse>> Getallapplication( ISANYUKTServiceUser serviceUser)
+        public async Task<List<ApplicationListResponse>> Getallapplication(ISANYUKTServiceUser serviceUser)
         {
             List<ApplicationListResponse> response = new List<ApplicationListResponse>();
 
             var dbCommand = _database.GetStoredProcCommand("[AAC].ListAllApplication");
             _database.AddInParameter(dbCommand, "@OrganizationID", serviceUser.UserID);
-           
+
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
@@ -487,7 +488,7 @@ namespace SANYUKT.Repository
                     objp.MobileNo = GetStringValue(dataReader, "MobileNo");
                     objp.OrganisationName = GetStringValue(dataReader, "OrganisationName");
                     objp.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
-                    
+
                     response.Add(objp);
                 }
             }
@@ -520,7 +521,7 @@ namespace SANYUKT.Repository
                     row.FileUrl = GetStringValue(dataReader, "FileUrl");
                     row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
                     row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
-                    
+
                     response.Add(row);
                 }
             }
@@ -614,7 +615,7 @@ namespace SANYUKT.Repository
                     objp.DocumentNo = GetStringValue(dataReader, "DocumentNo");
                     objp.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
                     objp.KycTypeName = GetStringValue(dataReader, "KycTypeName");
-                    
+
                     response.Add(objp);
                 }
             }
@@ -688,7 +689,7 @@ namespace SANYUKT.Repository
 
                     row.MenuID = GetInt32Value(dataReader, "MenuID").Value;
                     row.DisplayOrder = GetInt32Value(dataReader, "DisplayOrder").Value;
-                    
+
                     row.Target = GetStringValue(dataReader, "Target");
                     row.Tooltip = GetStringValue(dataReader, "Tooltip");
                     row.Description = GetStringValue(dataReader, "Description");
@@ -706,7 +707,7 @@ namespace SANYUKT.Repository
                     {
                         while (dataReader1.Read())
                         {
-                            ApplicationMenuResponse xx= new ApplicationMenuResponse();
+                            ApplicationMenuResponse xx = new ApplicationMenuResponse();
                             xx.MenuID = GetInt32Value(dataReader1, "MenuID").Value;
                             xx.ParentID = GetInt32Value(dataReader1, "ParentID").Value;
                             xx.DisplayOrder = GetInt32Value(dataReader1, "DisplayOrder").Value;
@@ -722,7 +723,7 @@ namespace SANYUKT.Repository
                     }
                     row.submenu = mm;
 
-                        response.Add(row);
+                    response.Add(row);
                 }
             }
             return response;
@@ -784,6 +785,67 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<List<OriginatorListAccountResponse>> ListAllOriginatorsAccountsforAdmin(OriginatorListAccountforadminRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            List<OriginatorListAccountResponse> response = new List<OriginatorListAccountResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].ListallOriginatorsAccountsForAdmin");
+
+            _database.AddInParameter(dbCommand, "@FromDate", request.FromDate);
+            _database.AddInParameter(dbCommand, "@ToDate", request.ToDate);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    OriginatorListAccountResponse row = new OriginatorListAccountResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.BankId = GetInt32Value(dataReader, "BankId").Value;
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.OriginatorAccountID = GetInt32Value(dataReader, "OriginatorAccountID").Value;
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.AccountName = GetStringValue(dataReader, "AccountName");
+                    row.BankName = GetStringValue(dataReader, "BankName");
+                    row.AccountNo = GetStringValue(dataReader, "AccountNo");
+                    row.BranchAddress = GetStringValue(dataReader, "BranchAddress");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.Fullname = GetStringValue(dataReader, "Fullname");
+                    row.Usercode = GetStringValue(dataReader, "Usercode");
+                    row.Filename = GetStringValue(dataReader, "Filename");
+                    row.Ifsccode = GetStringValue(dataReader, "Ifsccode");
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
+        public async Task<long> ApproveRejectOriginatorAccounts(ApproveRejectOriAccountRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].ApproveRejectOriginatorAcc");
+            _database.AddInParameter(dbCommand, "@RequestId",request.RequestId);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@RemarksReason", request.RemarksReason);
+            _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+
 
     }
 }

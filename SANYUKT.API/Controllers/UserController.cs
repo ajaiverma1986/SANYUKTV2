@@ -121,6 +121,20 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.AddOriginatorAccounts(request, this.CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/AddOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ApproveRejectOrigiAccounts([FromBody] ApproveRejectOriAccountRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.ApproveRejectOriAccounts(request, this.CallerUser);
+            return Json(response);
+        }
         [HttpGet]
        // [AuditApi(EventTypeName = "POST UserController/ListOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
         public async Task<IActionResult> ListOriginatorAccounts()
@@ -161,6 +175,20 @@ namespace SANYUKT.API.Controllers
                 return Json(response);
             }
             response = await _Provider.ListAllOriginatorsAccounts(request,CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        // [AuditApi(EventTypeName = "POST UserController/ListOriginatorAccounts", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ListAllOriginatorsAccountsforAdmin([FromBody] OriginatorListAccountforadminRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.ListAllOriginatorsAccountsforAdmin(request, CallerUser);
             return Json(response);
         }
         [HttpPost]

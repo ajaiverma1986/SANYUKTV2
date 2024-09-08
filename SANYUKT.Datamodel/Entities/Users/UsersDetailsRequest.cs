@@ -113,6 +113,13 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string BranchAddress { get; set; }
       
     }
+    public class ApproveRejectOriAccountRequest
+    {
+        public long RequestId { get; set; }
+        public int Status { get; set; }
+        public string RemarksReason { get; set; }
+    
+    }
     public class OriginatorListAccountResponse
     {
         public long OriginatorAccountID { get; set; }
@@ -138,7 +145,15 @@ namespace SANYUKT.Datamodel.Entities.Users
     public class OriginatorListAccountRequest:ListRequest
     {
         public int Status { get; set; }
-  
+      
+
+    }
+    public class OriginatorListAccountforadminRequest : ListRequest
+    {
+        public int Status { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+
     }
     public class CreateUserDetailAddressRequest
     {
