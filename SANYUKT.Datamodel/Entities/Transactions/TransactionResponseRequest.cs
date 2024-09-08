@@ -121,7 +121,6 @@ namespace SANYUKT.Datamodel.Entities.Transactions
         public long RequestID { get; set; }
         public string RejectedReason { get; set; }
         public int Status { get; set; }
-        public long UpdatedBy { get; set; }
 
     }
     public class ListPayinRequestRequest:ListRequest
