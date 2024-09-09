@@ -367,4 +367,23 @@ namespace SANYUKT.Datamodel.Entities.Users
         public int PlanId { get; set; }
 
     }
+    public class ListOrganisationDetailRequest : ListRequest
+    {
+        public string MobileNo { get; set; }
+        public string EmailId { get; set; }
+        public long? UserId { get; set; } 
+
+    }
+    public class ListOrganisationResponse
+    {
+        public long UserId { get; set; }
+        public string Usercode { get; set; }
+        public string OrganisationName { get; set; }
+        public string ContactPerson { get; set; }
+        public string MobileNo { get; set; }
+        public string EmailId { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public string UpdatedBy { get; set; }
+       
+    }
 }

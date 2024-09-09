@@ -362,5 +362,12 @@ namespace SANYUKT.Provider
             response.Result = await _repository.GetAllUserDeatils(serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> GetAllOrganisationDetails(ListOrganisationDetailRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetAllOrganisationDetails(request, serviceUser);
+            return response;
+        }
     }
 }

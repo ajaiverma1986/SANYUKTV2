@@ -846,6 +846,38 @@ namespace SANYUKT.Repository
 
         }
 
+        public async Task<List<ListOrganisationResponse>> GetAllOrganisationDetails(ListOrganisationDetailRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            List<ListOrganisationResponse> response = new List<ListOrganisationResponse>();
 
+            var dbCommand = _database.GetStoredProcCommand("[USR].OrganisationList");
+
+            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
+            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
+            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    ListOrganisationResponse row = new ListOrganisationResponse();
+
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.ContactPerson = GetStringValue(dataReader, "ContactPerson");
+                    row.Usercode = GetStringValue(dataReader, "Usercode");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.EmailId = GetStringValue(dataReader, "EmailId");
+                    row.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    row.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
     }
 }
