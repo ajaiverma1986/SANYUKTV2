@@ -72,6 +72,12 @@ namespace SANYUKT.Provider
             response.Result = await _repository.AddPaymentAccounts(request, serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> AddNewTransactionslab(AddTxnslabRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response.Result = await _repository.AddTransactionslab(request, serviceUser);
+            return response;
+        }
         public async Task<SimpleResponse> changesPaymentAccountsStatus(ChangePaymentAccStatusRequest request, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();

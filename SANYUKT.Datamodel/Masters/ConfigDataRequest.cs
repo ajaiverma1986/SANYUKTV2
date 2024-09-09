@@ -61,4 +61,16 @@ namespace SANYUKT.Datamodel.Masters
         public int PolicyId { get; set; }
         public string PolicyKey { get; set; }
     }
+    public class AddTxnslabRequest
+    {
+        public int PlanId { get; set; }
+        public int AgencyID { get; set; }
+        public int ServiceID { get; set; }
+        public decimal FromAmount { get; set; }
+        public decimal ToAmount { get; set; }
+        public int SlabType { get; set; }
+        public int CalculationType { get; set; }
+        public decimal CalculationValue { get; set; }
+    
+    }
 }

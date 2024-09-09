@@ -367,5 +367,29 @@ namespace SANYUKT.Repository
             }
 
         }
+        public async Task<long> AddTransactionslab(AddTxnslabRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[CONFG].AddTransactionSlab");
+            _database.AddInParameter(dbCommand, "@PlanId", request.PlanId);
+            _database.AddInParameter(dbCommand, "@AgencyID", request.AgencyID);
+            _database.AddInParameter(dbCommand, "@ServiceID", request.ServiceID);
+            _database.AddInParameter(dbCommand, "@FromAmount", request.FromAmount);
+            _database.AddInParameter(dbCommand, "@ToAmount", request.ToAmount);
+            _database.AddInParameter(dbCommand, "@SlabType", request.SlabType);
+            _database.AddInParameter(dbCommand, "@CalculationType", request.CalculationType);
+            _database.AddInParameter(dbCommand, "@CalculationValue", request.CalculationValue);
+            _database.AddInParameter(dbCommand, "@CreatedBy",serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", 100);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
     }
 }

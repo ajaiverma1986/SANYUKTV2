@@ -180,7 +180,7 @@ namespace SANYUKT.API.Controllers
             return Json(response);
         }
         [HttpPost]
-        public async Task<IActionResult> AddTransacttionSlab([FromBody] AddPaymentAccountMasterRequest request)
+        public async Task<IActionResult> AddTransacttionSlab([FromBody] AddTxnslabRequest request)
         {
             SimpleResponse response = new SimpleResponse();
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
@@ -189,7 +189,7 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Json(response);
             }
-            response = await _Provider.AddPaymentAccounts(request, CallerUser);
+            response = await _Provider.AddNewTransactionslab(request, CallerUser);
             return Json(response);
         }
     }
