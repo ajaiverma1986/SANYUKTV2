@@ -874,6 +874,8 @@ namespace SANYUKT.Repository
                     row.EmailId = GetStringValue(dataReader, "EmailId");
                     row.MobileNo = GetStringValue(dataReader, "MobileNo");
                     row.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
                     response.Add(row);
                 }
             }

@@ -384,6 +384,8 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string EmailId { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public string UpdatedBy { get; set; }
-       
+        public string StatusName { get; set; }
+        public int Status { get; set; }
+
     }
 }
