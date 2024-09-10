@@ -264,6 +264,13 @@ namespace SANYUKT.Provider
             response.Result = await _repository.GetAllUserKyc(serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> GetAllUserKycByUserId(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetAllUserKycByUserId(UserId,serviceUser);
+            return response;
+        }
         public async Task<SimpleResponse> GetAllUserKycById(long KycId, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
@@ -307,7 +314,7 @@ namespace SANYUKT.Provider
                     resp.KycID = item.KycID;
                     resp.ContentType = "image";
                     resp.MediaContentType = "png";
-                    resp.FileBytes = fileManager.ReadFile(item.FileUrl, "PartnerDocument", serviceUser.UserID.ToString());
+                    resp.FileBytes = fileManager.ReadFile(item.FileUrl, "PartnerDocument", item.UserId.ToString());
                     if(resp.FileBytes!=null && resp.FileBytes.Length>0)
                     {
                         resp.Base64String = "";

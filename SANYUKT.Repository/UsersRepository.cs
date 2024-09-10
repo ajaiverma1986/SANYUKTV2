@@ -528,6 +528,40 @@ namespace SANYUKT.Repository
             return response;
         }
 
+        public async Task<List<UserKYYCResponse>> GetAllUserKycByUserId(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            List<UserKYYCResponse> response = new List<UserKYYCResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetallUserDeatilsKyc");
+
+            _database.AddInParameter(dbCommand, "@UserId", UserId);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    UserKYYCResponse row = new UserKYYCResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.KycID = GetInt32Value(dataReader, "KycID").Value;
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.UserKYCID = GetInt32Value(dataReader, "UserKYCID").Value;
+                    row.CreatedOn = GetDateValue(dataReader, "CreatedOn");
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.DocumentNo = GetStringValue(dataReader, "DocumentNo");
+                    row.KycTypeName = GetStringValue(dataReader, "KycTypeName");
+                    row.FullName = GetStringValue(dataReader, "FullName");
+                    row.FileUrl = GetStringValue(dataReader, "FileUrl");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
+
         public async Task<long> CreateNewUser(CreateNewUserRequest request, string Password, ISANYUKTServiceUser serviceUser)
         {
 
@@ -627,7 +661,7 @@ namespace SANYUKT.Repository
 
             var dbCommand = _database.GetStoredProcCommand("[USR].GetallUserDeatilsKycById");
 
-            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+            //_database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@KycId", KycId);
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
@@ -655,6 +689,8 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+
+     
         public async Task<long> UpdateOriginatorChequeFile(PayinAccountRegistrationChequeRequest request, ISANYUKTServiceUser serviceUser)
         {
 

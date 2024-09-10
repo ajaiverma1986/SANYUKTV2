@@ -252,6 +252,20 @@ namespace SANYUKT.API.Controllers
             return Json(response);
         }
         [HttpGet]
+        //[AuditApi(EventTypeName = "POST UserController/ListUserKYC", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ListUserKYCByUserId(long UserId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetAllUserKycByUserId(UserId,CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
         // [AuditApi(EventTypeName = "POST UserController/ListUserAddresses", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
         public async Task<IActionResult> CheckBalance()
         {
@@ -394,6 +408,7 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetAllUserKycById(KycId,CallerUser);
             return Json(response);
         }
+       
         [HttpGet]
         
         public async Task<IActionResult> DocumentView_Search(long KYCID)
