@@ -527,5 +527,32 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetAllOrganisationDetails(request, CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/AddUserDeatilKYC", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ApproveRejectUserDocument([FromBody] ApproveRejectUserDocumentRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.ApproveRejectUserDocument(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllUserConfigration(long UserId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, true, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetAllUserConfigration(UserId,CallerUser);
+            return Json(response);
+        }
     }
 }

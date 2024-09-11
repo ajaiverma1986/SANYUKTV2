@@ -376,5 +376,21 @@ namespace SANYUKT.Provider
             response.Result = await _repository.GetAllOrganisationDetails(request, serviceUser);
             return response;
         }
+        public async Task<long> ApproveRejectUserDocument(ApproveRejectUserDocumentRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputresponse = 0;
+           
+
+            outputresponse = await _repository.ApproveRejectUserDocument(request, serviceUser);
+
+            return outputresponse;
+        }
+        public async Task<SimpleResponse> GetAllUserConfigration(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GetAllUserConfigration(UserId, serviceUser);
+            return response;
+        }
     }
 }

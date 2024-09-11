@@ -388,4 +388,25 @@ namespace SANYUKT.Datamodel.Entities.Users
         public int Status { get; set; }
 
     }
+    public class ApproveRejectUserDocumentRequest
+    {
+        public long UserKYCID { get; set; }
+        public int Status { get; set; }
+        public string RejectedReason { get; set; }
+    }
+    public class UserConfigrationResponse
+    {
+        public long ConfigurationId { get; set; }
+        public long UserId { get; set; }
+        public decimal MinTxn { get; set; }
+        public decimal MaxTxn { get; set; }
+        public int ChargeTypeOn { get; set; }
+        public string ChargeDeductionType { get; set; }
+        public decimal MaxPayinamount { get; set; }
+        public int MaxNoofcountPayin { get; set; }
+        public int SameAmountPayinAllowed { get; set; }
+        public int PlanId { get; set; }
+        public string PlanName { get; set; }
+
+    }
 }

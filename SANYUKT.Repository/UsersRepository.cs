@@ -917,5 +917,60 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<long> ApproveRejectUserDocument(ApproveRejectUserDocumentRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].ApproveRejectDocument");
+            _database.AddInParameter(dbCommand, "@UserKYCID", request.UserKYCID);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@RejectedReason", request.RejectedReason);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<List<UserConfigrationResponse>> GetAllUserConfigration(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            List<UserConfigrationResponse> response = new List<UserConfigrationResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetUSerConfigurationByUserId");
+
+            if(UserId==0)
+            {
+                _database.AddInParameter(dbCommand, "@UserId", 0);
+            }
+            else
+            {
+                _database.AddInParameter(dbCommand, "@UserId", UserId);
+            }
+        
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    UserConfigrationResponse row = new UserConfigrationResponse();
+
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.ConfigurationId = GetInt64Value(dataReader, "ConfigurationId").Value;
+                    row.MinTxn = GetDecimalValue(dataReader, "MinTxn").Value;
+                    row.MaxTxn = GetDecimalValue(dataReader, "MaxTxn").Value;
+                    row.ChargeDeductionType = GetStringValue(dataReader, "ChargeDeductionType");
+                    row.MaxPayinamount = GetDecimalValue(dataReader, "MaxPayinamount").Value;
+                    row.ChargeTypeOn = GetInt32Value(dataReader, "ChargeTypeOn").Value;
+                    row.PlanName = GetStringValue(dataReader, "PlanName");
+                    row.SameAmountPayinAllowed = GetInt32Value(dataReader, "SameAmountPayinAllowed").Value;
+                    row.PlanId = GetInt32Value(dataReader, "PlanId").Value;
+                    row.MaxNoofcountPayin = GetInt32Value(dataReader, "MaxNoofcountPayin").Value;
+                    response.Add(row);
+                }
+            }
+            return response;
+        }
     }
 }
