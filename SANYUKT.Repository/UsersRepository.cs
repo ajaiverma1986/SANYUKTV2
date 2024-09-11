@@ -972,5 +972,41 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<long> UpDateUserConfigrationDetails(UserConfigrationRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            long? UserId = 0;
+
+            if(serviceUser.UserTypeId==2)
+            {
+                UserId=serviceUser.UserID;
+            }
+            else
+            {
+                UserId = request.UserId;
+            }
+
+
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].UpdateUserConfigration");
+            _database.AddInParameter(dbCommand, "@userid", UserId);
+            _database.AddInParameter(dbCommand, "@mintxn", request.MinTxn);
+            _database.AddInParameter(dbCommand, "@maxtxn", request.MaxTxn);
+            _database.AddInParameter(dbCommand, "@chargetypeon", request.ChargeTypeOn);
+            _database.AddInParameter(dbCommand, "@planid", request.PlanId);
+            _database.AddInParameter(dbCommand, "@maxpayinamount", request.MaxPayinamount);
+            _database.AddInParameter(dbCommand, "@maxnoofcountpayin", request.MaxNoofcountPayin);
+            _database.AddInParameter(dbCommand, "@sameamountpayinallowed", request.SameAmountPayinAllowed);
+            _database.AddInParameter(dbCommand, "@updatedby", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
     }
 }

@@ -409,4 +409,16 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string PlanName { get; set; }
 
     }
+    public class UserConfigrationRequest
+    {
+        public long UserId { get; set; }
+        public decimal MinTxn { get; set; }
+        public decimal MaxTxn { get; set; }
+        public int ChargeTypeOn { get; set; }
+        public decimal MaxPayinamount { get; set; }
+        public int MaxNoofcountPayin { get; set; }
+        public int SameAmountPayinAllowed { get; set; }
+        public int PlanId { get; set; }
+
+    }
 }

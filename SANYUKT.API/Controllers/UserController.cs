@@ -554,5 +554,19 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetAllUserConfigration(UserId,CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/AddUserDeatilKYC", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> UpDateUserConfigrationDetails([FromBody] UserConfigrationRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.UpDateUserConfigrationDetails(request, this.CallerUser);
+            return Json(response);
+        }
     }
 }

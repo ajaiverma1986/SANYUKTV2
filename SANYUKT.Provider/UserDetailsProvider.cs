@@ -392,5 +392,14 @@ namespace SANYUKT.Provider
             response.Result = await _repository.GetAllUserConfigration(UserId, serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> UpDateUserConfigrationDetails(UserConfigrationRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.UpDateUserConfigrationDetails(request, serviceUser);
+
+            return response;
+        }
     }
 }
