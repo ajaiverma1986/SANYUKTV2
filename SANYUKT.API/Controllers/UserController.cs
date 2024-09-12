@@ -568,5 +568,33 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.UpDateUserConfigrationDetails(request, this.CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/AddUserDeatilKYC", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ActivateDeactivateApiUser([FromBody] ActivateAPIUserRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.ActivateDeactivateApiUser(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/AddUserDeatilKYC", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ActivateDeactivateUserMaster([FromBody] ActivateAPIUserMasterRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response.Result = await _Provider.ActivateDeactivateUserMaster(request, this.CallerUser);
+            return Json(response);
+        }
     }
 }

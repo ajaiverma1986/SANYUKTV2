@@ -943,7 +943,7 @@ namespace SANYUKT.Repository
 
             if(UserId==0)
             {
-                _database.AddInParameter(dbCommand, "@UserId", 0);
+                _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
             }
             else
             {
@@ -999,6 +999,46 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@maxnoofcountpayin", request.MaxNoofcountPayin);
             _database.AddInParameter(dbCommand, "@sameamountpayinallowed", request.SameAmountPayinAllowed);
             _database.AddInParameter(dbCommand, "@updatedby", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<long> ActivateDeactivateApiUser(ActivateAPIUserRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+           
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].ActivateDeactivateAPIUser");
+            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@Reason", request.Reason);
+            _database.AddInParameter(dbCommand, "@UpdatedBy", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<long> ActivateDeactivateUserMaster(ActivateAPIUserMasterRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].ActivateDeactivateUserMaster");
+            _database.AddInParameter(dbCommand, "@UserMasterID", request.UserMasterId);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@Reason", request.Reason);
+            _database.AddInParameter(dbCommand, "@UpdatedBy", serviceUser.UserMasterID);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
 
             await _database.ExecuteNonQueryAsync(dbCommand);

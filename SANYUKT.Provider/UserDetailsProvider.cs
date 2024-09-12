@@ -401,5 +401,23 @@ namespace SANYUKT.Provider
 
             return response;
         }
+        public async Task<SimpleResponse> ActivateDeactivateApiUser(ActivateAPIUserRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.ActivateDeactivateApiUser(request, serviceUser);
+
+            return response;
+        }
+        public async Task<SimpleResponse> ActivateDeactivateUserMaster(ActivateAPIUserMasterRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.ActivateDeactivateUserMaster(request, serviceUser);
+
+            return response;
+        }
     }
 }

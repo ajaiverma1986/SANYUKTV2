@@ -421,4 +421,18 @@ namespace SANYUKT.Datamodel.Entities.Users
         public int PlanId { get; set; }
 
     }
+    public class ActivateAPIUserRequest
+    {
+        public long UserId { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
+     
+    }
+    public class ActivateAPIUserMasterRequest
+    {
+        public long UserMasterId { get; set; }
+        public int Status { get; set; }
+        public string Reason { get; set; }
+
+    }
 }
