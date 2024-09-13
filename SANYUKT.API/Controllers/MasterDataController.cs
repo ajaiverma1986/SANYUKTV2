@@ -154,6 +154,19 @@ namespace SANYUKT.API.Controllers
             return Json(response);
         }
         [HttpGet]
+        public async Task<IActionResult> UserTypeAdminList()
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetAllUserAdminType();
+            return Json(response);
+        }
+        [HttpGet]
         public async Task<IActionResult> DemographicDataListByPincode(string Pincode)
         {
             SimpleResponse response = new SimpleResponse();

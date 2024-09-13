@@ -162,5 +162,6 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetUSerStatement(request, CallerUser);
             return Json(response);
         }
+
     }
 }

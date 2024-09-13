@@ -1048,5 +1048,47 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<ListResponse> GetAllUserMasterList(ListUserMasterRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response1 = new ListResponse();
+            List<ListUserMasterResponse> response = new List<ListUserMasterResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].UserMasterList");
+
+            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
+            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
+            _database.AddInParameter(dbCommand, "@UserMasterId", request.UserMasterId);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    ListUserMasterResponse row = new ListUserMasterResponse();
+
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.UserTypeId = GetInt32Value(dataReader, "UserTypeId").Value;
+                    row.UserMasterID = GetInt32Value(dataReader, "UserMasterID").Value;
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.ContactPerson = GetStringValue(dataReader, "ContactPerson");
+                    row.UserName = GetStringValue(dataReader, "UserName");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.EmailId = GetStringValue(dataReader, "EmailId");
+                    row.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    row.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    row.UserTypename = GetStringValue(dataReader, "UserTypename");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    response.Add(row);
+                }
+            }
+            response1.SetPagingOutput(dbCommand);
+            response1.CurrentPage = request.PageNo;
+            response1.Result = response;
+            return response1;
+        }
     }
 }

@@ -77,6 +77,12 @@ namespace SANYUKT.Provider
             response = await _repository.GetUserTypeList();
             return response;
         }
+        public async Task<SimpleResponse> GetAllUserAdminType()
+        {
+            SimpleResponse response = new SimpleResponse();
+            response = await _repository.GetAllUserAdminType();
+            return response;
+        }
         public async Task<SimpleResponse> GetDataByPincode(string Pincode)
         {
             SimpleResponse response = new SimpleResponse();

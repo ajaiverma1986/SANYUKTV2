@@ -596,5 +596,18 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.ActivateDeactivateUserMaster(request, this.CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        public async Task<IActionResult> GetAllUserMasterList([FromBody] ListUserMasterRequest request)
+        {
+            ListResponse response = new ListResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetAllUserMasterList(request, CallerUser);
+            return Json(response);
+        }
     }
 }

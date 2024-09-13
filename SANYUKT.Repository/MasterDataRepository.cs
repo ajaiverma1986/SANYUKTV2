@@ -358,6 +358,31 @@ namespace SANYUKT.Repository
             }
 
         }
+        public async Task<SimpleResponse> GetAllUserAdminType()
+        {
+            SimpleResponse response = new SimpleResponse();
+            List<UserTypeListResponse> objMaster = new List<UserTypeListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[MDM].UserTypeAdminList");
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    UserTypeListResponse obj = new UserTypeListResponse();
+
+                    obj.UserTypeId = GetInt32Value(dataReader, "UserTypeId").Value;
+                    obj.UserTypeName = GetStringValue(dataReader, "UserTypeName");
+                    obj.Status = GetInt32Value(dataReader, "Status").Value;
+                    obj.StatusName = GetStringValue(dataReader, "StatusName");
+
+                    objMaster.Add(obj);
+                }
+                response.Result = objMaster;
+                return response;
+            }
+
+        }
 
         public async Task<SimpleResponse> GetDataByPincode(string Pincode)
         {

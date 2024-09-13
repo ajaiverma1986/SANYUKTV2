@@ -419,5 +419,12 @@ namespace SANYUKT.Provider
 
             return response;
         }
+        public async Task<ListResponse> GetAllUserMasterList(ListUserMasterRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response = new ListResponse();
+
+            response = await _repository.GetAllUserMasterList(request, serviceUser);
+            return response;
+        }
     }
 }
