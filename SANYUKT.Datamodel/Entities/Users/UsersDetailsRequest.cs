@@ -460,4 +460,9 @@ namespace SANYUKT.Datamodel.Entities.Users
         public int Status { get; set; }
 
     }
+    public class ListUserAddressRequest : ListRequest
+    {
+        public long UserId { get; set; }
+
+    }
 }

@@ -609,5 +609,31 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetAllUserMasterList(request, CallerUser);
             return Json(response);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetUserMasterDetailsforConfig(string UserName)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetUserMasterDetailsforConfig(UserName, CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ListUserAddress([FromBody] ListUserAddressRequest request)
+        {
+            ListResponse response = new ListResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.ListUserAddress(request, CallerUser);
+            return Json(response);
+        }
     }
 }

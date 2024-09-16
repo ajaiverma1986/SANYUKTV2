@@ -368,7 +368,7 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].Add_UserDetailAddress");
-            _database.AddInParameter(dbCommand, "@UserID", request.userId);
+            _database.AddInParameter(dbCommand, "@UserID", serviceUser.UserID);
             _database.AddInParameter(dbCommand, "@AddressTypeId", request.AddressTypeId);
             _database.AddInParameter(dbCommand, "@Pincode", request.Pincode);
             _database.AddInParameter(dbCommand, "@Address1", request.Address1);
@@ -1082,6 +1082,100 @@ namespace SANYUKT.Repository
                     row.UserTypename = GetStringValue(dataReader, "UserTypename");
                     row.StatusName = GetStringValue(dataReader, "StatusName");
                     row.Status = GetInt32Value(dataReader, "Status").Value;
+                    response.Add(row);
+                }
+            }
+            response1.SetPagingOutput(dbCommand);
+            response1.CurrentPage = request.PageNo;
+            response1.Result = response;
+            return response1;
+        }
+
+        public async Task<SimpleResponse> GetUserMasterDetailsforConfig(string UserName, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response1 = new SimpleResponse();
+            ListUserMasterResponse response = new ListUserMasterResponse();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].UserMasterListDetails");
+
+            _database.AddInParameter(dbCommand, "@UserName", UserName);
+           
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+
+
+
+                    response.UserTypeId = GetInt32Value(dataReader, "UserTypeId").Value;
+                    response.UserMasterID = GetInt32Value(dataReader, "UserMasterID").Value;
+                    // row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn") ;
+                    response.ContactPerson = GetStringValue(dataReader, "ContactPerson");
+                    response.UserName = GetStringValue(dataReader, "UserName");
+                    response.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    response.EmailId = GetStringValue(dataReader, "EmailId");
+                    response.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    response.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    response.UserTypename = GetStringValue(dataReader, "UserTypename");
+                    response.StatusName = GetStringValue(dataReader, "StatusName");
+                    response.Status = GetInt32Value(dataReader, "Status").Value;
+                    
+                }
+            }
+         
+            response1.Result = response;
+            return response1;
+        }
+        public async Task<ListResponse> ListUserAddress(ListUserAddressRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response1 = new ListResponse();
+            List<UserAddressListResponse> response = new List<UserAddressListResponse>();
+            long? newuserid = 0;
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].ListallUserAddresses");
+
+
+            if(serviceUser.UserTypeId==3)
+            {
+                newuserid=serviceUser.UserID;
+            }
+            else
+            {
+                newuserid=request.UserId;
+            }
+
+            _database.AddInParameter(dbCommand, "@UserId", newuserid);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    UserAddressListResponse row = new UserAddressListResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.AddressTypeId = GetInt32Value(dataReader, "AddressTypeId").Value;
+                    row.UserID = GetInt32Value(dataReader, "UserID").Value;
+                    row.UserAddressID = GetInt32Value(dataReader, "UserAddressID").Value;
+                    row.CreatedOn = GetDateValue(dataReader, "CreatedOn");
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.Address1 = GetStringValue(dataReader, "Address1");
+                    row.Address2 = GetStringValue(dataReader, "Address2");
+                    row.Address3 = GetStringValue(dataReader, "Address3");
+                    row.AddressTypeName = GetStringValue(dataReader, "AddressTypeName");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.AreaName = GetStringValue(dataReader, "AreaName");
+                    row.PincodeDataId = GetInt32Value(dataReader, "PincodeDataId").Value;
+                    row.DistrictName = GetStringValue(dataReader, "DistrictName");
+                    row.StateName = GetStringValue(dataReader, "StateName");
+                    row.SubDistrictName = GetStringValue(dataReader, "SubDistrictName");
+                    row.Pincode = GetStringValue(dataReader, "Pincode");
                     response.Add(row);
                 }
             }
