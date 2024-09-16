@@ -444,7 +444,7 @@ namespace SANYUKT.Datamodel.Entities.Users
     }
     public class ListUserMasterResponse
     {
-        public long UserId { get; set; }
+        
         public long UserMasterID { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypename { get; set; }
@@ -454,7 +454,7 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string ContactPerson { get; set; }
         public string MobileNo { get; set; }
         public string EmailId { get; set; }
-        public DateTime? UpdatedOn { get; set; }
+       // public DateTime? UpdatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public string StatusName { get; set; }
         public int Status { get; set; }

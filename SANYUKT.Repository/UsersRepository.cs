@@ -1069,10 +1069,10 @@ namespace SANYUKT.Repository
                 {
                     ListUserMasterResponse row = new ListUserMasterResponse();
 
-                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    
                     row.UserTypeId = GetInt32Value(dataReader, "UserTypeId").Value;
                     row.UserMasterID = GetInt32Value(dataReader, "UserMasterID").Value;
-                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                   // row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn") ;
                     row.ContactPerson = GetStringValue(dataReader, "ContactPerson");
                     row.UserName = GetStringValue(dataReader, "UserName");
                     row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
