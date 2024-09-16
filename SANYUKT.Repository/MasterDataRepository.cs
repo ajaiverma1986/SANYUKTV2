@@ -413,6 +413,75 @@ namespace SANYUKT.Repository
             }
 
         }
+        public async Task<ListResponse> GetDataByPincodeList(PincodeDataRequest request)
+        {
+            ListResponse response = new ListResponse();
+            List<PincodeDataResponse> objMaster = new List<PincodeDataResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[MDM].GetDataByPincodeList");
+            _database.AddInParameter(dbCommand, "@Pincode", request.Pincode);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    PincodeDataResponse obj = new PincodeDataResponse();
+                    obj.StateID = GetInt32Value(dataReader, "StateID").Value;
+                    obj.DistrictID = GetInt32Value(dataReader, "DistrictID").Value;
+                    obj.PincodeDataId = GetInt32Value(dataReader, "PincodeDataId").Value;
+                    obj.AreaName = GetStringValue(dataReader, "AreaName");
+                    obj.DistrictName = GetStringValue(dataReader, "DistrictName");
+                    obj.StateName = GetStringValue(dataReader, "StateName");
+                    obj.Pincode = GetStringValue(dataReader, "Pincode");
+                    obj.SubDistrictName = GetStringValue(dataReader, "SubDistrictName");
+
+                    objMaster.Add(obj);
+                }
+              
+            }
+            response.SetPagingOutput(dbCommand);
+            response.CurrentPage = request.PageNo;
+            response.Result = objMaster;
+            return response;
+
+        }
+        public async Task<ListResponse> GetAllDistrictMaster(DistrictListRequest request)
+        {
+            ListResponse response = new ListResponse();
+            List<DistrictListResponse> objMaster = new List<DistrictListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[MDM].usp_GetDistrictMaster");
+            _database.AddInParameter(dbCommand, "@StateID", request.StateId);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    DistrictListResponse obj = new DistrictListResponse();
+                    obj.StateID = GetInt32Value(dataReader, "StateID").Value;
+                    obj.DistrictID = GetInt32Value(dataReader, "DistrictID").Value;
+                    obj.DistrictCode = GetStringValue(dataReader, "DistrictCode");
+                    obj.DistrictName = GetStringValue(dataReader, "DistrictName");
+                    obj.StateName = GetStringValue(dataReader, "StateName");
+
+                    objMaster.Add(obj);
+                }
+                
+            }
+            response.SetPagingOutput(dbCommand);
+            response.CurrentPage = request.PageNo;
+            response.Result = objMaster;
+            return response;
+
+        }
 
         public async Task<SimpleResponse> GetAllServiceType(int? AgencyId)
         {

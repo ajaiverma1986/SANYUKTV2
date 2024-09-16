@@ -65,6 +65,12 @@ namespace SANYUKT.Provider
             response = await _repository.GetAllDistrict(StateId);
             return response;
         }
+        public async Task<ListResponse> GetDistrictMasterList(DistrictListRequest request)
+        {
+            ListResponse response = new ListResponse();
+            response = await _repository.GetAllDistrictMaster(request);
+            return response;
+        }
         public async Task<SimpleResponse> GetAllKycTypeMasterList(int? CompanyTypeId,int? UserTypeID)
         {
             SimpleResponse response = new SimpleResponse();
@@ -87,6 +93,12 @@ namespace SANYUKT.Provider
         {
             SimpleResponse response = new SimpleResponse();
             response = await _repository.GetDataByPincode(Pincode);
+            return response;
+        }
+        public async Task<ListResponse> GetDataByPincodeList(PincodeDataRequest request)
+        {
+            ListResponse response = new ListResponse();
+            response = await _repository.GetDataByPincodeList(request);
             return response;
         }
         public async Task<SimpleResponse> GetallLedegrType()

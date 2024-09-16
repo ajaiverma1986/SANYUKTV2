@@ -127,6 +127,20 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.GetDistrictList(StateId);
             return Json(response);
         }
+        [HttpPost]
+        public async Task<IActionResult> DistrictMasterList([FromBody]DistrictListRequest request)
+        {
+            ListResponse response = new ListResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetDistrictMasterList(request);
+            return Json(response);
+        }
+
         [HttpGet]
         public async Task<IActionResult> KycTypeList(int? CompanyTypeId, int? UserTypeID)
         {
@@ -177,6 +191,19 @@ namespace SANYUKT.API.Controllers
                 return Json(response);
             }
             response = await _Provider.GetDataByPincode(Pincode);
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DemographicDataListByPincodeList([FromBody]PincodeDataRequest request)
+        {
+            ListResponse response = new ListResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetDataByPincodeList(request);
             return Json(response);
         }
         [HttpGet]

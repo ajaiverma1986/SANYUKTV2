@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SANYUKT.Datamodel.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -113,6 +114,16 @@ namespace SANYUKT.Datamodel.Masters
         public string DistrictName { get; set; }
         public string StateName { get; set; }
        
+    }
+    public class PincodeDataRequest:ListRequest
+    {
+        public string Pincode { get; set; }
+     
+    }
+    public class DistrictListRequest : ListRequest
+    {
+        public int StateId { get; set; }
+
     }
     public class serviceTypeListResponse
     {
