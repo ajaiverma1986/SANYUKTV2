@@ -1136,13 +1136,13 @@ namespace SANYUKT.Repository
             var dbCommand = _database.GetStoredProcCommand("[USR].ListallUserAddresses");
 
 
-            if(serviceUser.UserTypeId==3)
+            if (serviceUser.UserTypeId == 3)
             {
-                newuserid=serviceUser.UserID;
+                newuserid = serviceUser.UserID;
             }
             else
             {
-                newuserid=request.UserId;
+                newuserid = request.UserId;
             }
 
             _database.AddInParameter(dbCommand, "@UserId", newuserid);
@@ -1183,6 +1183,23 @@ namespace SANYUKT.Repository
             response1.CurrentPage = request.PageNo;
             response1.Result = response;
             return response1;
+        }
+        public async Task<long> ChangePassword(ChangePasswordRequest request,string changepassword, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[USR].ChangePassword");
+            _database.AddInParameter(dbCommand, "@UserMasterID", serviceUser.UserMasterID);
+            _database.AddInParameter(dbCommand, "@Password", changepassword);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
         }
     }
 }

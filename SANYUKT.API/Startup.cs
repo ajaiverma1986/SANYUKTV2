@@ -210,6 +210,7 @@ namespace SANYUKT.API
                     }
                     //Get client IP address
                     serviceUser.ClientIPAddress = context.Request.Headers["ClientIPAddress"];
+                   // app.UseIPFilter();
                 }
 
                 if (applicationUserDetails != null && applicationUserDetails.UserMasterID > 0)

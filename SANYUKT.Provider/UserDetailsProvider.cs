@@ -440,5 +440,15 @@ namespace SANYUKT.Provider
             response = await _repository.ListUserAddress(request, serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> ChangePassword(ChangePasswordRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            string pwd = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+            response.Result = await _repository.ChangePassword(request, pwd, serviceUser);
+          
+            return response;
+        }
     }
 }

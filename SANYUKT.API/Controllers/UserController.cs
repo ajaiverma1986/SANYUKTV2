@@ -635,5 +635,25 @@ namespace SANYUKT.API.Controllers
             response = await _Provider.ListUserAddress(request, CallerUser);
             return Json(response);
         }
+        /// <summary>
+        /// Change Password
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+            response.Result = await _Provider.ChangePassword(request, this.CallerUser);
+            return Json(response);
+        }
     }
 }
