@@ -469,7 +469,12 @@ namespace SANYUKT.Datamodel.Entities.Users
     {
         public string UserName { get; set; }
         public string Password { get; set; }
-     
+
+    }
+    public class AddIPAddressRequest
+    {
+        public long UserID { get; set; }
+        public string IPAddress { get; set; }
 
     }
 }

@@ -655,5 +655,20 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.ChangePassword(request, this.CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> AddIPAddress([FromBody] AddIPAddressRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+            response.Result = await _Provider.AddIPAddress(request, this.CallerUser);
+            return Json(response);
+        }
     }
 }

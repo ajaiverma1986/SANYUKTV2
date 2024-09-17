@@ -1201,5 +1201,44 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<long> AddIPAddress(AddIPAddressRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[AAC].CreateIPAddress");
+            _database.AddInParameter(dbCommand, "@UserID", request.IPAddress);
+            _database.AddInParameter(dbCommand, "@IPAddress", request.IPAddress);
+            _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<List<string>> GetallIPAddress( ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response1 = new SimpleResponse();
+            List<string> addresses = new List<string>();
+
+             var dbCommand = _database.GetStoredProcCommand("[AAC].GetAllIPAddress");
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                string ipp = "";
+                while (dataReader.Read())
+                {
+                     ipp = GetStringValue(dataReader, "IPAddress");
+
+                }
+                addresses.Add(ipp);
+            }
+          
+            return addresses;
+        }
     }
 }

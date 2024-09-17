@@ -224,7 +224,8 @@ namespace SANYUKT.API.Controllers
         /// <returns></returns>
         [Route("Payout/GetBalalnce")]
         [HttpGet]
-         //[AuditApi(EventTypeName = "POST Payout/CheckBalance", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        [ServiceFilter(typeof(CustomIPWhitelistActionFilter))]
+        //[AuditApi(EventTypeName = "POST Payout/CheckBalance", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
         public async Task<IActionResult> CheckBalance()
         {
             SimpleResponse response = new SimpleResponse();

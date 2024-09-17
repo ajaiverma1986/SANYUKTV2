@@ -63,6 +63,7 @@ namespace SANYUKT.API
             services.AddSingleton<SANYUKTExceptionFilterService>();
             services.AddSingleton<ILoggingService, LoggingService>();
             services.AddScoped<ISANYUKTServiceUser, SANYUKTServiceUser>();
+            services.AddScoped<CustomIPWhitelistActionFilter>();
             services.AddMemoryCache();
             //my data
             Audit.Core.Configuration.DataProvider = new SqlDataProvider()

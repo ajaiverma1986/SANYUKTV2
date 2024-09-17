@@ -450,5 +450,13 @@ namespace SANYUKT.Provider
           
             return response;
         }
+        public async Task<SimpleResponse> AddIPAddress(AddIPAddressRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.AddIPAddress(request, serviceUser);
+
+            return response;
+        }
     }
 }

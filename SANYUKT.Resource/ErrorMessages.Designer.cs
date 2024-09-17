@@ -437,5 +437,23 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_140", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Access Denied.
+        /// </summary>
+        public static string CODE_141 {
+            get {
+                return ResourceManager.GetString("CODE_141", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IP Address not allowed.
+        /// </summary>
+        public static string CODE_142 {
+            get {
+                return ResourceManager.GetString("CODE_142", resourceCulture);
+            }
+        }
     }
 }
