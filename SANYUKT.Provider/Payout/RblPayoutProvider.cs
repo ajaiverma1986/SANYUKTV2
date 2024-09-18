@@ -377,7 +377,7 @@ namespace SANYUKT.Provider.Payout
             RblAccountBalalnceResponse respbal = new RblAccountBalalnceResponse();
             RblPayoutRequest payoutRequest = new RblPayoutRequest();
             payoutRequest.ApproverId = "";
-            payoutRequest.PartnerRetailorId = req.PartnerRetailorId;
+            payoutRequest.PartnerRetailorId = serviceUser.UserID.ToString();
             payoutRequest.AccountNo = serviceList.ServiceAccountNo;
 
 
@@ -503,7 +503,7 @@ namespace SANYUKT.Provider.Payout
             NewTransactionRequest request1 = new NewTransactionRequest();
             request1.description = "Payout Transaction";
             request1.amount = Convert.ToDecimal(req.Amount);
-            request1.partnerretailorid = req.PartnerRetailorId;
+            request1.partnerretailorid = serviceUser.UserID.ToString();
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
@@ -583,8 +583,8 @@ namespace SANYUKT.Provider.Payout
             bp.Debit_Acct_Name = serviceList.ServiceAccName;
             bp.Debit_Acct_No = serviceList.ServiceAccountNo;
             bp.Debit_IFSC = serviceList.ServcieIfsccode;
-            bp.Debit_Mobile = serviceList.ServiceMobileNo;
-            bp.Debit_TrnParticulars = "Transaction By-"+ req.PartnerRetailorId;
+            bp.Debit_Mobile = req.SenderMobile;
+            bp.Debit_TrnParticulars = "Transaction By-"+ req.SenderMobile.ToString();
             bp.Mode_of_Pay ="FT";
             spr.Body = bp;
             requestreq.Single_Payment_Corp_Req = spr;
@@ -816,7 +816,7 @@ namespace SANYUKT.Provider.Payout
             RblAccountBalalnceResponse respbal = new RblAccountBalalnceResponse();
             RblPayoutRequest payoutRequest = new RblPayoutRequest();
             payoutRequest.ApproverId = "";
-            payoutRequest.PartnerRetailorId = req.PartnerRetailorId;
+            payoutRequest.PartnerRetailorId = req.SenderMobile;
             payoutRequest.AccountNo = serviceList.ServiceAccountNo;
 
 
@@ -940,7 +940,7 @@ namespace SANYUKT.Provider.Payout
             NewTransactionRequest request1 = new NewTransactionRequest();
             request1.description = "Payout Transaction";
             request1.amount = Convert.ToDecimal(req.Amount);
-            request1.partnerretailorid = req.PartnerRetailorId;
+            request1.partnerretailorid = req.SenderMobile;
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
@@ -1020,8 +1020,8 @@ namespace SANYUKT.Provider.Payout
             bp.Debit_Acct_Name = serviceList.ServiceAccName;
             bp.Debit_Acct_No = serviceList.ServiceAccountNo;
             bp.Debit_IFSC = serviceList.ServcieIfsccode;
-            bp.Debit_Mobile = serviceList.ServiceMobileNo;
-            bp.Debit_TrnParticulars ="";
+            bp.Debit_Mobile = req.SenderMobile;
+            bp.Debit_TrnParticulars= "Transaction By-" + req.SenderMobile.ToString();
             bp.Mode_of_Pay = "NEFT";
             spr.Body = bp;
             requestreq.Single_Payment_Corp_Req = spr;
@@ -1261,7 +1261,7 @@ namespace SANYUKT.Provider.Payout
             RblAccountBalalnceResponse respbal = new RblAccountBalalnceResponse();
             RblPayoutRequest payoutRequest = new RblPayoutRequest();
             payoutRequest.ApproverId = "";
-            payoutRequest.PartnerRetailorId = req.PartnerRetailorId;
+            payoutRequest.PartnerRetailorId = req.SenderMobile;
             payoutRequest.AccountNo = serviceList.ServiceAccountNo;
 
 
@@ -1385,7 +1385,7 @@ namespace SANYUKT.Provider.Payout
             NewTransactionRequest request1 = new NewTransactionRequest();
             request1.description = "Payout Transaction";
             request1.amount = Convert.ToDecimal(req.Amount);
-            request1.partnerretailorid = req.PartnerRetailorId;
+            request1.partnerretailorid = req.SenderMobile;
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
@@ -1465,8 +1465,8 @@ namespace SANYUKT.Provider.Payout
             bp.Debit_Acct_Name = serviceList.ServiceAccName;
             bp.Debit_Acct_No = serviceList.ServiceAccountNo;
             bp.Debit_IFSC = serviceList.ServcieIfsccode;
-            bp.Debit_Mobile = serviceList.ServiceMobileNo;
-            bp.Debit_TrnParticulars = "";
+            bp.Debit_Mobile = req.SenderMobile;
+            bp.Debit_TrnParticulars = "Transaction By-" + req.SenderMobile.ToString();
             bp.Mode_of_Pay = "RTGS";
             spr.Body = bp;
             requestreq.Single_Payment_Corp_Req = spr;
@@ -1697,7 +1697,7 @@ namespace SANYUKT.Provider.Payout
             RblAccountBalalnceResponse respbal = new RblAccountBalalnceResponse();
             RblPayoutRequest payoutRequest = new RblPayoutRequest();
             payoutRequest.ApproverId = "";
-            payoutRequest.PartnerRetailorId = req.PartnerRetailorId;
+            payoutRequest.PartnerRetailorId = req.SenderMobile;
             payoutRequest.AccountNo = serviceList.ServiceAccountNo;
 
 
@@ -1821,7 +1821,7 @@ namespace SANYUKT.Provider.Payout
             NewTransactionRequest request1 = new NewTransactionRequest();
             request1.description = "Payout Transaction";
             request1.amount = Convert.ToDecimal(req.Amount);
-            request1.partnerretailorid = req.PartnerRetailorId;
+            request1.partnerretailorid = req.SenderMobile;
             request1.TxnPlateForm = "API";
             request1.agencyid = 1;
             request1.serviceid = 1;
@@ -1901,8 +1901,8 @@ namespace SANYUKT.Provider.Payout
             bp.Debit_Acct_Name = serviceList.ServiceAccName;
             bp.Debit_Acct_No = serviceList.ServiceAccountNo;
             bp.Debit_IFSC = serviceList.ServcieIfsccode;
-            bp.Debit_Mobile = serviceList.ServiceMobileNo;
-            bp.Debit_TrnParticulars = "";
+            bp.Debit_Mobile = req.SenderMobile;
+            bp.Debit_TrnParticulars = "Transaction By-" + req.SenderMobile.ToString();
             bp.Mode_of_Pay = "IMPS";
             spr.Body = bp;
             requestreq.Single_Payment_Corp_Req = spr;
@@ -2124,7 +2124,7 @@ namespace SANYUKT.Provider.Payout
             fT.Ben_Mobile=resben.BenMobile;
             fT.Ben_Name=resben.BenficiaryName;
             fT.PartnerRefNo=req.PartnerRefNo;
-            fT.PartnerRetailorId=req.PartnerRetailorId;
+            fT.SenderMobile = req.SenderMobile;
 
             if (req.Mode_of_Pay == "FT")
             {

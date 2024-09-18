@@ -249,4 +249,34 @@
   <data name="CODE_142" xml:space="preserve">
     <value>IP Address not allowed</value>
   </data>
+  <data name="CODE_143" xml:space="preserve">
+    <value>Sender Mobile no is Required</value>
+  </data>
+  <data name="CODE_144" xml:space="preserve">
+    <value>Payment Mode is Required</value>
+  </data>
+  <data name="CODE_145" xml:space="preserve">
+    <value>Benficiary Id is Required</value>
+  </data>
+  <data name="CODE_146" xml:space="preserve">
+    <value>Transaction amount should be greater than 0</value>
+  </data>
+  <data name="CODE_147" xml:space="preserve">
+    <value>Partner Ref no is Required</value>
+  </data>
+  <data name="CODE_148" xml:space="preserve">
+    <value>Benficiary Name is Required</value>
+  </data>
+  <data name="CODE_149" xml:space="preserve">
+    <value>Benficiary Mobile No  is Required</value>
+  </data>
+  <data name="CODE_150" xml:space="preserve">
+    <value>Benficiary Acc No  is Required</value>
+  </data>
+  <data name="CODE_151" xml:space="preserve">
+    <value>Benficiary Bank name is Required</value>
+  </data>
+  <data name="CODE_152" xml:space="preserve">
+    <value>Benficiary IFSC Code Required</value>
+  </data>
 </root>

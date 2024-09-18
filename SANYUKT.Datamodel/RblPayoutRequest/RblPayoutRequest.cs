@@ -57,14 +57,13 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
     public class PayoutTransaction
     {
         public string Amount { get; set; }
-        public string Debit_TrnParticulars { get; set; }
         public string BenficiaryID { get; set; }
         public string Ben_TrnParticulars { get; set; }
         public string Mode_of_Pay { get; set; }
         public string Remarks { get; set; }
         public string PartnerRefNo { get; set; }
-        public string PartnerRetailorId { get; set; }
-       
+        public string SenderMobile { get; set; }
+
     }
 
     public class HeaderFT
@@ -276,7 +275,7 @@ namespace SANYUKT.Datamodel.RblPayoutRequest
     public class SinglePaymentRequestFT 
     {
         public string PartnerRefNo { get; set; }
-        public string PartnerRetailorId { get; set; }
+        public string SenderMobile { get; set; }
         public decimal  Amount { get; set; }
         public string Ben_IFSC { get; set; }
         public string Ben_Acct_No { get; set; }

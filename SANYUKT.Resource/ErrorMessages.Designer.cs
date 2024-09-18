@@ -455,5 +455,95 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_142", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sender Mobile no is Required.
+        /// </summary>
+        public static string CODE_143 {
+            get {
+                return ResourceManager.GetString("CODE_143", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment Mode is Required.
+        /// </summary>
+        public static string CODE_144 {
+            get {
+                return ResourceManager.GetString("CODE_144", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary Id is Required.
+        /// </summary>
+        public static string CODE_145 {
+            get {
+                return ResourceManager.GetString("CODE_145", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction amount should be greater than 0.
+        /// </summary>
+        public static string CODE_146 {
+            get {
+                return ResourceManager.GetString("CODE_146", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partner Ref no is Required.
+        /// </summary>
+        public static string CODE_147 {
+            get {
+                return ResourceManager.GetString("CODE_147", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary Name is Required.
+        /// </summary>
+        public static string CODE_148 {
+            get {
+                return ResourceManager.GetString("CODE_148", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary Mobile No  is Required.
+        /// </summary>
+        public static string CODE_149 {
+            get {
+                return ResourceManager.GetString("CODE_149", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary Acc No  is Required.
+        /// </summary>
+        public static string CODE_150 {
+            get {
+                return ResourceManager.GetString("CODE_150", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary Bank name is Required.
+        /// </summary>
+        public static string CODE_151 {
+            get {
+                return ResourceManager.GetString("CODE_151", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benficiary IFSC Code Required.
+        /// </summary>
+        public static string CODE_152 {
+            get {
+                return ResourceManager.GetString("CODE_152", resourceCulture);
+            }
+        }
     }
 }

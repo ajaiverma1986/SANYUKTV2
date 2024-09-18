@@ -21,11 +21,13 @@ namespace SANYUKT.Provider
     public class AuthenticationProvider
     {
         private readonly AuthenticationRepository _repository = null;
+ 
         //private readonly OracleAuthenticationRepository _repository = null;
 
         public AuthenticationProvider()
         {
             // _repository = new OracleAuthenticationRepository();
+         
             _repository = new AuthenticationRepository();
         }
 
@@ -225,7 +227,35 @@ namespace SANYUKT.Provider
                 throw ex;
             }
         }
+        public async Task<ErrorResponse> GetAllIPAddressDetails( ISANYUKTServiceUser serviceUser)
+        {
+            ErrorResponse response = new ErrorResponse ();
 
+            bool abc = await _repository.GetallSecureIPDetail(serviceUser);
+            if (abc==true)
+            {
+                List<string> whiteListIPList = await _repository.GetallIPAddress(serviceUser);
+                if (whiteListIPList.Count == 0)
+                {
+                    response.SetError(ErrorCodes.SP_142);
+
+                }
+                if (whiteListIPList.Count == 1)
+                {
+                    if (whiteListIPList[0].ToString() == "")
+                    {
+                        response.SetError(ErrorCodes.SP_142);
+                    }
+                }
+            }
+            else
+            {
+                response.NoError();
+            }
+
+           
+            return response;
+        }
 
     }
 }

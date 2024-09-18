@@ -285,6 +285,52 @@ namespace SANYUKT.Repository
                 throw ex;
             }
         }
+        public async Task<List<string>> GetallIPAddress(ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response1 = new SimpleResponse();
+            List<string> addresses = new List<string>();
+
+            var dbCommand = _database.GetStoredProcCommand("[AAC].GetAllIPAddressForAuth");
+            _database.AddInParameter(dbCommand, "@ApplicationId", serviceUser.ApplicationID);
+            _database.AddInParameter(dbCommand, "@IPAddress", serviceUser.IPAddress);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                string ipp = "";
+                while (dataReader.Read())
+                {
+                    ipp = GetStringValue(dataReader, "IPAddress");
+
+                }
+                addresses.Add(ipp);
+            }
+
+            return addresses;
+        }
+        public async Task<bool> GetallSecureIPDetail(ISANYUKTServiceUser serviceUser)
+        {
+           bool isavail=false;
+            var dbCommand = _database.GetStoredProcCommand("[AAC].GetSecureIPDetails");
+            _database.AddInParameter(dbCommand, "@ApplicationId", serviceUser.ApplicationID);
+            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                int  ipp = 0;
+                if (dataReader.Read())
+                {
+                    ipp = GetInt32Value(dataReader, "isReqired").Value;
+
+                }
+                if(ipp==1)
+                {
+                    isavail = true;
+                }
+             
+            }
+            
+            return isavail;
+        }
 
     }
 }

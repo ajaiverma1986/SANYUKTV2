@@ -45,7 +45,7 @@ namespace SANYUKT.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-           // services.Configure<IPOptions>(Configuration.GetSection("ApplicationOptions"));
+            //services.Configure<IPOptions>(Configuration.GetSection("ApplicationOptions"));
             services.AddControllers();
             
             services.AddControllers().AddJsonOptions(options =>
@@ -212,7 +212,7 @@ namespace SANYUKT.API
                     }
                     //Get client IP address
                     serviceUser.ClientIPAddress = context.Request.Headers["ClientIPAddress"];
-                    //app.UseIPFilter();
+                   // app.UseIPFilter();
                 }
 
                 if (applicationUserDetails != null && applicationUserDetails.UserMasterID > 0)

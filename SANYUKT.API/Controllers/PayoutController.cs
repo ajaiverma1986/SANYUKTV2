@@ -14,6 +14,7 @@ using SANYUKT.Datamodel.RblPayoutResponse;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider;
 using SANYUKT.Provider.Payout;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace SANYUKT.API.Controllers
 {
     [ResponseCache(Duration = -1, Location = ResponseCacheLocation.None, NoStore = true)]
     [ServiceFilter(typeof(SANYUKTExceptionFilterService))]
+
     public class PayoutController : BaseApiController
     {
         private AuthenticationProvider _authenticationProvider;
@@ -56,12 +58,21 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
-            if(this.CallerUser.UserTypeId!=2)
+            
+            response = await _authenticationProvider.Login(userLoginRequest, this.CallerUser);
+
+            ErrorResponse errorResponse = await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if (errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
+            }
+            if (this.CallerUser.UserTypeId != 2)
             {
                 response.SetError(ErrorCodes.SP_140);
                 return Ok(response);
             }
-            response = await _authenticationProvider.Login(userLoginRequest, this.CallerUser);
+
 
             return Ok(response);
 
@@ -77,6 +88,20 @@ namespace SANYUKT.API.Controllers
         {
             long UserId = 0;
             SimpleResponse response=new SimpleResponse();
+
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Ok(response);
+            }
+
+            ErrorResponse errorResponse = await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if (errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
+            }
             if (this.CallerUser.UserTypeId != 2)
             {
                 response.SetError(ErrorCodes.SP_140);
@@ -107,6 +132,20 @@ namespace SANYUKT.API.Controllers
         {
             List<BenficiaryResponse> benficiaries=new List<BenficiaryResponse>();
             SimpleResponse response = new SimpleResponse();
+
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Ok(response);
+            }
+
+            ErrorResponse errorResponse = await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if (errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
+            }
             if (this.CallerUser.UserTypeId != 2)
             {
                 response.SetError(ErrorCodes.SP_140);
@@ -143,11 +182,7 @@ namespace SANYUKT.API.Controllers
         public async Task<IActionResult> DirectPay([FromBody] SinglePaymentRequestFT request)
         {
             SimpleResponse response = new SimpleResponse();
-            if (this.CallerUser.UserTypeId != 2)
-            {
-                response.SetError(ErrorCodes.SP_140);
-                return Ok(response);
-            }
+           
 
             ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, false);
             if (error.HasError)
@@ -155,7 +190,74 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
+            ErrorResponse errorResponse = await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if (errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
+            }
+            if (this.CallerUser.UserTypeId != 2)
+            {
+                response.SetError(ErrorCodes.SP_140);
+                return Ok(response);
+            }
+            if (request == null)
+            {
+                response.SetError(ErrorCodes.INVALID_PARAMETERS);
+                return Ok(response);
+            }
+            if (request.SenderMobile == "")
+            {
+                response.SetError(ErrorCodes.SP_143);
+                return Ok(response);
+            }
+            if (request.Mode_of_Pay == "")
+            {
+                response.SetError(ErrorCodes.SP_144);
+                return Ok(response);
+            }
            
+            if (request.Amount == 0)
+            {
+                response.SetError(ErrorCodes.SP_131);
+                return Ok(response);
+            }
+            if (Convert.ToDecimal(request.Amount) <= 0)
+            {
+                response.SetError(ErrorCodes.SP_131);
+                return Ok(response);
+            }
+            if (request.PartnerRefNo == "")
+            {
+                response.SetError(ErrorCodes.SP_147);
+                return Ok(response);
+            }
+            if (request.Ben_Name == "")
+            {
+                response.SetError(ErrorCodes.SP_148);
+                return Ok(response);
+            }
+            if (request.Ben_Mobile == "")
+            {
+                response.SetError(ErrorCodes.SP_149);
+                return Ok(response);
+            }
+            if (request.Ben_Acct_No == "")
+            {
+                response.SetError(ErrorCodes.SP_150);
+                return Ok(response);
+            }
+            if (request.Ben_BankName == "")
+            {
+                response.SetError(ErrorCodes.SP_151);
+                return Ok(response);
+            }
+            if (request.Ben_IFSC == "")
+            {
+                response.SetError(ErrorCodes.SP_152);
+                return Ok(response);
+            }
+            
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response = await _rblProvider.PayoutTransactionwithoutBen(request, certificate2, this.CallerUser);
 
@@ -180,11 +282,18 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
+            ErrorResponse errorResponse = await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if (errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
+            }
             if (this.CallerUser.UserTypeId != 2)
             {
                 response.SetError(ErrorCodes.SP_140);
                 return Ok(response);
             }
+           
             RblStatusResponse response1 = new RblStatusResponse();
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response1 = await _rblProvider.PayoutTransactionStatus(request, certificate2, this.CallerUser);
@@ -209,6 +318,12 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Json(response);
             }
+            ErrorResponse errorResponse = await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if (errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
+            }
             if (this.CallerUser.UserTypeId != 2)
             {
                 response.SetError(ErrorCodes.SP_140);
@@ -224,7 +339,6 @@ namespace SANYUKT.API.Controllers
         /// <returns></returns>
         [Route("Payout/GetBalalnce")]
         [HttpGet]
-        [ServiceFilter(typeof(CustomIPWhitelistActionFilter))]
         //[AuditApi(EventTypeName = "POST Payout/CheckBalance", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
         public async Task<IActionResult> CheckBalance()
         {
@@ -234,6 +348,13 @@ namespace SANYUKT.API.Controllers
             {
                 response.SetError(error);
                 return Json(response);
+            }
+          
+            ErrorResponse errorResponse =await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if(errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
             }
             if (this.CallerUser.UserTypeId != 2)
             {
@@ -261,11 +382,63 @@ namespace SANYUKT.API.Controllers
                 response.SetError(error);
                 return Ok(response);
             }
+            ErrorResponse errorResponse = await _authenticationProvider.GetAllIPAddressDetails(CallerUser);
+            if (errorResponse.HasError)
+            {
+                response.SetError(ErrorCodes.SP_142);
+                return Ok(response);
+            }
             if (this.CallerUser.UserTypeId != 2)
             {
                 response.SetError(ErrorCodes.SP_140);
                 return Ok(response);
             }
+            if(request==null)
+            {
+                response.SetError(ErrorCodes.INVALID_PARAMETERS);
+                return Ok(response);
+            }
+            if (request.SenderMobile == "")
+            {
+                response.SetError(ErrorCodes.SP_143);
+                return Ok(response);
+            }
+            if (request.Mode_of_Pay == "")
+            {
+                response.SetError(ErrorCodes.SP_144);
+                return Ok(response);
+            }
+            if (request.BenficiaryID == null)
+            {
+                response.SetError(ErrorCodes.SP_145);
+                return Ok(response);
+            }
+            if (request.BenficiaryID == "0")
+            {
+                response.SetError(ErrorCodes.SP_145);
+                return Ok(response);
+            }
+            if (request.BenficiaryID == "")
+            {
+                response.SetError(ErrorCodes.SP_145);
+                return Ok(response);
+            }
+            if (request.Amount == "")
+            {
+                response.SetError(ErrorCodes.SP_131);
+                return Ok(response);
+            }
+            if (Convert.ToDecimal( request.Amount) <=0)
+            {
+                response.SetError(ErrorCodes.SP_131);
+                return Ok(response);
+            }
+            if (request.PartnerRefNo=="")
+            {
+                response.SetError(ErrorCodes.SP_147);
+                return Ok(response);
+            }
+           
             X509Certificate2 certificate2 = new X509Certificate2(System.IO.Path.Combine(_env.WebRootPath.ToString() + "\\SSlCertificate", SANYUKTApplicationConfiguration.Instance.certisslName.ToString()), SANYUKTApplicationConfiguration.Instance.certisslpass.ToString());
             response = await _rblProvider.PayoutTransaction(request, certificate2, this.CallerUser);
 
