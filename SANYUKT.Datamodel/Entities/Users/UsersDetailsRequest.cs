@@ -473,8 +473,24 @@ namespace SANYUKT.Datamodel.Entities.Users
     }
     public class AddIPAddressRequest
     {
-        public long UserID { get; set; }
+        public long ApplicationId { get; set; }
         public string IPAddress { get; set; }
+
+    }
+    public class GetIPAddressResponse
+    {
+        public long IPAddressId { get; set; }
+        public long ApplicationId { get; set; }
+        public string OrganisationName { get; set; }
+        public string ApplicationName { get; set; }
+        public string StatusName { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public string IPAddress { get;set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public int Status { get; set; }
+
 
     }
 }

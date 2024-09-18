@@ -670,5 +670,18 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.AddIPAddress(request, this.CallerUser);
             return Json(response);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetallIPAdress(long UserId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetallIPAdress(UserId, CallerUser);
+            return Json(response);
+        }
     }
 }

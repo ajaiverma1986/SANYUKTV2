@@ -690,7 +690,7 @@ namespace SANYUKT.Repository
             return response;
         }
 
-     
+
         public async Task<long> UpdateOriginatorChequeFile(PayinAccountRegistrationChequeRequest request, ISANYUKTServiceUser serviceUser)
         {
 
@@ -868,7 +868,7 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].ApproveRejectOriginatorAcc");
-            _database.AddInParameter(dbCommand, "@RequestId",request.RequestId);
+            _database.AddInParameter(dbCommand, "@RequestId", request.RequestId);
             _database.AddInParameter(dbCommand, "@Status", request.Status);
             _database.AddInParameter(dbCommand, "@RemarksReason", request.RemarksReason);
             _database.AddInParameter(dbCommand, "@UserMasterId", serviceUser.UserMasterID);
@@ -941,7 +941,7 @@ namespace SANYUKT.Repository
 
             var dbCommand = _database.GetStoredProcCommand("[USR].GetUSerConfigurationByUserId");
 
-            if(UserId==0)
+            if (UserId == 0)
             {
                 _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
             }
@@ -949,7 +949,7 @@ namespace SANYUKT.Repository
             {
                 _database.AddInParameter(dbCommand, "@UserId", UserId);
             }
-        
+
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
                 while (dataReader.Read())
@@ -978,9 +978,9 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             long? UserId = 0;
 
-            if(serviceUser.UserTypeId==2)
+            if (serviceUser.UserTypeId == 2)
             {
-                UserId=serviceUser.UserID;
+                UserId = serviceUser.UserID;
             }
             else
             {
@@ -1012,7 +1012,7 @@ namespace SANYUKT.Repository
         {
 
             long outputstr = 0;
-           
+
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[USR].ActivateDeactivateAPIUser");
             _database.AddInParameter(dbCommand, "@UserId", request.UserId);
@@ -1069,10 +1069,10 @@ namespace SANYUKT.Repository
                 {
                     ListUserMasterResponse row = new ListUserMasterResponse();
 
-                    
+
                     row.UserTypeId = GetInt32Value(dataReader, "UserTypeId").Value;
                     row.UserMasterID = GetInt32Value(dataReader, "UserMasterID").Value;
-                   // row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn") ;
+                    // row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn") ;
                     row.ContactPerson = GetStringValue(dataReader, "ContactPerson");
                     row.UserName = GetStringValue(dataReader, "UserName");
                     row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
@@ -1099,7 +1099,7 @@ namespace SANYUKT.Repository
             var dbCommand = _database.GetStoredProcCommand("[USR].UserMasterListDetails");
 
             _database.AddInParameter(dbCommand, "@UserName", UserName);
-           
+
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
@@ -1120,10 +1120,10 @@ namespace SANYUKT.Repository
                     response.UserTypename = GetStringValue(dataReader, "UserTypename");
                     response.StatusName = GetStringValue(dataReader, "StatusName");
                     response.Status = GetInt32Value(dataReader, "Status").Value;
-                    
+
                 }
             }
-         
+
             response1.Result = response;
             return response1;
         }
@@ -1184,7 +1184,7 @@ namespace SANYUKT.Repository
             response1.Result = response;
             return response1;
         }
-        public async Task<long> ChangePassword(ChangePasswordRequest request,string changepassword, ISANYUKTServiceUser serviceUser)
+        public async Task<long> ChangePassword(ChangePasswordRequest request, string changepassword, ISANYUKTServiceUser serviceUser)
         {
 
             long outputstr = 0;
@@ -1207,7 +1207,7 @@ namespace SANYUKT.Repository
             long outputstr = 0;
             SimpleResponse response = new SimpleResponse();
             var dbCommand = _database.GetStoredProcCommand("[AAC].CreateIPAddress");
-            _database.AddInParameter(dbCommand, "@UserID", request.IPAddress);
+            _database.AddInParameter(dbCommand, "@ApplicationId", request.ApplicationId);
             _database.AddInParameter(dbCommand, "@IPAddress", request.IPAddress);
             _database.AddInParameter(dbCommand, "@CreatedBy", serviceUser.UserMasterID);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
@@ -1219,26 +1219,46 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
-        public async Task<List<string>> GetallIPAddress( ISANYUKTServiceUser serviceUser)
+        public async Task<SimpleResponse> GetallIPAddress(long UserId, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response1 = new SimpleResponse();
-            List<string> addresses = new List<string>();
+            List<GetIPAddressResponse> response = new List<GetIPAddressResponse>();
 
-             var dbCommand = _database.GetStoredProcCommand("[AAC].GetAllIPAddress");
-            _database.AddInParameter(dbCommand, "@ApplicationID", serviceUser.ApplicationID);
+            long? newuserid = 0;
+            if (serviceUser.UserTypeId == 3)
+            {
+                newuserid = serviceUser.UserID;
+            }
+            else
+            {
+                newuserid = UserId;
+            }
+            var dbCommand = _database.GetStoredProcCommand("[AAC].GetAllIPAddress");
+            _database.AddInParameter(dbCommand, "@UserId", newuserid);
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
-                string ipp = "";
                 while (dataReader.Read())
                 {
-                     ipp = GetStringValue(dataReader, "IPAddress");
+                    GetIPAddressResponse row = new GetIPAddressResponse();
 
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.IPAddressId = GetInt32Value(dataReader, "IPAddressId").Value;
+                    row.ApplicationId = GetInt32Value(dataReader, "ApplicationId").Value;
+                    row.CreatedOn = GetDateValue(dataReader, "CreatedOn");
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.ApplicationName = GetStringValue(dataReader, "ApplicationName");
+                    row.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    row.IPAddress = GetStringValue(dataReader, "IPAddress");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+
+                    response.Add(row);
                 }
-                addresses.Add(ipp);
             }
-          
-            return addresses;
+            response1.Result = response;
+            return response1;
         }
     }
 }

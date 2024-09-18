@@ -458,5 +458,12 @@ namespace SANYUKT.Provider
 
             return response;
         }
+        public async Task<SimpleResponse> GetallIPAdress(long userid, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response = await _repository.GetallIPAddress(userid, serviceUser);
+            return response;
+        }
     }
 }

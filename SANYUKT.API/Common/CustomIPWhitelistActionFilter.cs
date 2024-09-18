@@ -31,7 +31,7 @@ namespace SANYUKT.API.Common
                 if( serviceUser.UserMasterID!=0)
                 {
                     IPAddress remoteIpAddress = context.HttpContext.Connection.RemoteIpAddress;
-                    _ipWhitelistOptions.Whitelist = await repository.GetallIPAddress(serviceUser);
+                    //_ipWhitelistOptions.Whitelist = await repository.GetallIPAddress(serviceUser);
                     List<string> whiteListIPList = _ipWhitelistOptions.Whitelist;
 
                     if (!whiteListIPList.Contains(remoteIpAddress.ToString()))
