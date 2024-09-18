@@ -1225,7 +1225,7 @@ namespace SANYUKT.Repository
             List<string> addresses = new List<string>();
 
              var dbCommand = _database.GetStoredProcCommand("[AAC].GetAllIPAddress");
-            _database.AddInParameter(dbCommand, "@UserId", serviceUser.UserID);
+            _database.AddInParameter(dbCommand, "@ApplicationID", serviceUser.ApplicationID);
 
             using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
             {
