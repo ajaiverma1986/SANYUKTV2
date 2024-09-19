@@ -494,6 +494,35 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<List<ApplicationListResponse>> GetallapplicationForAdmin(long UserID, ISANYUKTServiceUser serviceUser)
+        {
+            List<ApplicationListResponse> response = new List<ApplicationListResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[AAC].ListAllApplication");
+            _database.AddInParameter(dbCommand, "@OrganizationID", UserID);
+
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    ApplicationListResponse objp = new ApplicationListResponse();
+                    objp.ApplicationID = GetInt32Value(dataReader, "ApplicationID").Value;
+                    objp.OrganizationID = GetInt64Value(dataReader, "OrganizationID").Value;
+                    objp.ApplicationName = GetStringValue(dataReader, "ApplicationName");
+                    objp.ApplicationDescription = GetStringValue(dataReader, "ApplicationDescription");
+                    objp.ApplicationToken = GetStringValue(dataReader, "ApplicationToken");
+                    objp.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    objp.EmailId = GetStringValue(dataReader, "EmailId");
+                    objp.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    objp.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    objp.CreatedOn = GetDateValue(dataReader, "CreatedOn").Value;
+
+                    response.Add(objp);
+                }
+            }
+            return response;
+        }
         public async Task<List<UserKYYCResponse>> GetAllUserKyc(ISANYUKTServiceUser serviceUser)
         {
             List<UserKYYCResponse> response = new List<UserKYYCResponse>();
@@ -1257,6 +1286,64 @@ namespace SANYUKT.Repository
                     response.Add(row);
                 }
             }
+            response1.Result = response;
+            return response1;
+        }
+        public async Task<long> ApproveRejectIP(ApproveRejectIPAddressRequest request, ISANYUKTServiceUser serviceUser)
+        {
+
+            long outputstr = 0;
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("[AAC].ApproveRejectIPAddress");
+            _database.AddInParameter(dbCommand, "@IpAddressId",request.IpAddressId);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@UpdatedBy",serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+
+        }
+        public async Task<ListResponse> GetAllIPAddressforAdmin(IPAddressListDetail request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response1 = new ListResponse();
+            List<GetIPAddressResponse> response = new List<GetIPAddressResponse>();
+
+            var dbCommand = _database.GetStoredProcCommand("[AAC].GetAllIPAddressForAdmin");
+            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@applicationID", request.applicationID);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    GetIPAddressResponse row = new GetIPAddressResponse();
+
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.IPAddressId = GetInt32Value(dataReader, "IPAddressId").Value;
+                    row.ApplicationId = GetInt32Value(dataReader, "ApplicationId").Value;
+                    row.CreatedOn = GetDateValue(dataReader, "CreatedOn");
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.ApplicationName = GetStringValue(dataReader, "ApplicationName");
+                    row.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    row.IPAddress = GetStringValue(dataReader, "IPAddress");
+                    row.CreatedBy = GetStringValue(dataReader, "CreatedBy");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+
+                    response.Add(row);
+                }
+            }
+            response1.SetPagingOutput(dbCommand);
+            response1.CurrentPage = request.PageNo;
             response1.Result = response;
             return response1;
         }

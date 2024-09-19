@@ -83,6 +83,10 @@ namespace SANYUKT.Provider
         {
             return await _repository.Getallapplication( serviceUser);
         }
+        public async Task<List<ApplicationListResponse>> GetallapplicationforAdmin(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            return await _repository.GetallapplicationForAdmin(UserId,serviceUser);
+        }
         public async Task<BenficiaryResponse> GetBenficiaryDetailsByID(long BenFiciaryId)
         {
             return await _repository.GetBenficiaryDetailsByID(BenFiciaryId);
@@ -463,6 +467,22 @@ namespace SANYUKT.Provider
             SimpleResponse response = new SimpleResponse();
 
             response = await _repository.GetallIPAddress(userid, serviceUser);
+            return response;
+        }
+        public async Task<SimpleResponse> ApproveRejectIP(ApproveRejectIPAddressRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.ApproveRejectIP(request, serviceUser);
+
+            return response;
+        }
+        public async Task<ListResponse> GetAllIPAddressforAdmin(IPAddressListDetail request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response = new ListResponse();
+
+            response = await _repository.GetAllIPAddressforAdmin(request, serviceUser);
+
             return response;
         }
     }

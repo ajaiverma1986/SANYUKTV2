@@ -493,4 +493,17 @@ namespace SANYUKT.Datamodel.Entities.Users
 
 
     }
+    public class ApproveRejectIPAddressRequest
+    {
+        public long IpAddressId { get; set; }
+        public int Status { get; set; }
+      
+    }
+    public class IPAddressListDetail:ListRequest
+    {
+        public long UserId { get; set; }
+        public long applicationID { get; set; }
+        public int Status { get; set; }
+
+    }
 }
