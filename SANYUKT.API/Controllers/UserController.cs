@@ -475,6 +475,21 @@ namespace SANYUKT.API.Controllers
             return Json(response);
         }
         [HttpGet]
+        public async Task<IActionResult> GetUserLogo(long UserId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(this.CallerUser, true, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+
+            response = await _Provider.GetUserLogo(UserId, CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
         public async Task<IActionResult> ListAllMenu()
         {
             SimpleResponse response = new SimpleResponse();

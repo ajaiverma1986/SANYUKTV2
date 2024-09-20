@@ -173,10 +173,6 @@ namespace SANYUKT.Provider
                     resp.MediaExtension = System.IO.Path.GetExtension(response[0].Filename).ToLower();
                 }
                 
-
-
-          
-
            return resp;
           
         }
@@ -319,7 +315,7 @@ namespace SANYUKT.Provider
                     resp.ContentType = "image";
                     resp.MediaContentType = "png";
                     resp.FileBytes = fileManager.ReadFile(item.FileUrl, "PartnerDocument", item.UserId.ToString());
-                    if(resp.FileBytes!=null && resp.FileBytes.Length>0)
+                    if(resp.FileBytes==null)
                     {
                         resp.Base64String = "";
                     }
@@ -340,6 +336,37 @@ namespace SANYUKT.Provider
 
             }
             
+            response.Result = resp;
+            return response;
+        }
+        public async Task<SimpleResponse> GetUserLogo(long UsserID, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            PartnerDeatilsResponse list = new PartnerDeatilsResponse();
+            list = await _repository.GetAllUserDeatilsForAdmin(UsserID, serviceUser);
+
+            FileManager fileManager = new FileManager();
+            GetUserLogoRequest resp = new GetUserLogoRequest();
+
+            resp.UserId = list.UserId;
+            resp.FileUrl = list.LogoUrl;
+            resp.ContentType = "image";
+            resp.MediaContentType = "png";
+            resp.FileBytes = fileManager.ReadFile(list.LogoUrl, "PartnerDocument", list.UserId.ToString());
+            if (resp.FileBytes == null)
+            {
+                resp.Base64String = "";
+                resp.FileUrl = "";
+                response.SetError(ErrorCodes.SP_153);
+                return response;
+            }
+            else
+            {
+                resp.Base64String = Convert.ToBase64String(resp.FileBytes);
+            }
+            resp.MediaExtension = System.IO.Path.GetExtension(list.LogoUrl).ToLower();
+           
+
             response.Result = resp;
             return response;
         }

@@ -545,5 +545,14 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_152", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Not found.
+        /// </summary>
+        public static string CODE_153 {
+            get {
+                return ResourceManager.GetString("CODE_153", resourceCulture);
+            }
+        }
     }
 }

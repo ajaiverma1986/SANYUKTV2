@@ -825,7 +825,41 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<PartnerDeatilsResponse> GetAllUserDeatilsForAdmin(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            PartnerDeatilsResponse response = new PartnerDeatilsResponse();
 
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetOrganisationDetails");
+            long? Useridnew = 0;
+
+            if(serviceUser.UserTypeId==3)
+            {
+                Useridnew = serviceUser.UserID;
+            }
+            else
+            {
+                Useridnew = UserId;
+            }
+
+            _database.AddInParameter(dbCommand, "@UserId", Useridnew);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+
+                    response.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    response.Usercode = GetStringValue(dataReader, "Usercode");
+                    response.ContactPersonName = GetStringValue(dataReader, "ContactPersonName");
+                    response.AvailableLimit = GetDecimalValue(dataReader, "AvailableLimit") ?? 0;
+                    response.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    response.EmailId = GetStringValue(dataReader, "EmailId");
+                    response.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    response.LogoUrl = GetStringValue(dataReader, "LogoUrl");
+                }
+            }
+            return response;
+        }
         public async Task<PartnerDeatilsResponse> GetAllUserDeatils(ISANYUKTServiceUser serviceUser)
         {
             PartnerDeatilsResponse response = new PartnerDeatilsResponse();
@@ -846,6 +880,7 @@ namespace SANYUKT.Repository
                     response.OrganisationName = GetStringValue(dataReader, "OrganisationName");
                     response.EmailId = GetStringValue(dataReader, "EmailId");
                     response.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    response.LogoUrl = GetStringValue(dataReader, "LogoUrl");
                 }
             }
             return response;

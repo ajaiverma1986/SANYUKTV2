@@ -304,6 +304,20 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string MediaExtension { get; set; }
 
     }
+    public class GetUserLogoRequest
+    {
+        public long UserId { get; set; }
+        public string FileUrl { get; set; }
+
+        public string ContentType { get; set; }
+        public Byte[] FileBytes { get; set; }
+
+        public string Base64String { get; set; }
+
+        public string MediaContentType { get; set; }
+        public string MediaExtension { get; set; }
+
+    }
     public class PayinAccountRegistrationChequeRequest
     {
         public string Filename { get; set; }
@@ -354,7 +368,8 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string MobileNo { get; set; }
         public string EmailId { get; set; }
         public decimal? AvailableLimit { get; set; }
-       
+        public string LogoUrl { get; set; }
+
     }
     public class UserConfigResponse
     {

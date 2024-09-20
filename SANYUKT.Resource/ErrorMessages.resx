@@ -279,4 +279,7 @@
   <data name="CODE_152" xml:space="preserve">
     <value>Benficiary IFSC Code Required</value>
   </data>
+  <data name="CODE_153" xml:space="preserve">
+    <value>File Not found</value>
+  </data>
 </root>
