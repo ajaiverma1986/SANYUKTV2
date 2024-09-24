@@ -521,4 +521,21 @@ namespace SANYUKT.Datamodel.Entities.Users
         public int Status { get; set; }
 
     }
+    public class AddUserOtherDetailRequest
+    {
+        public long UserId { get; set; }
+        public string Pancard { get; set; }
+        public string AadharCard { get; set; }
+        public string GSTNo { get; set; }
+
+    }
+    public class GetUserOtherDetailsResponse
+    {
+        public long OtherDetailId { get; set; }
+        public long UserId { get; set; }
+        public string Pancard { get; set; }
+        public string AadharCard { get; set; }
+        public string GSTNo { get; set; }
+
+    }
 }

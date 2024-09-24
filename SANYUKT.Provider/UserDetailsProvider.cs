@@ -512,5 +512,21 @@ namespace SANYUKT.Provider
 
             return response;
         }
+        public async Task<SimpleResponse> AddUserOtherDetails(AddUserOtherDetailRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.AddUserOtherDetail(request, serviceUser);
+
+            return response;
+        }
+        public async Task<SimpleResponse> GetUserOtherDetails(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response = await _repository.GetUserOtherDetails(UserId, serviceUser);
+
+            return response;
+        }
     }
 }

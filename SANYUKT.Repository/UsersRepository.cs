@@ -1382,5 +1382,33 @@ namespace SANYUKT.Repository
             response1.Result = response;
             return response1;
         }
+        public async Task<long> AddUserOtherDetail(AddUserOtherDetailRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            var dbCommand = _database.GetStoredProcCommand("[USR].GetallUserOtherDetails");
+            _database.AutoGenerateInputParams(dbCommand, request, serviceUser);
+            return await _database.ExecuteNonQueryAsync(dbCommand);
+        }
+        public async Task<SimpleResponse> GetUserOtherDetails(long UserId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            GetUserOtherDetailsResponse response1 = new GetUserOtherDetailsResponse();  
+              var dbCommand = _database.GetStoredProcCommand("[USR].GetallUserOtherDetails");
+            _database.AddInParameter(dbCommand, "@UserId", UserId);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    response1.OtherDetailId = GetInt32Value(dataReader, "OtherDetailId").Value;
+                    response1.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    response1.AadharCard = GetStringValue(dataReader, "AadharCard");
+                    response1.Pancard = GetStringValue(dataReader, "Pancard");
+                    response1.GSTNo = GetStringValue(dataReader, "GSTNo");
+                }
+            }
+
+            
+            return response;
+        }
     }
 }

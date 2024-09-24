@@ -742,5 +742,34 @@ namespace SANYUKT.API.Controllers
             response.Result = await _Provider.GetallapplicationforAdmin(UserId, CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> AddUserOtherDetails([FromBody] AddUserOtherDetailRequest request)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+            response = await _Provider.AddUserOtherDetails(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpGet]
+        // [AuditApi(EventTypeName = "POST UserController/ListUserAddresses", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> GetUserOtherDetails(long UserId)
+        {
+            SimpleResponse response = new SimpleResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+            response = await _Provider.GetUserOtherDetails(UserId, CallerUser);
+            return Json(response);
+        }
     }
 }

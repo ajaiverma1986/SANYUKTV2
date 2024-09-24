@@ -1,4 +1,5 @@
-﻿using SANYUKT.Datamodel.Interfaces;
+﻿using SANYUKT.Datamodel.Entities;
+using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
 using SANYUKT.Repository;
@@ -20,6 +21,12 @@ namespace SANYUKT.Provider
         {
             SimpleResponse response=new SimpleResponse ();
             response.Result=await repository.GetTransactionSummaryByUserId(userId, serviceUser);
+            return response;
+        }
+        public async Task<SimpleResponse> GetDayBookByUserId(GetDayBookRequest Request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response.Result = await repository.GetDayBookByUserId(Request, serviceUser);
             return response;
         }
     }
