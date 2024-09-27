@@ -47,6 +47,62 @@ namespace SANYUKT.Repository
             }
             return response;
         }
+        public async Task<GetFirmDetailByFirmId> GetallFirmDetail(int userId, ISANYUKTServiceUser serviceUser)
+        {
+            GetFirmDetailByFirmId response = new GetFirmDetailByFirmId();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].UserProfileDetails");
+            long? Useridnew = 0;
+
+            if (serviceUser.UserTypeId == 3)
+            {
+                Useridnew = serviceUser.UserID;
+            }
+            else
+            {
+                Useridnew = userId;
+            }
+
+            _database.AddInParameter(dbCommand, "@UserId", Useridnew);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                if (dataReader.Read())
+                {
+                    response.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    response.Status = GetInt32Value(dataReader, "Status").Value;
+                    response.ChargeTypeOn = GetInt32Value(dataReader, "ChargeTypeOn").Value;
+                    response.AvailableLimit = GetDecimalValue(dataReader, "AvailableLimit") ?? 0;
+                    response.ThresoldLimit = GetDecimalValue(dataReader, "ThresoldLimit") ?? 0;
+                    response.MinTxn = GetDecimalValue(dataReader, "MinTxn") ?? 0;
+                    response.MaxTxn = GetDecimalValue(dataReader, "MaxTxn") ?? 0;
+                    response.MaxPayinamount = GetDecimalValue(dataReader, "MaxPayinamount") ?? 0;
+                    response.MaxNoofcountPayin = GetInt32Value(dataReader, "MaxNoofcountPayin").Value;
+                    response.PlanId = GetInt32Value(dataReader, "PlanId").Value;
+                    response.SameAmountPayinAllowed = GetInt32Value(dataReader, "SameAmountPayinAllowed").Value;
+                    response.PlanName = GetStringValue(dataReader, "PlanName");
+                    response.ContactPersonName = GetStringValue(dataReader, "ContactPersonName");
+                    response.StatusName = GetStringValue(dataReader, "StatusName");
+                    response.AadharCard = GetStringValue(dataReader, "AadharCard");
+                    response.UserPermaAddress = GetStringValue(dataReader, "UserPermaAddress");
+                    response.ChargeDeductionType = GetStringValue(dataReader, "ChargeDeductionType");
+                    response.EmailId = GetStringValue(dataReader, "EmailId");
+                    response.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    response.GSTNo = GetStringValue(dataReader, "GSTNo");
+                    response.LogoUrl = GetStringValue(dataReader, "LogoUrl");
+                    response.MaskedAadhar = GetStringValue(dataReader, "MaskedAadhar");
+                    response.MaskedPan = GetStringValue(dataReader, "MaskedPan");
+                    response.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    response.Pancard = GetStringValue(dataReader, "Pancard");
+                    response.RemarkReason = GetStringValue(dataReader, "RemarkReason");
+                    response.SameAmountPayinAllowedText = GetStringValue(dataReader, "SameAmountPayinAllowedText");
+                    response.Usercode = GetStringValue(dataReader, "Usercode");
+                    response.UserOfficeAddress = GetStringValue(dataReader, "UserOfficeAddress");
+                    
+                }
+            }
+            return response;
+        }
         public async Task<SimpleResponse> GetDayBookByUserId(GetDayBookRequest Request, ISANYUKTServiceUser serviceUser)
         {
             List< GetDayBookResponse> response = new List<GetDayBookResponse>();

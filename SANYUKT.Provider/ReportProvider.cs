@@ -23,6 +23,12 @@ namespace SANYUKT.Provider
             response.Result=await repository.GetTransactionSummaryByUserId(userId, serviceUser);
             return response;
         }
+        public async Task<SimpleResponse> GetallFirmDetail(int userId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+            response.Result = await repository.GetallFirmDetail(userId, serviceUser);
+            return response;
+        }
         public async Task<SimpleResponse> GetDayBookByUserId(GetDayBookRequest Request, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response = new SimpleResponse();
