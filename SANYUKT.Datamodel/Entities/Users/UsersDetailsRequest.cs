@@ -538,4 +538,19 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string GSTNo { get; set; }
 
     }
+    public class CreateNewOutLetRequest
+    {
+        public int UserTypeId { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public int GenderID { get; set; }
+        public string OrganisationName { get; set; }
+        public string MobileNo { get; set; }
+        public string EmailId { get; set; }
+        public string Password { get; set; }
+        public long? ParentID { get; set; }
+
+
+    }
 }

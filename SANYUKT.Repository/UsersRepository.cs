@@ -1410,5 +1410,29 @@ namespace SANYUKT.Repository
             
             return response;
         }
+        public async Task<long> AddNewOutLet(CreateNewOutLetRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long outputstr = 0;
+            var dbCommand = _database.GetStoredProcCommand("[USR].CreateNewOutLet");
+            _database.AddInParameter(dbCommand, "@applicationID", serviceUser.ApplicationID);
+            _database.AddInParameter(dbCommand, "@OrganisationID", serviceUser.OrganizationID);
+            _database.AddInParameter(dbCommand, "@UserTypeId", request.UserTypeId);
+            _database.AddInParameter(dbCommand, "@FirstName", request.FirstName);
+            _database.AddInParameter(dbCommand, "@MiddleName", request.MiddleName);
+            _database.AddInParameter(dbCommand, "@LastName", request.LastName);
+            _database.AddInParameter(dbCommand, "@GenderID", request.GenderID);
+            _database.AddInParameter(dbCommand, "@OrganisationName", request.OrganisationName);
+            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
+            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
+            _database.AddInParameter(dbCommand, "@Password", request.Password);
+            _database.AddInParameter(dbCommand, "@ParentID", request.ParentID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputLong(dbCommand);
+
+            return outputstr;
+        }
     }
 }

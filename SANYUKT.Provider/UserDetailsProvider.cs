@@ -528,5 +528,13 @@ namespace SANYUKT.Provider
 
             return response;
         }
+        public async Task<SimpleResponse> AddNewOutLet(CreateNewOutLetRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.AddNewOutLet(request, serviceUser);
+
+            return response;
+        }
     }
 }
