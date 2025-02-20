@@ -532,8 +532,22 @@ namespace SANYUKT.Provider
         {
             SimpleResponse response = new SimpleResponse();
 
-            response.Result = await _repository.AddNewOutLet(request, serviceUser);
+            string pwd = BCrypt.Net.BCrypt.HashPassword(request.MobileNo);
 
+            if(request.UserTypeId==5) { 
+                request.ParentID=serviceUser.UserID;
+            }
+          
+
+            response.Result = await _repository.AddNewOutLet(request,pwd, serviceUser);
+
+            return response;
+        }
+        public async Task<ListResponse> GetAllOutLetList(ListRetailorRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            ListResponse response = new ListResponse();
+
+            response = await _repository.GetAllOutLetList(request, serviceUser);
             return response;
         }
     }

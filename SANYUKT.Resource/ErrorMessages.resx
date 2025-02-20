@@ -282,4 +282,13 @@
   <data name="CODE_153" xml:space="preserve">
     <value>File Not found</value>
   </data>
+  <data name="CODE_154" xml:space="preserve">
+    <value>First Name is Required</value>
+  </data>
+  <data name="CODE_155" xml:space="preserve">
+    <value>Email Id is Required</value>
+  </data>
+  <data name="CODE_156" xml:space="preserve">
+    <value>Mobile no is Required</value>
+  </data>
 </root>

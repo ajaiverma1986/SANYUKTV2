@@ -548,9 +548,37 @@ namespace SANYUKT.Datamodel.Entities.Users
         public string OrganisationName { get; set; }
         public string MobileNo { get; set; }
         public string EmailId { get; set; }
-        public string Password { get; set; }
         public long? ParentID { get; set; }
 
+
+    }
+    public class ListRetailorRequest : ListRequest
+    {
+        public string MobileNo { get; set; }
+        public string Usercode { get; set; }
+        public string EmailId { get; set; }
+        public long? UserId { get; set; }
+        public long? ParentID { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? Status { get; set; }
+        public string ParentCode { get; set; }
+
+    }
+    public class ListOutletResponse
+    {
+        public long UserId { get; set; }
+        public string Usercode { get; set; }
+        public string ParentCode { get; set; }
+        public string OrganisationName { get; set; }
+        public string ContactPerson { get; set; }
+        public decimal? AvailableLimit { get; set; }
+        public decimal? ThresoldLimit { get; set; }
+        public string MobileNo { get; set; }
+        public string EmailId { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public string UpdatedBy { get; set; }
+        public string StatusName { get; set; }
+        public int Status { get; set; }
 
     }
 }

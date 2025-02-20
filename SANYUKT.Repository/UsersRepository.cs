@@ -1410,7 +1410,7 @@ namespace SANYUKT.Repository
             
             return response;
         }
-        public async Task<long> AddNewOutLet(CreateNewOutLetRequest request, ISANYUKTServiceUser serviceUser)
+        public async Task<long> AddNewOutLet(CreateNewOutLetRequest request,string passwordd, ISANYUKTServiceUser serviceUser)
         {
             long outputstr = 0;
             var dbCommand = _database.GetStoredProcCommand("[USR].CreateNewOutLet");
@@ -1424,8 +1424,9 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@OrganisationName", request.OrganisationName);
             _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
             _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
-            _database.AddInParameter(dbCommand, "@Password", request.Password);
+            _database.AddInParameter(dbCommand, "@Password", passwordd);
             _database.AddInParameter(dbCommand, "@ParentID", request.ParentID);
+            _database.AddInParameter(dbCommand, "@LoggedInUserMasterID", serviceUser.UserMasterID);
             _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
 
             await _database.ExecuteNonQueryAsync(dbCommand);
@@ -1433,6 +1434,52 @@ namespace SANYUKT.Repository
             outputstr = GetIDOutputLong(dbCommand);
 
             return outputstr;
+        }
+        public async Task<ListResponse> GetAllOutLetList(ListRetailorRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            List<ListOutletResponse> response = new List<ListOutletResponse>();
+            ListResponse response1=new ListResponse ();
+
+            var dbCommand = _database.GetStoredProcCommand("[USR].RetailorListByUserType");
+
+            _database.AddInParameter(dbCommand, "@MobileNo", request.MobileNo);
+            _database.AddInParameter(dbCommand, "@Usercode", request.Usercode);
+            _database.AddInParameter(dbCommand, "@ParentCode", request.ParentCode);
+            _database.AddInParameter(dbCommand, "@Status", request.Status);
+            _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
+            _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@ParentID", request.ParentID);
+            _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
+            _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
+            _database.AddInParameter(dbCommand, "@OrderBy", request.OrderBy);
+            _database.AddOutParameter(dbCommand, "@Out_TotalRec", 100);
+
+            using (var dataReader = await _database.ExecuteReaderAsync(dbCommand))
+            {
+                while (dataReader.Read())
+                {
+                    ListOutletResponse row = new ListOutletResponse();
+
+                    row.UserId = GetInt32Value(dataReader, "UserId").Value;
+                    row.UpdatedOn = GetDateValue(dataReader, "UpdatedOn");
+                    row.ContactPerson = GetStringValue(dataReader, "ContactPerson");
+                    row.Usercode = GetStringValue(dataReader, "Usercode");
+                    row.UpdatedBy = GetStringValue(dataReader, "UpdatedBy");
+                    row.EmailId = GetStringValue(dataReader, "EmailId");
+                    row.MobileNo = GetStringValue(dataReader, "MobileNo");
+                    row.OrganisationName = GetStringValue(dataReader, "OrganisationName");
+                    row.ParentCode = GetStringValue(dataReader, "ParentCode");
+                    row.StatusName = GetStringValue(dataReader, "StatusName");
+                    row.Status = GetInt32Value(dataReader, "Status").Value;
+                    row.AvailableLimit = GetDecimalValue(dataReader, "AvailableLimit").Value;
+                    row.ThresoldLimit = GetDecimalValue(dataReader, "ThresoldLimit").Value;
+                    response.Add(row);
+                }
+            }
+            response1.SetPagingOutput(dbCommand);
+            response1.CurrentPage = request.PageNo;
+            response1.Result = response;
+            return response1;
         }
     }
 }

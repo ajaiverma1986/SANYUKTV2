@@ -554,5 +554,32 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_153", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First Name is Required.
+        /// </summary>
+        public static string CODE_154 {
+            get {
+                return ResourceManager.GetString("CODE_154", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email Id is Required.
+        /// </summary>
+        public static string CODE_155 {
+            get {
+                return ResourceManager.GetString("CODE_155", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mobile no is Required.
+        /// </summary>
+        public static string CODE_156 {
+            get {
+                return ResourceManager.GetString("CODE_156", resourceCulture);
+            }
+        }
     }
 }

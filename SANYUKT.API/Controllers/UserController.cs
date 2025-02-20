@@ -783,7 +783,48 @@ namespace SANYUKT.API.Controllers
                 return Json(response);
             }
 
+            if(request.FirstName == null)
+            {
+                response.SetError(ErrorCodes.BAD_REQUEST);
+                return Json(response);
+            }
+            if (request.FirstName == "")
+            {
+                response.SetError(ErrorCodes.SP_154);
+                return Json(response);
+            }
+            if (request.EmailId == "")
+            {
+                response.SetError(ErrorCodes.SP_154);
+                return Json(response);
+            }
+            if (request.EmailId == "")
+            {
+                response.SetError(ErrorCodes.SP_155);
+                return Json(response);
+            }
+            if (request.MobileNo == "")
+            {
+                response.SetError(ErrorCodes.SP_156);
+                return Json(response);
+            }
+          
             response = await _Provider.AddNewOutLet(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        //[AuditApi(EventTypeName = "POST UserController/CreateNewUser", IncludeHeaders = true, IncludeResponseBody = true, IncludeRequestBody = true, IncludeModelState = true)]
+        public async Task<IActionResult> GetAllOutLetList([FromBody] ListRetailorRequest request)
+        {
+            ListResponse response = new ListResponse();
+            ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            if (error.HasError)
+            {
+                response.SetError(error);
+                return Json(response);
+            }
+
+            response = await _Provider.GetAllOutLetList(request, this.CallerUser);
             return Json(response);
         }
     }
