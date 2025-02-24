@@ -1448,6 +1448,7 @@ namespace SANYUKT.Repository
             _database.AddInParameter(dbCommand, "@Status", request.Status);
             _database.AddInParameter(dbCommand, "@EmailId", request.EmailId);
             _database.AddInParameter(dbCommand, "@UserId", request.UserId);
+            _database.AddInParameter(dbCommand, "@UserTypeId", request.UserTypeId);
             _database.AddInParameter(dbCommand, "@ParentID", request.ParentID);
             _database.AddInParameter(dbCommand, "@PageNo", request.PageNo);
             _database.AddInParameter(dbCommand, "@PageSize", request.PageSize);
