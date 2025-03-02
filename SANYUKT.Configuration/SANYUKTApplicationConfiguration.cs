@@ -185,6 +185,27 @@ namespace SANYUKT.Configuration
                 return configuration["RblBankPayout:DebitMobile"];
             }
         }
+        public string digitapApiURL
+        {
+            get
+            {
+                return configuration["digitapApiURL"];
+            }
+        }
+        public string digitapClientID
+        {
+            get
+            {
+                return configuration["digitapClientID"];
+            }
+        }
+        public string digitapSecratekey
+        {
+            get
+            {
+                return configuration["digitapSecratekey"];
+            }
+        }
 
         private string GetParameterValue(string ParamName)
         {
