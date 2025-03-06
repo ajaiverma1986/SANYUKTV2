@@ -1,0 +1,192 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SANYUKT.Datamodel.Paysprint
+{
+    public class GetCustomerRequestView
+    {
+        public string Mobile { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class GetCustomerRequest
+    {
+        public string mobile { get; set; }
+    }
+    public class FinoEkycRequestView
+    {
+        public string Mobile { get; set; }
+        public string TokenData { get; set; }
+        public string AadharNo { get; set; }
+        public string PidData { get; set; }
+        public string AccessMode { get; set; }
+        public int isIris { get; set; }
+    }
+    public class FinoEkycRequest
+    {
+        public string mobile { get; set; }
+        public string aadhaar_number { get; set; }
+        public string piddata { get; set; }
+        public string accessmode { get; set; }
+        public int is_iris { get; set; }
+    }
+    public class FinoRegCustomerRequestView
+    {
+        public string ekyc_id { get; set; }
+        public string mobile { get; set; }
+        public string otp { get; set; }
+        public string stateresp { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoRegCustomerRequest
+    {
+        public string ekyc_id { get; set; }
+        public string mobile { get; set; }
+        public string otp { get; set; }
+        public string stateresp { get; set; }
+    }
+    public class FinoRegBenRequestView
+    {
+        public string mobile { get; set; }
+        public string benename { get; set; }
+        public string bankid { get; set; }
+        public string accno { get; set; }
+        public string ifsccode { get; set; }
+        public int verified { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoRegBenRequest
+    {
+        public string mobile { get; set; }
+        public string benename { get; set; }
+        public string bankid { get; set; }
+        public string accno { get; set; }
+        public string ifsccode { get; set; }
+        public int verified { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoDeleteBenRequestView
+    {
+        public string mobile { get; set; }
+        public string bene_id { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoDeleteBenRequest
+    {
+        public string mobile { get; set; }
+        public string bene_id { get; set; }
+    }
+    public class FinofetchBenRequestView
+    {
+        public string mobile { get; set; }
+        public string beneid {  get; set; } 
+        public string TokenData { get; set; }
+    }
+    public class FinofetchBenRequest
+    {
+        public string mobile { get; set; }
+    }
+    public class FinofetchBenbybenIDRequest
+    {
+        public string beneid { get; set; }
+    }
+    public class FinoTransactionRequestView
+    {
+        public string mobile { get; set; }
+        public string accno { get; set; }
+        public string bankid { get; set; }
+        public string benename { get; set; }
+        public string referenceid { get; set; }
+        public string pincode { get; set; }
+        public string address { get; set; }
+        public string dob { get; set; }
+        public string gst_state { get; set; }
+        public string bene_id { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoTransactionRequest
+    {
+        public string mobile { get; set; }
+        public string accno { get; set; }
+        public string bankid { get; set; }
+        public string benename { get; set; }
+        public string referenceid { get; set; }
+        public string pincode { get; set; }
+        public string address { get; set; }
+        public string dob { get; set; }
+        public string gst_state { get; set; }
+        public string bene_id { get; set; }
+    }
+    public class FinoTransactionSendRequestView
+    {
+        public string mobile { get; set; }
+        public string referenceid { get; set; }
+        public string bene_id { get; set; }
+        public string txntype { get; set; }
+        public double amount { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoTransactionSendRequest
+    {
+        public string mobile { get; set; }
+        public string referenceid { get; set; }
+        public string bene_id { get; set; }
+        public string txntype { get; set; }
+        public double amount { get; set; }
+    }
+    public class FinoTransactionFinalRequestView
+    {
+        public string mobile { get; set; }
+        public string referenceid { get; set; }
+        public string bene_id { get; set; }
+        public string txntype { get; set; }
+        public double amount { get; set; }
+        public string otp  { get; set; }
+        public string stateresp { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoTransactionFinalRequest
+    {
+        public string mobile { get; set; }
+        public string referenceid { get; set; }
+        public string bene_id { get; set; }
+        public string txntype { get; set; }
+        public double amount { get; set; }
+        public string otp { get; set; }
+        public string stateresp { get; set; }
+    }
+    public class FinoTransactionStatusRequestView
+    {
+        public string referenceid { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoTransactionStatusRequest
+    {
+        public string referenceid { get; set; }
+       
+    }
+    public class FinoRefundOtpRequestView
+    {
+        public string referenceid { get; set; }
+        public string ackno { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoRefundOtpRequest
+    {
+        public string referenceid { get; set; }
+        public string ackno { get; set; }
+    }
+    public class FinoRefundRequestView
+    {
+        public string referenceid { get; set; }
+        public string ackno { get; set; }
+        public string otp { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class FinoRefundRequest
+    {
+        public string referenceid { get; set; }
+        public string ackno { get; set; }
+        public string otp { get; set; }
+    }
+}

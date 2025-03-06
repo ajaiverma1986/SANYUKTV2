@@ -206,6 +206,48 @@ namespace SANYUKT.Configuration
                 return configuration["digitapSecratekey"];
             }
         }
+        public string PaysprintjwtToken
+        {
+            get
+            {
+                return configuration["Paysprint:jwtToken"];
+            }
+        }
+        public string PaysprintAuthKey
+        {
+            get
+            {
+                return configuration["Paysprint:AuthKey"];
+            }
+        }
+        public string PaysprintPartnerId
+        {
+            get
+            {
+                return configuration["Paysprint:PartnerId"];
+            }
+        }
+        public string PaysprintBaseUrl
+        {
+            get
+            {
+                return configuration["Paysprint:BaseUrl"];
+            }
+        }
+        public string PaysprintAESENCRYPTIONIV
+        {
+            get
+            {
+                return configuration["Paysprint:AESENCRYPTIONIV"];
+            }
+        }
+        public string PaysprintAESENCRYPTIONKEY
+        {
+            get
+            {
+                return configuration["Paysprint:AESENCRYPTIONKEY"];
+            }
+        }
 
         private string GetParameterValue(string ParamName)
         {
