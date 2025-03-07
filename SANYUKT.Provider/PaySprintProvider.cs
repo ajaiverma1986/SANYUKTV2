@@ -13,6 +13,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using System.IO;
 using System.Security.Cryptography;
+using SANYUKT.Commonlib.Utility;
 
 namespace SANYUKT.Provider
 {
@@ -72,13 +73,13 @@ namespace SANYUKT.Provider
         public async Task<SimpleResponse> GetFinoCustomerDetail(GetCustomerRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response=new SimpleResponse();
-            WebRequest objRequest;
+            HttpWebRequest objRequest;
             string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl+ "service-api/api/v1/service/dmt/kyc/remitter/queryremitter";
             string jsondata = "";
             string jsons = "";
             GetCustomerRequest request1=new GetCustomerRequest();
             request1.mobile=request.Mobile;
-            objRequest = WebRequest.Create(reqUrl);
+            objRequest = (HttpWebRequest)HttpWebRequest.Create(reqUrl);
             objRequest.ContentType = "application/json";
             objRequest.Method = "POST";
             objRequest.Headers.Add("Token", request.TokenData);
@@ -96,11 +97,27 @@ namespace SANYUKT.Provider
                 streamWriter.Close();
             }
 
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+            var httpResponse = (HttpWebResponse)objRequest.GetResponse();
+
+            
+            if(httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                jsons = await streamReader.ReadToEndAsync();
+                using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+                {
+                    jsons = await streamReader.ReadToEndAsync();
+                }
+                SpCustomerResponse rsp = jsons.Deserialize<SpCustomerResponse>();
             }
+            else if (httpResponse.StatusCode==HttpStatusCode.Unauthorized)
+            {
+                using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+                {
+                    jsons = await streamReader.ReadToEndAsync();
+                }
+                SpBaseResponse rsp = jsons.Deserialize<SpBaseResponse>();
+            }
+           
+            
             response.Result = jsons;
             return response;
 

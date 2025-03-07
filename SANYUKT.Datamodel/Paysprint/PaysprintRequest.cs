@@ -4,6 +4,19 @@ using System.Text;
 
 namespace SANYUKT.Datamodel.Paysprint
 {
+    public class SpBaseResponse
+    {
+        public bool status { get; set; }
+        public string response_code { get; set; }
+        public string message { get; set; }
+    }
+    public class SpCustomerResponse
+    {
+        public bool status { get; set; }
+        public string response_code { get; set; }
+        public string message { get; set; }
+        public object data { get; set; }
+    }
     public class GetCustomerRequestView
     {
         public string Mobile { get; set; }
@@ -79,7 +92,7 @@ namespace SANYUKT.Datamodel.Paysprint
     public class FinofetchBenRequestView
     {
         public string mobile { get; set; }
-        public string beneid {  get; set; } 
+        public string beneid { get; set; }
         public string TokenData { get; set; }
     }
     public class FinofetchBenRequest
@@ -141,7 +154,7 @@ namespace SANYUKT.Datamodel.Paysprint
         public string bene_id { get; set; }
         public string txntype { get; set; }
         public double amount { get; set; }
-        public string otp  { get; set; }
+        public string otp { get; set; }
         public string stateresp { get; set; }
         public string TokenData { get; set; }
     }
@@ -163,7 +176,7 @@ namespace SANYUKT.Datamodel.Paysprint
     public class FinoTransactionStatusRequest
     {
         public string referenceid { get; set; }
-       
+
     }
     public class FinoRefundOtpRequestView
     {
