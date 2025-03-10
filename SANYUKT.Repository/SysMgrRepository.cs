@@ -79,6 +79,23 @@ namespace SANYUKT.Repository
             return outputstr;
 
         }
+        public async Task<string> GenerateServiceSessionID(int ServiceId, ISANYUKTServiceUser serviceUser)
+        {
+
+            string outputstr = "";
+            SimpleResponse response = new SimpleResponse();
+            var dbCommand = _database.GetStoredProcCommand("usp_GenerateServiceSessionID");
+            _database.AddInParameter(dbCommand, "@serviceid", ServiceId);
+            _database.AddInParameter(dbCommand, "@createdby", serviceUser.UserMasterID);
+            _database.AddOutParameter(dbCommand, "@Out_ID", OUTPARAMETER_SIZE);
+
+            await _database.ExecuteNonQueryAsync(dbCommand);
+
+            outputstr = GetIDOutputString(dbCommand);
+            return outputstr;
+
+        }
+
         public async Task<OTPResponse> SendOTP(string mobileNumber, string OTP)
         {
             OTPResponse row = new OTPResponse();

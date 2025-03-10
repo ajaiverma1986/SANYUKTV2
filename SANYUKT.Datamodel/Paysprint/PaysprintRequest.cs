@@ -10,12 +10,14 @@ namespace SANYUKT.Datamodel.Paysprint
         public string response_code { get; set; }
         public string message { get; set; }
     }
-    public class SpCustomerResponse
+    public class SpCustomerResponse: SpBaseResponse
     {
-        public bool status { get; set; }
-        public string response_code { get; set; }
-        public string message { get; set; }
-        public object data { get; set; }
+        public FinoCustomerLimitResponse data { get; set; }
+    }
+    public class FinoCustomerLimitResponse
+    {
+        public string limit { get; set; }
+        public string mobile { get; set; }
     }
     public class GetCustomerRequestView
     {

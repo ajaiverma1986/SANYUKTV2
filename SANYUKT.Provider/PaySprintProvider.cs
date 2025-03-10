@@ -14,17 +14,21 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Security.Cryptography;
 using SANYUKT.Commonlib.Utility;
+using System.Collections.Generic;
 
 namespace SANYUKT.Provider
 {
     public class PaySprintProvider:BaseProvider
     {
+       private readonly SysMgrProvider _sysprd=null;
         public PaySprintProvider() {
-
+            _sysprd = new  SysMgrProvider();
         }
         public async Task<SimpleResponse> GenerateToken(ISANYUKTServiceUser serviceUser)
         {
-            string RequestID = "12233773";
+            SimpleResponse xxx=new SimpleResponse ();
+            xxx = await _sysprd.GenerateServiceSessionID(2, serviceUser);
+            string RequestID = xxx.Result.ToString();
             SimpleResponse response = new SimpleResponse();
             string key = SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey;
             var securityKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
@@ -70,6 +74,7 @@ namespace SANYUKT.Provider
                 }
             }
         }
+       
         public async Task<SimpleResponse> GetFinoCustomerDetail(GetCustomerRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse response=new SimpleResponse();
@@ -100,25 +105,25 @@ namespace SANYUKT.Provider
             var httpResponse = (HttpWebResponse)objRequest.GetResponse();
 
             
-            if(httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
+            if(httpResponse.StatusCode == HttpStatusCode.OK)
             {
-                using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     jsons = await streamReader.ReadToEndAsync();
                 }
-                SpCustomerResponse rsp = jsons.Deserialize<SpCustomerResponse>();
+                SpCustomerResponse resp = jsons.Deserialize<SpCustomerResponse>();
+                response.Result = resp;
             }
             else if (httpResponse.StatusCode==HttpStatusCode.Unauthorized)
             {
-                using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     jsons = await streamReader.ReadToEndAsync();
                 }
-                SpBaseResponse rsp = jsons.Deserialize<SpBaseResponse>();
+                SpBaseResponse resp=jsons.Deserialize<SpBaseResponse>();
+                response.SetError(resp.message);
             }
            
-            
-            response.Result = jsons;
             return response;
 
         }

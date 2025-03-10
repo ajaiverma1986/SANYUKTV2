@@ -41,6 +41,13 @@ namespace SANYUKT.Provider
             response.Result = await _repository.GenerateServiceSessionCode(ServiceId, serviceUser);
             return response;
         }
-      
+        public async Task<SimpleResponse> GenerateServiceSessionID(int ServiceId, ISANYUKTServiceUser serviceUser)
+        {
+            SimpleResponse response = new SimpleResponse();
+
+            response.Result = await _repository.GenerateServiceSessionID(ServiceId, serviceUser);
+            return response;
+        }
+
     }
 }
