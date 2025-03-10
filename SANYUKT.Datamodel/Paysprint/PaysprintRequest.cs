@@ -8,7 +8,7 @@ namespace SANYUKT.Datamodel.Paysprint
     {
         public bool status { get; set; }
         public string response_code { get; set; }
-        public string message { get; set; }
+        public string? message { get; set; }
     }
     public class SpCustomerResponse: SpBaseResponse
     {
