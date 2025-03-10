@@ -42,6 +42,7 @@ namespace SANYUKT.Provider
                 { "reqid",RequestID},
             };
             var secToken = new JwtSecurityToken(header, payload);
+
             var handler = new JwtSecurityTokenHandler();
             var tokenString = handler.WriteToken(secToken);
             if (tokenString != "")
