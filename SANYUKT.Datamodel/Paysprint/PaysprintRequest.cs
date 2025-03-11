@@ -9,15 +9,68 @@ namespace SANYUKT.Datamodel.Paysprint
         public bool status { get; set; }
         public string response_code { get; set; }
         public string? message { get; set; }
-    }
-    public class SpCustomerResponse: SpBaseResponse
-    {
-        public FinoCustomerLimitResponse data { get; set; }
+        public object data { get; set; }    
     }
     public class FinoCustomerLimitResponse
     {
         public string limit { get; set; }
         public string mobile { get; set; }
+    }
+    public class FinoCustomerEkycResponse
+    {
+        public string ekyc_id { get; set; }
+        public string stateresp { get; set; }
+        public string mobile { get; set; }
+    }
+    public class FinoRegisterBenResponse
+    {
+        public string bene_id { get; set; }
+        public string bankid { get; set; }
+        public string bankname { get; set; }
+        public string name { get; set; }
+        public string accno { get; set; }
+        public string ifsc  { get; set; }
+        public string verified { get; set; }
+        public string banktype { get; set; }
+        public bool paytm { get; set; }
+    }
+    public class FinoTransactionResponse
+    {
+        public string ackno { get; set; }
+        public string utr { get; set; }
+        public string txn_status { get; set; }
+        public string benename { get; set; }
+        public string remarks { get; set; }
+        public string customercharge { get; set; }
+        public string gst { get; set; }
+        public string tds { get; set; }
+        public string  netcommission { get; set; }
+        public string remitter { get; set; }
+        public string account_number { get; set; }
+        public string paysprint_share { get; set; }
+        public string txn_amount { get; set; }
+        public string balance { get; set; }
+    }
+    public class FinoTransactionStatusResponse
+    {
+        public string ackno { get; set; }
+        public string utr { get; set; }
+        public string amount { get; set; }
+        public string referenceid { get; set; }
+        public string account { get; set; }
+        public string txn_status { get; set; }
+        public string customercharge { get; set; }
+        public string gst { get; set; }
+        public string discount { get; set; }
+        public string tds { get; set; }
+        public string netcommission { get; set; }
+        public string daterefunded  { get; set; }
+        public string refundtxnid { get; set; }
+    }
+   
+    public class FinoTransactionOTPResponse
+    {
+        public string stateresp { get; set; }
     }
     public class GetCustomerRequestView
     {
@@ -111,7 +164,6 @@ namespace SANYUKT.Datamodel.Paysprint
         public string accno { get; set; }
         public string bankid { get; set; }
         public string benename { get; set; }
-        public string referenceid { get; set; }
         public string pincode { get; set; }
         public string address { get; set; }
         public string dob { get; set; }

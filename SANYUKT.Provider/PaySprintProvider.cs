@@ -16,23 +16,27 @@ using System.Security.Cryptography;
 using SANYUKT.Commonlib.Utility;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace SANYUKT.Provider
 {
     public class PaySprintProvider : BaseProvider
     {
         private readonly SysMgrProvider _sysprd = null;
+        private readonly PaySprintIntegratorProvider _pro=null;
         public PaySprintProvider()
         {
             _sysprd = new SysMgrProvider();
+            _pro=new PaySprintIntegratorProvider();     
         }
         public async Task<SimpleResponse> GenerateToken(ISANYUKTServiceUser serviceUser)
         {
             SimpleResponse xxx = new SimpleResponse();
-            xxx = await _sysprd.GenerateServiceSessionID(2, serviceUser);
-            string RequestID = xxx.Result.ToString();
+            // xxx = await _sysprd.GenerateServiceSessionID(2, serviceUser);
+            //string RequestID = xxx.Result.ToString();
+            string RequestID = "1120001234";
             SimpleResponse response = new SimpleResponse();
-            string key = SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey;
+            string key = SANYUKTApplicationConfiguration.Instance.PaysprintjwtToken;
             var securityKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(securityKey, "HS256");
             var header = new JwtHeader(credentials);
@@ -79,168 +83,50 @@ namespace SANYUKT.Provider
             }
         }
 
-        public async Task<SimpleResponse> GetFinoCustomerDetail(GetCustomerRequestView request, ISANYUKTServiceUser serviceUser)
+      
+        public async Task<SpBaseResponse> GetFinoCustomerDetail(GetCustomerRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            HttpWebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/remitter/queryremitter";
-            string jsondata = "";
-            string jsons = "";
             GetCustomerRequest request1 = new GetCustomerRequest();
+            SpBaseResponse resp = new SpBaseResponse();
             request1.mobile = request.Mobile;
-            try
-            {
-                objRequest = (HttpWebRequest)HttpWebRequest.Create(reqUrl);
-                objRequest.ContentType = "application/json";
-                objRequest.Method = "POST";
-                objRequest.Headers.Add("Token", request.TokenData);
-                objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-                var options = new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented,
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                };
-                jsondata = JsonConvert.SerializeObject(request1, options);
-                using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(jsondata);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                var httpResponse = (HttpWebResponse)objRequest.GetResponse();
-
-               
-                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                    {
-                        jsons = await streamReader.ReadToEndAsync();
-                    }
-                    SpCustomerResponse resp = jsons.Deserialize<SpCustomerResponse>();
-                    response.Result = resp;
-                
-
-            }
-            catch (Exception ex)
-            {
-                SpBaseResponse resp = jsons.Deserialize<SpBaseResponse>();
-                //resp.message = ex.Message.ToString();
-                response.SetError(ex.Message.ToString());
-            }
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData,1);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoCustomerEkyc(FinoEkycRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoCustomerEkyc(FinoEkycRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            HttpWebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/remitter/queryremitter/kyc";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             string piddata = request.PidData;
             byte[] key = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONKEY);
             byte[] iv = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONIV);
 
             byte[] ciphertext_raw = Encrypt(piddata, key, iv);
             string enctoken = Convert.ToBase64String(ciphertext_raw);
-
-
             FinoEkycRequest request1 = new FinoEkycRequest();
             request1.mobile = request.Mobile;
             request1.aadhaar_number = request.AadharNo;
             request1.piddata = enctoken;
             request1.accessmode = request.AccessMode;
             request1.is_iris = request.isIris;
-            try
-            {
-                objRequest = (HttpWebRequest)HttpWebRequest.Create(reqUrl);
-                objRequest.ContentType = "application/json";
-                objRequest.Method = "POST";
-                objRequest.Headers.Add("Token", request.TokenData);
-                objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-                var options = new JsonSerializerSettings
-                {
-                    Formatting = Formatting.Indented,
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                };
-                jsondata = JsonConvert.SerializeObject(request1, options);
-                using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(jsondata);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                var httpResponse = (HttpWebResponse)objRequest.GetResponse();
-                using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-                {
-                    jsons = await streamReader.ReadToEndAsync();
-                }
-                response.Result = jsons;
-            }
-            catch (Exception ex)
-            {
-
-                response.SetError(ex.Message.ToString());
-            }
-           
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 2);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoRegisterCustomer(FinoRegCustomerRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoRegisterCustomer(FinoRegCustomerRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/remitter/registerremitter";
-            string jsondata = "";
-            string jsons = "";
-
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoRegCustomerRequest request1 = new FinoRegCustomerRequest();
             request1.mobile = request.mobile;
             request1.otp = request.otp;
             request1.ekyc_id = request.ekyc_id;
             request1.stateresp = request.stateresp;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 3);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoRegisterBenficiary(FinoRegBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoRegisterBenficiary(FinoRegBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/beneficiary/registerbeneficiary";
-            string jsondata = "";
-            string jsons = "";
-
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoRegBenRequest request1 = new FinoRegBenRequest();
             request1.mobile = request.mobile;
             request1.benename = request.benename;
@@ -249,253 +135,72 @@ namespace SANYUKT.Provider
             request1.accno = request.accno;
             request1.ifsccode = request.ifsccode;
 
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData,4);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoDeleteBenficiary(FinoDeleteBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoDeleteBenficiary(FinoDeleteBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/beneficiary/registerbeneficiary/deletebeneficiary";
-            string jsondata = "";
-            string jsons = "";
-
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoDeleteBenRequest request1 = new FinoDeleteBenRequest();
             request1.mobile = request.mobile;
             request1.bene_id = request.bene_id;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 5);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoFetchBenficiary(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoFetchBenficiary(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/beneficiary/registerbeneficiary/fetchbeneficiary";
-            string jsondata = "";
-            string jsons = "";
-
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinofetchBenRequest request1 = new FinofetchBenRequest();
             request1.mobile = request.mobile;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 6);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoFetchBenficiaryByBenID(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoFetchBenficiaryByBenID(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/beneficiary/registerbeneficiary/fetchbeneficiary";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinofetchBenbybenIDRequest request1 = new FinofetchBenbybenIDRequest();
             request1.beneid = request.beneid;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 7);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoPPenyDrop(FinoTransactionRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoPPenyDrop(FinoTransactionRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/beneficiary/registerbeneficiary/benenameverify";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionRequest request1 = new FinoTransactionRequest();
             request1.dob = request.dob;
             request1.benename = request.benename;
             request1.address = request.address;
             request1.bene_id = request.bene_id;
-            request1.referenceid = request.referenceid;
+            request1.referenceid = "SP02003034"; // transaction id generated by system
             request1.accno = request.accno;
             request1.mobile = request.mobile;
             request1.gst_state = request.gst_state;
             request1.pincode = request.pincode;
             request1.bankid = request.bankid;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 8);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoTransactionOTP(FinoTransactionSendRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoTransactionOTP(FinoTransactionSendRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/transact/transact/send_otp";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionSendRequestView request1 = new FinoTransactionSendRequestView();
             request1.bene_id = request.bene_id;
             request1.referenceid = request.referenceid;
             request1.txntype = request.txntype;
             request1.mobile = request.mobile;
             request1.amount = request.amount;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 9);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoTransaction(FinoTransactionFinalRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoTransaction(FinoTransactionFinalRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/transact/transact";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionFinalRequest request1 = new FinoTransactionFinalRequest();
             request1.bene_id = request.bene_id;
             request1.referenceid = request.referenceid;
@@ -504,155 +209,38 @@ namespace SANYUKT.Provider
             request1.amount = request.amount;
             request1.otp = request.otp;
             request1.stateresp = request.stateresp;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 10);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoTransactionStatus(FinoTransactionStatusRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoTransactionStatus(FinoTransactionStatusRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/transact/transact/querytransact";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionStatusRequest request1 = new FinoTransactionStatusRequest();
             request1.referenceid = request.referenceid;
-
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 11);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoTransactionRefundOTP(FinoRefundOtpRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoTransactionRefundOTP(FinoRefundOtpRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/refund/refund/resendotp";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoRefundOtpRequest request1 = new FinoRefundOtpRequest();
             request1.referenceid = request.referenceid;
             request1.ackno = request.ackno;
-
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 12);
+            return resp;
         }
 
-        public async Task<SimpleResponse> FinoTransactionRefund(FinoRefundRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> FinoTransactionRefund(FinoRefundRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            SimpleResponse response = new SimpleResponse();
-            WebRequest objRequest;
-            string reqUrl = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/refund/refund/resendotp";
-            string jsondata = "";
-            string jsons = "";
-
+            SpBaseResponse resp = new SpBaseResponse();
             FinoRefundRequest request1 = new FinoRefundRequest();
             request1.referenceid = request.referenceid;
             request1.ackno = request.ackno;
             request1.otp = request.otp;
-
-            objRequest = WebRequest.Create(reqUrl);
-            objRequest.ContentType = "application/json";
-            objRequest.Method = "POST";
-            objRequest.Headers.Add("Token", request.TokenData);
-            objRequest.Headers.Add("Authorisedkey", SANYUKTApplicationConfiguration.Instance.PaysprintAuthKey);
-            var options = new JsonSerializerSettings
-            {
-                Formatting = Formatting.Indented,
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            jsondata = JsonConvert.SerializeObject(request1, options);
-            using (var streamWriter = new System.IO.StreamWriter(objRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsondata);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (WebResponse)objRequest.GetResponse();
-            using (var streamReader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
-            {
-                jsons = await streamReader.ReadToEndAsync();
-            }
-            response.Result = jsons;
-            return response;
-
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 13);
+            return resp;
         }
     }
 }
