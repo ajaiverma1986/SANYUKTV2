@@ -79,6 +79,10 @@ namespace SANYUKT.Provider
                 {
                     APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt/kyc/refund/refund/resendotp";
                 }
+                else if (Apiid == 14)
+                {
+                    APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/dmt-v2/remitter/queryremitter";
+                }
 
                 objRequest = WebRequest.Create(APIURL);
                 objRequest.ContentType = "application/json";
@@ -232,6 +236,13 @@ namespace SANYUKT.Provider
                     resp2.tds = json.tds;
                     resp2.refundtxnid = json.refundtxnid;
                     resp2.refundtxnid = json.refundtxnid;
+                    resp.data = resp2;
+                }
+                else if (Apiid == 14)
+                {
+                    FinoCustomerLimitResponse resp2 = new FinoCustomerLimitResponse();
+                    resp2.mobile = json2.mobile;
+                    resp2.limit = json2.limit ?? "0";
                     resp.data = resp2;
                 }
 

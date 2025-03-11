@@ -1,33 +1,26 @@
-﻿using SANYUKT.Datamodel.Shared;
+﻿using SANYUKT.Configuration;
+using SANYUKT.Datamodel.Interfaces;
+using SANYUKT.Datamodel.Paysprint;
+using SANYUKT.Datamodel.Shared;
 using SANYUKT.Provider.Shared;
 using System;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using SANYUKT.Configuration;
-using SANYUKT.Datamodel.Paysprint;
-using SANYUKT.Datamodel.Common;
-using SANYUKT.Datamodel.Interfaces;
-using System.Net;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
 using System.IO;
 using System.Security.Cryptography;
-using SANYUKT.Commonlib.Utility;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Asn1.Ocsp;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SANYUKT.Provider
 {
-    public class PaySprintProvider : BaseProvider
+    public class PaySpAirtelDMTProvider:BaseProvider
     {
         private readonly SysMgrProvider _sysprd = null;
-        private readonly PaySprintIntegratorProvider _pro=null;
-        public PaySprintProvider()
+        private readonly PaySprintIntegratorProvider _pro = null;
+        public PaySpAirtelDMTProvider()
         {
             _sysprd = new SysMgrProvider();
-            _pro=new PaySprintIntegratorProvider();     
+            _pro = new PaySprintIntegratorProvider();
         }
         public async Task<SimpleResponse> GenerateToken(ISANYUKTServiceUser serviceUser)
         {
@@ -83,14 +76,13 @@ namespace SANYUKT.Provider
             }
         }
 
-      
-        public async Task<SpBaseResponse> GetFinoCustomerDetail(GetCustomerRequestView request, ISANYUKTServiceUser serviceUser)
+
+        public async Task<SpBaseResponse> GetAirtelCustomerDetail(GetCustomerRequestView request, ISANYUKTServiceUser serviceUser)
         {
-           
             GetCustomerRequest request1 = new GetCustomerRequest();
             SpBaseResponse resp = new SpBaseResponse();
             request1.mobile = request.Mobile;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData,14);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 1);
             return resp;
         }
 
@@ -136,7 +128,7 @@ namespace SANYUKT.Provider
             request1.accno = request.accno;
             request1.ifsccode = request.ifsccode;
 
-            resp = await _pro.GenericIntegrator(request1, request.TokenData,4);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 4);
             return resp;
         }
 
