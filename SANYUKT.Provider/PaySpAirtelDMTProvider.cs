@@ -22,39 +22,6 @@ namespace SANYUKT.Provider
             _sysprd = new SysMgrProvider();
             _pro = new PaySprintIntegratorProvider();
         }
-        public async Task<SimpleResponse> GenerateToken(ISANYUKTServiceUser serviceUser)
-        {
-            SimpleResponse xxx = new SimpleResponse();
-            // xxx = await _sysprd.GenerateServiceSessionID(2, serviceUser);
-            //string RequestID = xxx.Result.ToString();
-            string RequestID = "1120001234";
-            SimpleResponse response = new SimpleResponse();
-            string key = SANYUKTApplicationConfiguration.Instance.PaysprintjwtToken;
-            var securityKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(securityKey, "HS256");
-            var header = new JwtHeader(credentials);
-
-            var payload = new JwtPayload
-           {
-                {"timestamp", DateTimeOffset.Now.ToUnixTimeMilliseconds()},
-                {"partnerId",SANYUKTApplicationConfiguration.Instance.PaysprintPartnerId },
-                { "reqid",RequestID},
-            };
-            var secToken = new JwtSecurityToken(header, payload);
-
-            var handler = new JwtSecurityTokenHandler();
-            var tokenString = handler.WriteToken(secToken);
-            if (tokenString != "")
-            {
-                response.Result = tokenString;
-            }
-            else
-            {
-                response.SetError("Token not Generated");
-            }
-
-            return response;
-        }
         public static byte[] Encrypt(string plainText, byte[] key, byte[] iv)
         {
             using (Aes aes = Aes.Create())
@@ -82,42 +49,44 @@ namespace SANYUKT.Provider
             GetCustomerRequest request1 = new GetCustomerRequest();
             SpBaseResponse resp = new SpBaseResponse();
             request1.mobile = request.Mobile;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 1);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 14);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoCustomerEkyc(FinoEkycRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelVerifyAadhar(AirtelVerifyAadharRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
-            string piddata = request.PidData;
+
+            AirtelVerifyAadharRequest request1 = new AirtelVerifyAadharRequest();
+            request1.mobile = request.mobile;
+            request1.aadhaar_no = request.aadhaar_no;
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 15);
+            return resp;
+        }
+
+        public async Task<SpBaseResponse> AirtelRegisterCustomer(AirtelRegCustomerRequestView request, ISANYUKTServiceUser serviceUser)
+        {
+            SpBaseResponse resp = new SpBaseResponse();
+            AirtelRegCustomerRequest request1 = new AirtelRegCustomerRequest();
+
+            string piddata = request.data;
             byte[] key = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONKEY);
             byte[] iv = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONIV);
 
             byte[] ciphertext_raw = Encrypt(piddata, key, iv);
             string enctoken = Convert.ToBase64String(ciphertext_raw);
-            FinoEkycRequest request1 = new FinoEkycRequest();
-            request1.mobile = request.Mobile;
-            request1.aadhaar_number = request.AadharNo;
-            request1.piddata = enctoken;
-            request1.accessmode = request.AccessMode;
-            request1.is_iris = request.isIris;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 2);
-            return resp;
-        }
 
-        public async Task<SpBaseResponse> FinoRegisterCustomer(FinoRegCustomerRequestView request, ISANYUKTServiceUser serviceUser)
-        {
-            SpBaseResponse resp = new SpBaseResponse();
-            FinoRegCustomerRequest request1 = new FinoRegCustomerRequest();
             request1.mobile = request.mobile;
             request1.otp = request.otp;
-            request1.ekyc_id = request.ekyc_id;
+            request1.data = enctoken;
             request1.stateresp = request.stateresp;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 3);
+            request1.accessmode = request.accessmode;
+            request1.is_iris = request.is_iris;
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 16);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoRegisterBenficiary(FinoRegBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelRegisterBenficiary(FinoRegBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoRegBenRequest request1 = new FinoRegBenRequest();
@@ -128,39 +97,39 @@ namespace SANYUKT.Provider
             request1.accno = request.accno;
             request1.ifsccode = request.ifsccode;
 
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 4);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 17);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoDeleteBenficiary(FinoDeleteBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelDeleteBenficiary(FinoDeleteBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoDeleteBenRequest request1 = new FinoDeleteBenRequest();
             request1.mobile = request.mobile;
             request1.bene_id = request.bene_id;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 5);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 18);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoFetchBenficiary(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelFetchBenficiary(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinofetchBenRequest request1 = new FinofetchBenRequest();
             request1.mobile = request.mobile;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 6);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 19);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoFetchBenficiaryByBenID(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelFetchBenficiaryByBenID(FinofetchBenRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinofetchBenbybenIDRequest request1 = new FinofetchBenbybenIDRequest();
             request1.beneid = request.beneid;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 7);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 20);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoPPenyDrop(FinoTransactionRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelPPenyDrop(FinoTransactionRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionRequest request1 = new FinoTransactionRequest();
@@ -174,11 +143,11 @@ namespace SANYUKT.Provider
             request1.gst_state = request.gst_state;
             request1.pincode = request.pincode;
             request1.bankid = request.bankid;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 8);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 21);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoTransactionOTP(FinoTransactionSendRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelTransactionOTP(FinoTransactionSendRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionSendRequestView request1 = new FinoTransactionSendRequestView();
@@ -187,11 +156,11 @@ namespace SANYUKT.Provider
             request1.txntype = request.txntype;
             request1.mobile = request.mobile;
             request1.amount = request.amount;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 9);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 22);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoTransaction(FinoTransactionFinalRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelTransaction(FinoTransactionFinalRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionFinalRequest request1 = new FinoTransactionFinalRequest();
@@ -202,37 +171,37 @@ namespace SANYUKT.Provider
             request1.amount = request.amount;
             request1.otp = request.otp;
             request1.stateresp = request.stateresp;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 10);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 23);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoTransactionStatus(FinoTransactionStatusRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelTransactionStatus(FinoTransactionStatusRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoTransactionStatusRequest request1 = new FinoTransactionStatusRequest();
             request1.referenceid = request.referenceid;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 11);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 24);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoTransactionRefundOTP(FinoRefundOtpRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelTransactionRefundOTP(FinoRefundOtpRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoRefundOtpRequest request1 = new FinoRefundOtpRequest();
             request1.referenceid = request.referenceid;
             request1.ackno = request.ackno;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 12);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 25);
             return resp;
         }
 
-        public async Task<SpBaseResponse> FinoTransactionRefund(FinoRefundRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelTransactionRefund(FinoRefundRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
             FinoRefundRequest request1 = new FinoRefundRequest();
             request1.referenceid = request.referenceid;
             request1.ackno = request.ackno;
             request1.otp = request.otp;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData, 13);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData, 26);
             return resp;
         }
     }

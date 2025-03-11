@@ -34,6 +34,7 @@ namespace SANYUKT.Datamodel.Paysprint
         public string banktype { get; set; }
         public bool paytm { get; set; }
     }
+   
     public class FinoTransactionResponse
     {
         public string ackno { get; set; }
@@ -113,6 +114,25 @@ namespace SANYUKT.Datamodel.Paysprint
         public string otp { get; set; }
         public string stateresp { get; set; }
     }
+    public class AirtelRegCustomerRequestView
+    {
+        public string mobile { get; set; }
+        public string otp { get; set; }
+        public string stateresp { get; set; }
+        public string data { get; set; }
+        public string accessmode { get; set; }
+        public int is_iris { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class AirtelRegCustomerRequest
+    {
+        public string mobile { get; set; }
+        public string otp { get; set; }
+        public string stateresp { get; set; }
+        public string data { get; set; }
+        public string accessmode { get; set; }
+        public int is_iris { get; set; }
+    }
     public class FinoRegBenRequestView
     {
         public string mobile { get; set; }
@@ -171,6 +191,7 @@ namespace SANYUKT.Datamodel.Paysprint
         public string bene_id { get; set; }
         public string TokenData { get; set; }
     }
+    
     public class FinoTransactionRequest
     {
         public string mobile { get; set; }
@@ -255,5 +276,41 @@ namespace SANYUKT.Datamodel.Paysprint
         public string referenceid { get; set; }
         public string ackno { get; set; }
         public string otp { get; set; }
+    }
+    public class AirtelVerifyAadharRequestView
+    {
+        public string TokenData { get; set; }
+        public string mobile { get; set; }
+        public string aadhaar_no { get; set; }
+       
+    }
+    public class AirtelVerifyAadharRequest
+    {
+        public string mobile { get; set; }
+        public string aadhaar_no { get; set; }
+
+    }
+    public class CCGenerateOTPView
+    {
+        public string amount { get; set; }
+        public string card_number { get; set; }
+        public string mobile { get; set; }
+        public string name { get; set; }
+        public string network { get; set; }
+        public string payee_name { get; set; }
+        public string refid { get; set; }
+        public string remarks { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class CCGenerateOTP
+    {
+        public string amount { get; set; }
+        public string card_number { get; set; }
+        public string mobile { get; set; }
+        public string name { get; set; }
+        public string network { get; set; }
+        public string payee_name { get; set; }
+        public string refid { get; set; }
+        public string remarks { get; set; }
     }
 }
