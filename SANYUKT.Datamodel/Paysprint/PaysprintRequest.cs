@@ -73,6 +73,10 @@ namespace SANYUKT.Datamodel.Paysprint
     {
         public string stateresp { get; set; }
     }
+    public class CCGeneratePayResponse
+    {
+        public string ackno { get; set; }
+    }
     public class GetCustomerRequestView
     {
         public string Mobile { get; set; }
@@ -313,4 +317,95 @@ namespace SANYUKT.Datamodel.Paysprint
         public string refid { get; set; }
         public string remarks { get; set; }
     }
+    public class CCPaybillRequestView
+    {
+        public string amount { get; set; }
+        public string card_number { get; set; }
+        public string mobile { get; set; }
+        public string name { get; set; }
+        public string network { get; set; }
+        public string payee_name { get; set; }
+        public string refid { get; set; }
+        public string otp { get; set; }
+        public string remarks { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class CCPaybillRequest
+    {
+        public string amount { get; set; }
+        public string card_number { get; set; }
+        public string mobile { get; set; }
+        public string name { get; set; }
+        public string network { get; set; }
+        public string payee_name { get; set; }
+        public string refid { get; set; }
+        public string otp { get; set; }
+        public string remarks { get; set; }
+    }
+    public class CCPaybillStatusRequestView
+    {
+        public string refid { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class CCPaybillStatusRequest
+    {
+        public string refid { get; set; }
+    }
+    public class CCPaybillStatusResponse
+    {
+        public string txnid { get; set; }
+        public string refid { get; set; }
+        public string name { get; set; }
+        public string mobile { get; set; }
+        public string card_number { get; set; }
+        public string amount { get; set; }
+        public string charge { get; set; }
+        public string network { get; set; }
+        public string remarks { get; set; }
+        public string dateadded { get; set; }
+        public string status { get; set; }
+
+    }
+    public class CCRefundOTPRequestView
+    {
+        public string ackno { get; set; }
+        public string refid { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class CCRefundRequestOTP
+    {
+        public string ackno { get; set; }
+        public string refid { get; set; }
+    }
+    public class CCRefundRequestView
+    {
+        public string ackno { get; set; }
+        public string refid { get; set; }
+        public string otp { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class CCRefundRequest
+    {
+        public string ackno { get; set; }
+        public string refid { get; set; }
+        public string otp { get; set; }
+    }
+    public class AirtelCMSLNKGENRequestView
+    {
+        public string refid { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
+        public string TokenData { get; set; }
+    }
+    public class AirtelCMSLNKGENRequest
+    {
+        public string refid { get; set; }
+        public string latitude { get; set; }
+        public string longitude { get; set; }
+    }
+    public class AirtelCMSLNKGENResponse
+    {
+        public string redirecturl { get; set; }
+    }
+
 }

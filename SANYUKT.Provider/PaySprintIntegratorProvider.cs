@@ -135,6 +135,26 @@ namespace SANYUKT.Provider
                 {
                     APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/cc-payment/ccpayment/generateotp";
                 }
+                else if (Apiid == 28)
+                {
+                    APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/cc-payment/ccpayment/paybill";
+                }
+                else if (Apiid == 29)
+                {
+                    APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/cc-payment/ccpayment/status";
+                }
+                else if (Apiid == 30)
+                {
+                    APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/cc-payment/ccpayment/resendotp";
+                }
+                else if (Apiid == 31)
+                {
+                    APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/cc-payment/ccpayment/claimrefund";
+                }
+                else if (Apiid == 32)
+                {
+                    APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/airtelcms/V2/airtel/index";
+                }
 
                 objRequest = WebRequest.Create(APIURL);
                 objRequest.ContentType = "application/json";
@@ -413,6 +433,35 @@ namespace SANYUKT.Provider
                     resp2.tds = json.tds;
                     resp2.refundtxnid = json.refundtxnid;
                     resp2.refundtxnid = json.refundtxnid;
+                    resp.data = resp2;
+                }
+                else if (Apiid == 28)
+                {
+                    CCGeneratePayResponse resp2 = new CCGeneratePayResponse();
+                    resp2.ackno = json.ackno;
+                    resp.data = resp2;
+                }
+                else if (Apiid == 29)
+                {
+                    CCPaybillStatusResponse resp2 = new CCPaybillStatusResponse();
+                    resp2.network = json2.network;
+                    resp2.card_number = json2.card_number;
+                    resp2.txnid = json2.txnid;
+                    resp2.refid = json2.refid;
+                    resp2.name = json2.name;
+                    resp2.amount = json2.amount;
+                    resp2.charge = json2.charge;
+                    resp2.dateadded = json2.dateadded;
+                    resp2.mobile = json2.mobile;
+                    resp2.remarks = json2.remarks;
+                    resp2.status = json2.status;
+                   
+                    resp.data = resp2;
+                }
+                else if (Apiid == 32)
+                {
+                    AirtelCMSLNKGENResponse resp2 = new AirtelCMSLNKGENResponse();
+                    resp2.redirecturl = json.redirecturl;
                     resp.data = resp2;
                 }
             }
