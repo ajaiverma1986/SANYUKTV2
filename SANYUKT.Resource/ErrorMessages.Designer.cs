@@ -581,5 +581,14 @@ namespace SANYUKT.Resource {
                 return ResourceManager.GetString("CODE_156", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Request.
+        /// </summary>
+        public static string INVALID_REQUEST {
+            get {
+                return ResourceManager.GetString("INVALID_REQUEST", resourceCulture);
+            }
+        }
     }
 }

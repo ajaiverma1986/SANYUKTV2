@@ -1,4 +1,5 @@
 ﻿using SANYUKT.Database;
+using SANYUKT.Datamodel.CMS;
 using SANYUKT.Datamodel.Interfaces;
 using SANYUKT.Datamodel.Shared;
 using SANYUKT.Repository.Shared;
@@ -11,12 +12,10 @@ namespace SANYUKT.Repository
 {
     public class CMSRepository : BaseRepository
     {
-        //private readonly IFIADatabase _database = null;
         private readonly ISANYUKTDatabase _database = null;
 
         public CMSRepository()
         {
-            //_database = new FIADatabase();
             _database = new SANYUKTDatabase();
         }
         public async Task<SimpleResponse> ListEntityuser(string Usercode, ISANYUKTServiceUser serviceUser)
@@ -89,7 +88,7 @@ namespace SANYUKT.Repository
         }
 
 
-        public async Task<SimpleResponse> CreateCMSAgent(AddCMSAgentRequest request, IFIAServiceUser serviceUser)
+        public async Task<SimpleResponse> CreateCMSAgent(AddCMSAgentRequest request, ISANYUKTServiceUser serviceUser)
         {
             long outputstr;
             SimpleResponse response = new SimpleResponse();
@@ -113,7 +112,7 @@ namespace SANYUKT.Repository
 
         }
 
-        public async Task<SimpleResponse> UpdateCMSAgent(UpdateCMSAgentRequest request, IFIAServiceUser serviceUser)
+        public async Task<SimpleResponse> UpdateCMSAgent(UpdateCMSAgentRequest request, ISANYUKTServiceUser serviceUser)
         {
             string outputstr = "";
             SimpleResponse response = new SimpleResponse();

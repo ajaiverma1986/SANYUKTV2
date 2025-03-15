@@ -65,6 +65,7 @@ namespace SANYUKT.Datamodel.Shared
         SP_153 = 153,
         SP_154 = 154,
         SP_155 = 155,
-        SP_156 = 156
+        SP_156 = 156,
+        INVALID_REQUEST = 157,
     }
 }

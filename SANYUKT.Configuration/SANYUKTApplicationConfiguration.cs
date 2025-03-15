@@ -248,6 +248,100 @@ namespace SANYUKT.Configuration
                 return configuration["Paysprint:AESENCRYPTIONKEY"];
             }
         }
+        public string CMSCertificate
+        {
+            get
+            {
+                return configuration["CMSCertificate"];
+            }
+        }
+        public string CMSMerchantId
+        {
+            get
+            {
+                return configuration["CMSMerchantId"];
+            }
+        }
+        public string CMSMerchantLoginId
+        {
+            get
+            {
+                return configuration["CMSMerchantLoginId"];
+            }
+        }
+        public string CMSMerchantPass
+        {
+            get
+            {
+                return configuration["CMSMerchantPass"];
+            }
+        }
+        public string CMSpassword
+        {
+            get
+            {
+                return configuration["CMSpassword"];
+            }
+        }
+        public string CMSAgreegator
+        {
+            get
+            {
+                return configuration["CMSAgreegator"];
+            }
+        }
+        public string CMSAPIURL
+        {
+            get
+            {
+                return configuration["CMSAPIURL"];
+            }
+        }
+        public string CMSMerchantSecurityKey
+        {
+            get
+            {
+                return configuration["CMSMerchantSecurityKey"];
+            }
+        }
+
+        public string CMSsuperMerchantSkey
+        {
+            get
+            {
+                return configuration["CMSsuperMerchantSkey"];
+            }
+        }
+        public string CMSSingleSignOnURL
+        {
+            get
+            {
+                return configuration["CMSSingleSignOnURL"];
+            }
+        }
+        public string CMSAPIMerURL
+        {
+            get
+            {
+                return configuration["CMSAPIMerURL"];
+            }
+        }
+
+        public string CMSAPIMerCorporateServiceURL
+        {
+            get
+            {
+                return configuration["CMSAPIMerCorporateServiceURL"];
+            }
+        }
+
+        public string CMSAPIKYCURL
+        {
+            get
+            {
+                return configuration["CMSAPIKYCURL"];
+            }
+        }
 
         private string GetParameterValue(string ParamName)
         {

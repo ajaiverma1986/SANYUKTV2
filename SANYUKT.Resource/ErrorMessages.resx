@@ -291,4 +291,7 @@
   <data name="CODE_156" xml:space="preserve">
     <value>Mobile no is Required</value>
   </data>
+  <data name="INVALID_REQUEST" xml:space="preserve">
+    <value>Invalid Request</value>
+  </data>
 </root>
