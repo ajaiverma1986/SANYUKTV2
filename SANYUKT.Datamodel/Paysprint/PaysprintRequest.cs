@@ -407,5 +407,28 @@ namespace SANYUKT.Datamodel.Paysprint
     {
         public string redirecturl { get; set; }
     }
+    public class AirtelCMSTransactionInqResponse
+    {
+        public string txnid { get; set; }
+        public string refid { get; set; }
+        public string amount { get; set; }
+        public string commission { get; set; }
+        public string transfertype { get; set; }
+        public string mobile { get; set; }
+        public string status { get; set; }
+        public string dateadded { get; set; }
+        public string remarks { get; set; }
+        public string errorcode { get; set; }
+        public string errormsg { get; set; }
+        public string network { get; set; }
+        public string refundtxnid { get; set; }
+        public string daterefunded { get; set; }
+
+    }
+    public class AirtelCMSTxnInqRequest
+    {
+        public string refid { get; set; }
+      
+    }
 
 }

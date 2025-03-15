@@ -155,6 +155,10 @@ namespace SANYUKT.Provider
                 {
                     APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/airtelcms/V2/airtel/index";
                 }
+                else if (Apiid == 33)
+                {
+                    APIURL = SANYUKTApplicationConfiguration.Instance.PaysprintBaseUrl + "service-api/api/v1/service/airtelcms/airtel/status";
+                }
 
                 objRequest = WebRequest.Create(APIURL);
                 objRequest.ContentType = "application/json";
@@ -462,6 +466,26 @@ namespace SANYUKT.Provider
                 {
                     AirtelCMSLNKGENResponse resp2 = new AirtelCMSLNKGENResponse();
                     resp2.redirecturl = json.redirecturl;
+                    resp.data = resp2;
+                }
+                else if (Apiid == 33)
+                {
+                    AirtelCMSTransactionInqResponse resp2 = new AirtelCMSTransactionInqResponse();
+                    resp2.network = json2.network;
+                    resp2.refid = json2.refid;
+                    resp2.refundtxnid = json2.refundtxnid;
+                    resp2.txnid = json2.txnid;
+                    resp2.errorcode = json2.errorcode;
+                    resp2.amount = json2.amount;
+                    resp2.dateadded = json2.dateadded;
+                    resp2.commission = json2.commission;
+                    resp2.daterefunded = json2.daterefunded;
+                    resp2.errormsg = json2.errormsg;
+                    resp2.mobile = json2.mobile;
+                    resp2.status = json2.status;
+                    resp2.remarks = json2.remarks;
+                    resp2.transfertype = json2.transfertype;
+                   
                     resp.data = resp2;
                 }
             }

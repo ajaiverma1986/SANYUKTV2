@@ -204,13 +204,11 @@ namespace SANYUKT.Provider
             resp = await _pro.GenericIntegrator(request1, request.TokenData, 26);
             return resp;
         }
-        public async Task<SpBaseResponse> AirtelCMSGenerateURL(AirtelCMSLNKGENRequestView request, ISANYUKTServiceUser serviceUser)
+        public async Task<SpBaseResponse> AirtelCMSTransactionInq(AirtelCMSLNKGENRequestView request, ISANYUKTServiceUser serviceUser)
         {
-            AirtelCMSLNKGENRequest request1 = new AirtelCMSLNKGENRequest();
+            AirtelCMSTxnInqRequest request1 = new AirtelCMSTxnInqRequest();
             SpBaseResponse resp = new SpBaseResponse();
-            request1.latitude = request.latitude;
             request1.refid = request.refid;
-            request1.latitude = request.latitude;
             resp = await _pro.GenericIntegrator(request1, request.TokenData, 32);
             return resp;
         }
