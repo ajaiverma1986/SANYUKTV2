@@ -45,6 +45,48 @@ namespace SANYUKT.API.Controllers
             response = await _provider.GetFinoCustomerDetail(request, this.CallerUser);
             return Json(response);
         }
+        [HttpPost]
+        public async Task<IActionResult> RegisterFinoCustomerKyc([FromBody] FinoEkycRequestView request)
+        {
+            SpBaseResponse response = new SpBaseResponse();
+            //ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            //if (error.HasError)
+            //{
+            //    response.SetError(error);
+            //    return Json(response);
+            //}
+
+            response = await _provider.FinoCustomerEkyc(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RegisterFinoCustomer([FromBody] FinoRegCustomerRequestView request)
+        {
+            SpBaseResponse response = new SpBaseResponse();
+            //ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            //if (error.HasError)
+            //{
+            //    response.SetError(error);
+            //    return Json(response);
+            //}
+
+            response = await _provider.FinoRegisterCustomer(request, this.CallerUser);
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> FinoRegisterBenficiary([FromBody] FinoRegBenRequestView request)
+        {
+            SpBaseResponse response = new SpBaseResponse();
+            //ErrorResponse error = await _callValidator.AuthenticateAndAuthorize(CallerUser, true);
+            //if (error.HasError)
+            //{
+            //    response.SetError(error);
+            //    return Json(response);
+            //}
+
+            response = await _provider.FinoRegisterBenficiary(request, this.CallerUser);
+            return Json(response);
+        }
 
     }
 }
