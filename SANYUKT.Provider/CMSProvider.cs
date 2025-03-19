@@ -22,11 +22,11 @@ namespace SANYUKT.Provider
     public class CMSProvider : BaseProvider
     {
         private readonly CMSRepository repository = null;
-        private readonly AgentProvider _provider = null;
+        //private readonly AgentProvider _provider = null;
         public CMSProvider()
         {
             repository = new CMSRepository();
-            _provider = new AgentProvider();
+           // _provider = new AgentProvider();
         }
 
         // sha256
@@ -295,12 +295,12 @@ namespace SANYUKT.Provider
                     }
                 }
 
-                await _provider.APIRequestRecord_Log("CMS API Merchant Onboarding", jsondata, JsonConvert.SerializeObject(jsons, options), Headrevalue, "");
+                //await _provider.APIRequestRecord_Log("CMS API Merchant Onboarding", jsondata, JsonConvert.SerializeObject(jsons, options), Headrevalue, "");
             }
             catch (Exception ex)
             {
                 response.SetError(ex.Message.ToString());
-                await _provider.APIRequestRecord_Log("CMS API Merchant Onboarding", jsondata, ex.Message.ToString(), Headrevalue, "");
+                //await _provider.APIRequestRecord_Log("CMS API Merchant Onboarding", jsondata, ex.Message.ToString(), Headrevalue, "");
             }
             return response;
         }
@@ -430,7 +430,7 @@ namespace SANYUKT.Provider
                 jsons = await streamReader.ReadToEndAsync();
                 response.Result = jsons.ToString();
             }
-            await _provider.APIRequestRecord_Log("CMS API OTP", jsondata, JsonConvert.SerializeObject(jsons, options), "", "");
+           // await _provider.APIRequestRecord_Log("CMS API OTP", jsondata, JsonConvert.SerializeObject(jsons, options), "", "");
             return response;
         }
 
@@ -510,7 +510,7 @@ namespace SANYUKT.Provider
                 jsons = await streamReader.ReadToEndAsync();
                 response.Result = jsons.ToString();
             }
-            await _provider.APIRequestRecord_Log("CMS API Resend OTP", jsondata, JsonConvert.SerializeObject(jsons, options), "", "");
+            //await _provider.APIRequestRecord_Log("CMS API Resend OTP", jsondata, JsonConvert.SerializeObject(jsons, options), "", "");
             return response;
         }
 
@@ -596,7 +596,7 @@ namespace SANYUKT.Provider
                 jsons = await streamReader.ReadToEndAsync();
                 response.Result = jsons.ToString();
             }
-            await _provider.APIRequestRecord_Log("CMS API Validate OTP", jsondata, JsonConvert.SerializeObject(jsons, options), "", "");
+            //await _provider.APIRequestRecord_Log("CMS API Validate OTP", jsondata, JsonConvert.SerializeObject(jsons, options), "", "");
             return response;
         }
 
@@ -687,7 +687,7 @@ namespace SANYUKT.Provider
                 Formatting = Formatting.Indented,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-            await _provider.APIRequestRecord_Log("Biometrict API Merchant Onboarding", JsonConvert.SerializeObject(objn, options), JsonConvert.SerializeObject(jsons, options), "", "");
+           // await _provider.APIRequestRecord_Log("Biometrict API Merchant Onboarding", JsonConvert.SerializeObject(objn, options), JsonConvert.SerializeObject(jsons, options), "", "");
             return response;
         }
 
@@ -770,7 +770,7 @@ namespace SANYUKT.Provider
             string encryptInfo = EncryptStringToBytes(jsons, parsedBase64Keybyt);
 
             Url = $"{baseUrl}?data={encryptInfo}&skey={key}";
-            await _provider.APIRequestRecord_Log("Single signon CMS", jsons, Url, encryptInfo, key);
+           // await _provider.APIRequestRecord_Log("Single signon CMS", jsons, Url, encryptInfo, key);
             response.Result = Url;
             return response;
 
@@ -846,7 +846,7 @@ namespace SANYUKT.Provider
                 Formatting = Formatting.Indented,
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             };
-            await _provider.APIRequestRecord_Log("Checking CMS Status - Cash Drop", JsonConvert.SerializeObject(obj, options), JsonConvert.SerializeObject(jsons, options), "", "");
+            //await _provider.APIRequestRecord_Log("Checking CMS Status - Cash Drop", JsonConvert.SerializeObject(obj, options), JsonConvert.SerializeObject(jsons, options), "", "");
             return response;
         }
     }
