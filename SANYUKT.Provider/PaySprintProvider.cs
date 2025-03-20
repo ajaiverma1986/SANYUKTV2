@@ -90,7 +90,7 @@ namespace SANYUKT.Provider
             GetCustomerRequest request1 = new GetCustomerRequest();
             SpBaseResponse resp = new SpBaseResponse();
             request1.mobile = request.Mobile;
-            resp = await _pro.GenericIntegrator(request1, request.TokenData,14);
+            resp = await _pro.GenericIntegrator(request1, request.TokenData,1);
             return resp;
         }
 
