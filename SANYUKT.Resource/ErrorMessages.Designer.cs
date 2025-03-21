@@ -585,9 +585,18 @@ namespace SANYUKT.Resource {
         /// <summary>
         ///   Looks up a localized string similar to Invalid Request.
         /// </summary>
-        public static string INVALID_REQUEST {
+        public static string CODE_157 {
             get {
-                return ResourceManager.GetString("INVALID_REQUEST", resourceCulture);
+                return ResourceManager.GetString("CODE_157", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PID Data is Required.
+        /// </summary>
+        public static string CODE_158 {
+            get {
+                return ResourceManager.GetString("CODE_158", resourceCulture);
             }
         }
     }

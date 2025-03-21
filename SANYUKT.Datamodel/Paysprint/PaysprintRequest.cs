@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SANYUKT.Datamodel.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace SANYUKT.Datamodel.Paysprint
 {
-    public class SpBaseResponse
+    public class SpBaseResponse: BaseResponse
     {
         public bool status { get; set; }
         public string response_code { get; set; }
@@ -89,6 +90,8 @@ namespace SANYUKT.Datamodel.Paysprint
     public class FinoEkycRequestView
     {
         public string Mobile { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string TokenData { get; set; }
         public string AadharNo { get; set; }
         public string PidData { get; set; }

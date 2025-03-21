@@ -17,6 +17,8 @@ using SANYUKT.Commonlib.Utility;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Org.BouncyCastle.Asn1.Ocsp;
+using SANYUKT.Repository;
+using Org.BouncyCastle.Ocsp;
 
 namespace SANYUKT.Provider
 {
@@ -24,10 +26,12 @@ namespace SANYUKT.Provider
     {
         private readonly SysMgrProvider _sysprd = null;
         private readonly PaySprintIntegratorProvider _pro=null;
+        private readonly PaySprintRepository _repository=null;
         public PaySprintProvider()
         {
             _sysprd = new SysMgrProvider();
-            _pro=new PaySprintIntegratorProvider();     
+            _pro=new PaySprintIntegratorProvider();
+            _repository=new PaySprintRepository();
         }
         public async Task<SimpleResponse> GenerateToken(ISANYUKTServiceUser serviceUser)
         {
@@ -97,7 +101,14 @@ namespace SANYUKT.Provider
         public async Task<SpBaseResponse> FinoCustomerEkyc(FinoEkycRequestView request, ISANYUKTServiceUser serviceUser)
         {
             SpBaseResponse resp = new SpBaseResponse();
+            SpBaseResponse resp2 = new SpBaseResponse();
             string piddata = request.PidData;
+            if (piddata == null) {
+                resp2.response_code = "100";
+                resp2.message = ErrorCodes.PID_DATA_REQ.ToString();
+                resp2.SetError(ErrorCodes.PID_DATA_REQ);
+                return resp2;
+            }
             byte[] key = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONKEY);
             byte[] iv = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONIV);
 
@@ -110,7 +121,34 @@ namespace SANYUKT.Provider
             request1.accessmode = request.AccessMode;
             request1.is_iris = request.isIris;
             resp = await _pro.GenericIntegrator(request1, request.TokenData, 2);
-            return resp;
+            if (resp != null) { 
+                if(resp.response_code=="1")
+                {
+                    
+                    FinoRegCustomerRequestView objp = new FinoRegCustomerRequestView();
+                    resp2= await FinoRegisterCustomer(objp, serviceUser);
+                    if (resp2 != null)
+                    {
+                        if (resp2.response_code == "1") {
+                            var regdata = (FinoCustomerEkycResponse)resp.data;
+                            PaySprintCreateCustomerRequest req = new PaySprintCreateCustomerRequest();
+                            req.AadharNo = request.AadharNo;
+                            req.FinoKYCId = regdata.ekyc_id;
+                            req.FirstName = request.FirstName;
+                            req.LastName = request.LastName;
+                            req.LastName = request.LastName;
+                            req.MobileNo = request.Mobile;
+                            long custid = await CreateFinoCustomer(req, serviceUser);
+                        }
+                    }
+                    else { 
+                        resp2.SetError(ErrorCodes.INVALID_PARAMETERS);
+                    }
+                  
+
+                }
+            }
+            return resp2;
         }
 
         public async Task<SpBaseResponse> FinoRegisterCustomer(FinoRegCustomerRequestView request, ISANYUKTServiceUser serviceUser)
@@ -242,6 +280,13 @@ namespace SANYUKT.Provider
             request1.otp = request.otp;
             resp = await _pro.GenericIntegrator(request1, request.TokenData, 13);
             return resp;
+        }
+
+        public async Task<long> CreateFinoCustomer(PaySprintCreateCustomerRequest request, ISANYUKTServiceUser serviceUser)
+        {
+            long CustomerId = 0;
+            CustomerId = await _repository.CreateNewCustomer(request, serviceUser);
+            return CustomerId;
         }
     }
 }
