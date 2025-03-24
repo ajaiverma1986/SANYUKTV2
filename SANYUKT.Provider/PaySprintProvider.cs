@@ -66,28 +66,27 @@ namespace SANYUKT.Provider
 
             return response;
         }
-        public static byte[] Encrypt(string plainText, byte[] key, byte[] iv)
+       public static byte[] Encrypt(string piddata, string key, string iv)
         {
-            using (Aes aes = Aes.Create())
+            using (AesManaged aesAlg = new AesManaged())
             {
-                aes.Key = key;
-                aes.IV = iv;
-                aes.Mode = CipherMode.CBC;
+                aesAlg.Key = Encoding.UTF8.GetBytes(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONKEY); // Make sure key is 16 bytes for AES-128
+                aesAlg.IV = Encoding.UTF8.GetBytes(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONIV); // Make sure IV is 16 bytes for AES-128
+                aesAlg.Mode = CipherMode.CBC;
+                aesAlg.Padding = PaddingMode.PKCS7;
 
-                using (var encryptor = aes.CreateEncryptor(aes.Key, aes.IV))
-                using (var ms = new MemoryStream())
-                {
-                    using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                    using (var sw = new StreamWriter(cs))
-                    {
-                        sw.Write(plainText);
-                    }
-                    return ms.ToArray();
-                }
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                byte[] piddataBytes = Encoding.UTF8.GetBytes(piddata);
+                byte[] encryptedBytes = encryptor.TransformFinalBlock(piddataBytes, 0, piddataBytes.Length);
+
+                // Convert the encrypted bytes to a Base64 string
+               // return Convert.ToBase64String(encryptedBytes);
+               return encryptedBytes;
             }
         }
 
-      
+
         public async Task<SpBaseResponse> GetFinoCustomerDetail(GetCustomerRequestView request, ISANYUKTServiceUser serviceUser)
         {
            
@@ -109,46 +108,43 @@ namespace SANYUKT.Provider
                 resp2.SetError(ErrorCodes.PID_DATA_REQ);
                 return resp2;
             }
-            byte[] key = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONKEY);
-            byte[] iv = Convert.FromBase64String(SANYUKTApplicationConfiguration.Instance.PaysprintAESENCRYPTIONIV);
-
-            byte[] ciphertext_raw = Encrypt(piddata, key, iv);
+            byte[] ciphertext_raw=  Encrypt(piddata, "", "");
             string enctoken = Convert.ToBase64String(ciphertext_raw);
             FinoEkycRequest request1 = new FinoEkycRequest();
             request1.mobile = request.Mobile;
             request1.aadhaar_number = request.AadharNo;
-            request1.piddata = enctoken;
+            request1.data = enctoken;
             request1.accessmode = request.AccessMode;
             request1.is_iris = request.isIris;
             resp = await _pro.GenericIntegrator(request1, request.TokenData, 2);
-            if (resp != null) { 
-                if(resp.response_code=="1")
-                {
+            //if (resp != null) { 
+            //    if(resp.response_code=="1")
+            //    {
                     
-                    FinoRegCustomerRequestView objp = new FinoRegCustomerRequestView();
-                    resp2= await FinoRegisterCustomer(objp, serviceUser);
-                    if (resp2 != null)
-                    {
-                        if (resp2.response_code == "1") {
-                            var regdata = (FinoCustomerEkycResponse)resp.data;
-                            PaySprintCreateCustomerRequest req = new PaySprintCreateCustomerRequest();
-                            req.AadharNo = request.AadharNo;
-                            req.FinoKYCId = regdata.ekyc_id;
-                            req.FirstName = request.FirstName;
-                            req.LastName = request.LastName;
-                            req.LastName = request.LastName;
-                            req.MobileNo = request.Mobile;
-                            long custid = await CreateFinoCustomer(req, serviceUser);
-                        }
-                    }
-                    else { 
-                        resp2.SetError(ErrorCodes.INVALID_PARAMETERS);
-                    }
+            //        FinoRegCustomerRequestView objp = new FinoRegCustomerRequestView();
+            //        resp2= await FinoRegisterCustomer(objp, serviceUser);
+            //        if (resp2 != null)
+            //        {
+            //            if (resp2.response_code == "1") {
+            //                var regdata = (FinoCustomerEkycResponse)resp.data;
+            //                PaySprintCreateCustomerRequest req = new PaySprintCreateCustomerRequest();
+            //                req.AadharNo = request.AadharNo;
+            //                req.FinoKYCId = regdata.ekyc_id;
+            //                req.FirstName = request.FirstName;
+            //                req.LastName = request.LastName;
+            //                req.LastName = request.LastName;
+            //                req.MobileNo = request.Mobile;
+            //                long custid = await CreateFinoCustomer(req, serviceUser);
+            //            }
+            //        }
+            //        else { 
+            //            resp2.SetError(ErrorCodes.INVALID_PARAMETERS);
+            //        }
                   
 
-                }
-            }
-            return resp2;
+            //    }
+            //}
+            return resp;
         }
 
         public async Task<SpBaseResponse> FinoRegisterCustomer(FinoRegCustomerRequestView request, ISANYUKTServiceUser serviceUser)

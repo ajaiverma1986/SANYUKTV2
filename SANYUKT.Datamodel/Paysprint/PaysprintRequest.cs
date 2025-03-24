@@ -102,7 +102,7 @@ namespace SANYUKT.Datamodel.Paysprint
     {
         public string mobile { get; set; }
         public string aadhaar_number { get; set; }
-        public string piddata { get; set; }
+        public string data { get; set; }
         public string accessmode { get; set; }
         public int is_iris { get; set; }
     }
